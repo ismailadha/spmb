@@ -4,11 +4,23 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('frontend.index');
+});
+
+Route::get('juknis', function () {
+    return view('frontend.juknis');
+});
+
+Route::get('persyaratan', function () {
+    return view('frontend.persyaratan');
+});
+
+Route::get('datasekolah', function () {
+    return view('frontend.datasekolah');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('backend.main');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
