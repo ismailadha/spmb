@@ -1,257 +1,280 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-
-	<!-- PAGE TITLE HERE -->
-	<title>SPMB Tahun {{ now()->format('Y') }}</title>
-
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="author" content="DexignZone">
-	<meta name="robots" content="">
-
-	<meta name="keywords" content="agency, business, company, corporate, creative, finance, multipurpose, one page, parallax, personal, portfolio, responsive, resume, template, unique">
-	<meta name="description" content="Agency : is a unique design template which is crafted specially for creative agency, corporate firms, professional businesses. Template theme is specially design for all types of business and have multiple color theme for different types of people.">
-	<meta property="og:title" content="Agency | Creative Multipurpose HTML with RTL Ready">
-	<meta property="og:description" content="Agency : is a unique design template which is crafted specially for creative agency, corporate firms, professional businesses. Template theme is specially design for all types of business and have multiple color theme for different types of people." >
-	<meta property="og:image" content="https://agency.dexignzone.com/xhtml/social-image.png">
-	<meta name="format-detection" content="telephone=no">
-
-	<!-- FAVICONS ICON -->
-	<link rel="icon" href="{{ asset('front/images/favicon.ico') }}" type="image/x-icon">
-	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('front/images/favicon.png') }}">
-
-	<!-- MOBILE SPECIFIC -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- STYLESHEETS -->
-	<link rel="stylesheet" type="text/css" href="{{ asset('front/css/plugins.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('front/css/style.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('front/css/templete.css') }}">
-	<link class="skin" rel="stylesheet" type="text/css" href="{{ asset('front/css/skin/color/skin-5.css') }}">
-
-	<!-- Revolution Slider Css -->
-	<link rel="stylesheet" type="text/css" href="{{ asset('front/plugins/revolution/revolution/css/settings.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('front/plugins/revolution/revolution/css/navigation.css') }}">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tejarat - Multipurpose Business & Corporate HTML Template</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,900|Mirza:400,700&amp;subset=arabic" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Allura" rel="stylesheet">
+    <!-- inject:css-->
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/bootstrap/bootstrap.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/animate.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/brands.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/fontawesome.min.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/fontello.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/jquery-ui.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/jquery.mb.YTPlayer.min.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/line-awesome.min.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/lnr-icon.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/magnific-popup.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/navigation.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/owl.carousel.min.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/select2.min.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/settings.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/slick.css' }}">
+    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/trumbowyg.min.css' }}">
+    <link rel="stylesheet" href="{{ 'front/style.css' }}">
+    <!-- endinject -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ 'front/img/favicon.png' }}">
 </head>
-<body id="bg">
-<div class="page-wraper">
-<div id="loading-area" class="loading-page-1">
-	<div class="spinner">
-		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<circle cx="8" cy="8" r="7" stroke-width="1"/>
-		</svg>
-	</div>
-</div>
-	<!-- header -->
-    <header class="site-header header mo-left header-ind">
-		<div class="top-bar bg-dark">
-			<div class="container">
-				<div class="row d-flex justify-content-between">
-					<div class="dlab-topbar-left">
-						<ul>
-							<li><i class="flaticon-phone-call m-r5"></i> 001 1234 6789</li>
-						</ul>
-					</div>
-					<div class="dlab-topbar-right">
-						<ul>
-							<li><i class="ti-email m-r5"></i> info@example.com</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- main header -->
-        <div class="sticky-header main-bar-wraper navbar-expand-lg">
-            <div class="main-bar clearfix ">
-                <div class="container clearfix">
-                    <!-- website logo -->
-                    <div class="logo-header mostion logo-dark">
-						<a href="{{ url('/') }}" class="dez-page"><img src="{{ asset('images/spmb-logo.png') }}" alt=""></a>
-					</div>
-                    <!-- nav toggle button -->
-                    <button class="navbar-toggler collapsed navicon justify-content-end" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-						<span></span>
-						<span></span>
-						<span></span>
-					</button>
-                    <!-- extra nav -->
-                    <div class="extra-nav">
-                        <div class="extra-cell">
-                            <a href="contact.html" class="dez-page site-button primary">Daftar Akun </a>
-                        </div>
-                    </div>
-                    <!-- main nav -->
-                    <div class="header-nav navbar-collapse collapse justify-content-end" id="navbarNavDropdown">
-                        <ul class="nav navbar-nav">
-							<li><a href="{{ url('/') }}">Beranda</a>
-							</li>
-							<li><a href="javascript:void(0);">Informasi <i class="fa fa-chevron-down"></i></a>
-								<ul class="sub-menu">
-									<li><a href="{{ url('juknis') }}" class="dez-page">Petunjuk Teknis</a></li>
-									<li><a href="{{ url('persyaratan') }}" class="dez-page">Persyaratan</a></li>
-                                    <li><a href="{{ url('datasekolah') }}" class="dez-page">Data Sekolah</a></li>
-								</ul>
-							</li>
-                            <li><a href="javascript:void(0);">Peta Zonasi <i class="fa fa-chevron-down"></i></a>
-								<ul class="sub-menu">
-									<li><a href="" class="dez-page">SD</a></li>
-									<li><a href="services-details.html" class="dez-page">SMP</a></li>
-								</ul>
-							</li>
-                            <li><a href="javascript:void(0);">Hasil Seleksi <i class="fa fa-chevron-down"></i></a>
-								<ul class="sub-menu">
-									<li><a href="" class="dez-page">SD</a></li>
-									<li><a href="services-details.html" class="dez-page">SMP</a></li>
-								</ul>
-							</li>
-                            <li><a href="javascript:void(0);">Pendaftaran <i class="fa fa-chevron-down"></i></a>
-								<ul class="sub-menu">
-									<li><a href="" class="dez-page">Pembuatan Akun</a></li>
-									<li><a href="services-details.html" class="dez-page">Pendaftaran Peserta</a></li>
-								</ul>
-							</li>
-						</ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- main header END -->
-    </header>
-    <!-- header END -->
-    <!-- Content -->
-    <div class="page-content bg-white rubik-font">
-       @yield('content')
-    </div>
-    <!-- Content END-->
-	<!-- Footer -->
-    <footer class="site-footer text-uppercase footer-white">
-        <div class="footer-top">
+
+<body>
+    <!-- header area -->
+    <section class="header header--2">
+        <div class="top_bar top--bar2 d-flex align-items-center bg-dark">
             <div class="container">
                 <div class="row">
-					<div class="col-5 col-lg-2 col-md-6 col-sm-6 footer-col-4">
-                        <div class="widget widget_services border-0">
-                            <h5 class="m-b30 text-white">Halaman</h5>
-                            <ul>
-                                <li><a href="about-1.html">Beranda </a></li>
-                                <li><a href="index.html">Home </a></li>
-                                <li><a href="contact.html">Contact Us</a></li>
-                                <li><a href="about-1.html">About Us</a></li>
-                                <li><a href="service.html">Our Services</a></li>
-                            </ul>
-                        </div>
-                    </div>
-					<div class="col-7 col-lg-2 col-md-6 col-sm-6 footer-col-4">
-                        <div class="widget widget_services border-0">
-                            <h5 class="m-b30 text-white">Tautan</h5>
-                            <ul>
-                                <li><a href="index.html">Create Account</a></li>
-                                <li><a href="index.html">Company Philosophy </a></li>
-                                <li><a href="contact.html">Corporate Culture</a></li>
-                                <li><a href="about-1.html">Portfolio</a></li>
-                                <li><a href="project-details.html">Project Details</a></li>
-                            </ul>
-                        </div>
-                    </div>
-					<div class="col-lg-4 col-md-6 col-sm-6 footer-col-4">
-                        <div class="widget widget_getintuch">
-                            <h5 class="m-b30 text-white ">Contact us</h5>
-                            <ul>
-                                <li><i class="ti-location-pin"></i><strong>address</strong> demo address #8901 Marmora Road Chi Minh City, Vietnam </li>
-                                <li><i class="ti-mobile"></i><strong>phone</strong>0800-123456 (24/7 Support Line)</li>
-								<li><i class="ti-email"></i><strong>email</strong>info@example.com</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6 footer-col-4 ">
-                        <div class="widget">
-                            <h5 class="m-b30 text-white">Subscribe To Our Newsletter</h5>
-							<p class="text-capitalize m-b20">If you have any questions, you can contact with us so that we can give you a satisfying answer. Subscribe to our newsletter to get our latest products.</p>
-                            <div class="subscribe-form m-b20">
-								<form class="dzSubscribe" action="script/mailchamp.php" method="post">
-									<div class="dzSubscribeMsg"></div>
-									<div class="input-group">
-										<input name="dzEmail" required="required"  class="form-control" placeholder="Your Email Address" type="email">
-										<span class="input-group-btn">
-											<button name="submit" value="Submit" type="submit" class="site-button">Subscribe</button>
-										</span>
-									</div>
-								</form>
-							</div>
-							<ul class="list-inline m-a0">
-								<li><a href="https://www.facebook.com/" target="_blank" class="site-button facebook circle "><i class="fab fa-facebook-f"></i></a></li>
-								<li><a href="https://www.behance.net/" target="_blank" class="site-button behance circle "><i class="fab fa-behance"></i></a></li>
-								<li><a href="https://www.linkedin.com/" target="_blank" class="site-button linkedin circle "><i class="fab fa-linkedin-in"></i></a></li>
-								<li><a href="https://www.instagram.com/" target="_blank" class="site-button instagram circle "><i class="fab fa-instagram"></i></a></li>
-								<li><a href="https://www.twitter.com/" target="_blank" class="site-button twitter circle "><i class="fab fa-twitter"></i></a></li>
-							</ul>
+                    <div class="col-md-12">
+                        <div class="d-flex topbar_content justify-content-between">
+                            <div class="top_bar--lang align-self-center order-2">
+                                <div class="dropdown">
+                                    <div class="dropdown-toggle d-flex align-items-center" id="dropdownMenuButton1" role="menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="lang">en</span>
+                                        <img class="lang_flag" src="img/en.jpg" alt="English">
+                                        <span class="la la-angle-down"></span>
+                                    </div>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <a class="dropdown-item" data-lang="en" href="#"><img src="img/en.jpg" alt="">English</a>
+                                        <a class="dropdown-item" data-lang="fr" href="#"><img src="img/fr.jpg" alt="">Français</a>
+                                        <a class="dropdown-item" data-lang="tr" href="#"><img src="img/tr.jpg" alt="">Türkçee</a>
+                                        <a class="dropdown-item" data-lang="es" href="#"><img src="img/es.jpg" alt="">Español</a>
+                                    </div>
+                                </div>
+                                <div class="drop-down">
+                                    <div class="options">
+                                        <ul>
+                                            <li><a href="#">User1<span class="value">1</span></a></li>
+                                            <li><a href="#">User2<span class="value">2</span></a></li>
+                                            <li><a href="#">User3<span class="value">3</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="top_bar--info order-0 d-none d-lg-block align-self-center">
+                                <ul>
+                                    <li><span class="la la-envelope"></span>
+                                        <p>support@email.com</p>
+                                    </li>
+                                    <li><span class="la la-headphones"></span>
+                                        <p>800 567.890.576</p>
+                                    </li>
+                                    <li><span class="la la-clock-o"></span>
+                                        <p>Mon-Sat 8.00 - 18.00</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="top_bar--social">
+                                <ul>
+                                    <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
+                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
+                                    <li><a href="#"><span class="fab fa-vimeo-v"></span></a></li>
+                                    <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- footer bottom part -->
-        <div class="footer-bottom bg-primary">
+        <!-- start menu area -->
+        <div class="menu_area menu1 menu--sticky">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light px-0">
+                    <a class="navbar-brand order-sm-1 order-1" href="#"><img height="50" width="150" src="{{ asset('images/spmb-logo.png') }}" alt="" /></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent2" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="la la-bars"></span>
+                    </button>
+                    <div class="collapse navbar-collapse order-md-1" id="navbarSupportedContent2">
+                        <ul class="navbar-nav m-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ route('home') }}">Beranda</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ route('juknis') }}">Petunjuk Teknis</a>
+                                    <a class="dropdown-item" href="{{ route('persyaratan') }}">Persyaratan</a>
+                                    <a class="dropdown-item" href="{{ route('datasekolah') }}">Data Sekolah</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Peta Zonasi</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">SD</a>
+                                    <a class="dropdown-item" href="">SMP</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hasil Seleksi</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">SD</a>
+                                    <a class="dropdown-item" href="">SMP</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pendaftaran</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Pembuatan Akun</a>
+                                    <a class="dropdown-item" href="">Pendaftaran Peserta</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kontak</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Dinas</a>
+                                    <a class="dropdown-item" href="">Sekolah</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- end: .navbar-nav -->
+                    </div>
+                    <div class="nav_right_content d-flex align-items-center order-2 order-sm-2">
+                        <!-- end .cart_module -->
+                        <div class="nav_right_module search_module">
+                            <span class="la la-search search_trigger"></span>
+                            <div class="search_area">
+                                <form action="/">
+                                    <div class="input-group input-group-light">
+                                        <span class="icon-left">
+                                            <i class="la la-search"></i>
+                                        </span>
+                                        <input type="text" class="form-control search_field" placeholder="Type words and hit enter...">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- end ./search_module -->
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- end menu area -->
+    </section><!-- end: .header -->
+    @yield('content')
+    <footer class="footer5 footer--bw">
+        <div class="footer__big">
             <div class="container">
                 <div class="row">
-                   <div class="col-lg-6 col-md-6 col-sm-6 text-left "> <span>Copyright © <span class="current-year">{{ now()->format('Y') }}</span> Dinas Pendidikan dan Kebudayaan Kota Lhokseumawe</span></div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 text-right ">
-						<div class="widget-link ">
-							<ul>
-								<li><a href="javascript:void(0);"> Help Desk</a></li>
-								<li><a href="javascript:void(0);"> Privacy Policy</a></li>
-							</ul>
-						</div>
-					</div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="widget text_widget">
+                            <img class="footer_logo" src="img/logo-white.png" alt="logo">
+                            <p>Nunc placerat mi id nisi interdum they mtolis. Praesient is pharetra justo ught scel
+                                erisque the mattis lhreo quam nterdum mollisy.</p>
+                            <a href="#">Read More About <span class="la la-chevron-right"></span></a>
+                        </div><!-- ends: .widget -->
+                    </div><!-- ends: .col-lg-3 -->
+                    <div class="col-lg-3 col-md-6 col-sm-6 d-flex justify-content-lg-center">
+                        <div class="widget widget--links">
+                            <h4 class="widget__title">quick links</h4>
+                            <ul class="links">
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Contacts Us</a></li>
+                                <li><a href="#">Testimonials</a></li>
+                                <li><a href="#">Careers</a></li>
+                                <li><a href="#">Our Team</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul>
+                        </div><!-- ends: .widget -->
+                    </div><!-- ends: .col-lg-3 -->
+                    <div class="col-lg-3 col-md-6 col-sm-6 d-flex justify-content-lg-center">
+                        <div class="widget widget--links">
+                            <h4 class="widget__title">our services</h4>
+                            <ul class="links">
+                                <li><a href="#">Business</a></li>
+                                <li><a href="#">Marketing</a></li>
+                                <li><a href="#">Management</a></li>
+                                <li><a href="#">Accounting</a></li>
+                                <li><a href="#">Training</a></li>
+                                <li><a href="#">Consultation</a></li>
+                            </ul>
+                        </div><!-- ends: .widget -->
+                    </div><!-- ends: .col-lg-3 -->
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="widget subcribe--widget">
+                            <h4 class="widget__title">Newsletter</h4>
+                            <p>Subscribe to get update and information. Don't worry, we won't send spam!</p>
+                            <form class="subscribe_form">
+                                <div class="input_with_embed">
+                                    <input type="text" class="form-control-lg input--rounded border-0" placeholder="Enter email">
+                                    <div class="embed_icon">
+                                        <span class="la la-envelope"></span>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="widget__social">
+                                <div class="social  ">
+                                    <ul class="d-flex flex-wrap">
+                                        <li><a href="#" class="facebook"><span class="fab fa-facebook-f"></span></a></li>
+                                        <li><a href="#" class="twitter"><span class="fab fa-twitter"></span></a></li>
+                                        <li><a href="#" class="linkedin"><span class="fab fa-linkedin-in"></span></a></li>
+                                        <li><a href="#" class="gplus"><span class="fab fa-google-plus-g"></span></a></li>
+                                    </ul>
+                                </div><!-- ends: .social -->
+                            </div>
+                        </div><!-- ends: .widget -->
+                    </div><!-- ends: .col-lg-3 -->
                 </div>
             </div>
-        </div>
+        </div><!-- ends: .footer__big -->
+        <div class="footer__small text-center">
+            <p>©2019 Tizara. All rights reserved. Created by <a href="#">AazzTech</a></p>
+        </div><!-- ends: .footer__small -->
     </footer>
-    <!-- Footer END-->
-    <button class="scroltop fa fa-chevron-up" ></button>
-</div>
-<!-- JAVASCRIPT FILES ========================================= -->
-<script src="{{ asset('front/js/jquery.min.js') }}"></script><!-- JQUERY.MIN JS -->
-<script src="{{ asset('front/plugins/wow/wow.js') }}"></script><!-- WOW JS -->
-
-<script src="{{ asset('front/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script><!-- BOOTSTRAP.MIN JS -->
-<script src="{{ asset('front/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script><!-- FORM JS -->
-<script src="{{ asset('front/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js') }}"></script><!-- FORM JS -->
-<script src="{{ asset('front/plugins/magnific-popup/magnific-popup.js') }}"></script><!-- MAGNIFIC POPUP JS -->
-<script src="{{ asset('front/plugins/counter/waypoints-min.js') }}"></script><!-- WAYPOINTS JS -->
-<script src="{{ asset('front/plugins/counter/counterup.min.js') }}"></script><!-- COUNTERUP JS -->
-<script src="{{ asset('front/plugins/imagesloaded/imagesloaded.js') }}"></script><!-- IMAGESLOADED -->
-<script src="{{ asset('front/plugins/masonry/masonry-4.2.2.js') }}"></script><!-- MASONRY -->
-<script src="{{ asset('front/plugins/masonry/isotope.pkgd.min.js') }}"></script><!-- MASONRY -->
-<script src="{{ asset('front/plugins/owl-carousel/owl.carousel.js') }}"></script><!-- OWL SLIDER -->
-<script src="{{ asset('front/plugins/rangeslider/rangeslider.js') }}" ></script><!-- Rangeslider -->
-<script src="{{ asset('front/js/custom.js') }}"></script><!-- CUSTOM FUCTIONS  -->
-<script src="{{ asset('front/js/dz.carousel.js') }}"></script><!-- SORTCODE FUCTIONS  -->
-<script src="{{ asset('front/plugins/loading/anime.js') }}"></script><!-- LOADING JS -->
-<script src="{{ asset('front/plugins/loading/anime-app3.js') }}"></script><!-- LOADING JS -->
-<script src="{{ asset('front/js/dz.ajax.js') }}"></script><!-- CONTACT JS  -->
- <!-- revolution JS FILES -->
-<script src="{{ asset('front/plugins/revolution/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
-<!-- Slider revolution 5.0 Extensions  (Load Extensions only on Local File Systems !  The following part can be removed on Server for On Demand Loading) -->
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
-<script src="{{ asset('front/plugins/revolution/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
-<script  src="{{ asset('front/js/rev.slider.js') }}"></script>
-<script>
-jQuery(document).ready(function() {
-	'use strict';
-	dz_rev_slider_5();
-});	/*ready*/
-</script>
-
-
+    <div class="go_top">
+        <span class="la la-angle-up"></span>
+    </div>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+    <!-- inject:js-->
+    <script src="{{ 'front/vendor_assets/js/jquery/jquery-1.12.3.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery/uikit.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/bootstrap/popper.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/bootstrap/bootstrap.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/jquery.themepunch.tools.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/jquery.themepunch.revolution.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.actions.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.carousel.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.kenburn.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.layeranimation.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.migration.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.navigation.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.parallax.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.slideanims.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.video.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/chart.bundle.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/dashboard.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/grid.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery-ui.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.barrating.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.camera.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.countdown.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.counterup.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.easing1.3.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.filterizr.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.magnific-popup.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/jquery.mb.YTPlayer.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/owl.carousel.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/parallax.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/select2.full.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/slick.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/tether.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/trumbowyg.min.js' }}"></script>
+    <script src="{{ 'front/vendor_assets/js/waypoints.min.js' }}"></script>
+    <script src="{{ 'front/theme_assets/js/main.js' }}"></script>
+    <script src="{{ 'front/theme_assets/js/map.js' }}"></script>
+    <script src="{{ 'front/theme_assets/js/revolution.slider.init.js' }}"></script>
+    <!-- endinject-->
 </body>
+
 </html>

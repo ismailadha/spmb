@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SliderController;
@@ -10,15 +9,15 @@ Route::get('/', [FrontendController::class, 'index'])->name('home');
 
 Route::get('juknis', function () {
     return view('frontend.juknis');
-});
+})->name('juknis');
 
 Route::get('persyaratan', function () {
     return view('frontend.persyaratan');
-});
+})->name('persyaratan');
 
 Route::get('datasekolah', function () {
     return view('frontend.datasekolah');
-});
+})->name('datasekolah');
 
 Route::middleware('auth')->group(function () {
 

@@ -1,169 +1,358 @@
 @extends('frontend.main')
 
 @section('content')
-    <div class="content-area">
-        <div class="container">
-            <div class="row justify-content-center">
-                <!-- Left part start -->
+    <section class="breadcrumb_area breadcrumb2 bgimage biz_overlay">
+        <div class="bg_image_holder">
+            <img src="{{ asset('front/img/breadbg.jpg') }}" alt="">
+        </div>
+        <div class="container content_above">
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="blog-post blog-single">
-                        <div class="dlab-post-title ">
-                            <h2 class="post-title"><a href="#">Petunjuk Teknis</a></h2>
-                        </div>
-                        <div class="dlab-tabs product-description tabs-site-button pt-3">
-                            <ul class="nav nav-tabs ">
-                                <li><a data-bs-toggle="tab" href="#web-design-1" class="active show"><i class="fa fa-globe"></i> Description</a></li>
-                                <li><a data-bs-toggle="tab" href="#graphic-design-1"><i class="far fa-image"></i> Additional Information</a></li>
-                                <li><a data-bs-toggle="tab" href="#developement-1"><i class="fa fa-cog"></i> Product Review</a></li>
-                            </ul>
-                            <div class="tab-content">
-                                <div id="web-design-1" class="tab-pane active">
-                                    <p class="m-b10">Suspendisse et justo. Praesent mattis commyolk augue Aliquam ornare hendrerit augue Cras tellus In pulvinar lectus a est Curabitur eget orci Cras laoreet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse et justo. Praesent mattis  commyolk augue aliquam ornare augue.</p>
-                                    <p>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences</p>
-                                    <ul class="list-check primary">
-                                        <li>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and </li>
-                                        <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </li>
-                                    </ul>
+                    <div class="breadcrumb_wrapper d-flex flex-column align-items-center">
+                        <h3 class="page_title">Petunjuk Teknis</h3>
+                    </div>
+                </div>
+            </div><!-- ends: .row -->
+        </div>
+    </section>
+    <section class="service-tab-wrapper section-padding">
+        <div class="tab service--tabs">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 sidebar">
+                        <div class="tab_nav tab_nav2 m-bottom-50">
+                            <div class="nav flex-column" id="tab_nav1" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active" id="v-pills-tab1" data-toggle="pill" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Financial Analysis</a>
+                                <a class="nav-link" id="v-pills-tab2" data-toggle="pill" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Investment Planning</a>
+                                <a class="nav-link" id="v-pills-tab3" data-toggle="pill" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Savings & Investments</a>
+                                <a class="nav-link" id="v-pills-tab4" data-toggle="pill" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Investment Planning</a>
+                                <a class="nav-link" id="v-pills-tab5" data-toggle="pill" href="#tab5" role="tab" aria-controls="tab5" aria-selected="false">Online Consulting</a>
+                                <a class="nav-link" id="v-pills-tab6" data-toggle="pill" href="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Strategic Consulting</a>
+                                <a class="nav-link" id="v-pills-tab7" data-toggle="pill" href="#tab7" role="tab" aria-controls="tab7" aria-selected="false">Business Process Services</a>
+                            </div>
+                        </div><!-- ends: .tab_nav -->
+                        <div class="download-widget m-bottom-30">
+                            <div class="header">
+                                <h6>Company Brochure</h6>
+                            </div>
+                            <div class="content">
+                                <img src="img/brochure.jpg" alt="">
+                                <p>
+                                    <a href="" class="btn btn-secondary btn-sm btn-icon icon-left"><i class="la la-cloud-download"></i> Download (PDF)</a>
+                                    <span>165.64 KB</span>
+                                </p>
+                            </div>
+                        </div><!-- ends: .download-widget -->
+                        <div class="cta-widget m-bottom-50">
+                            <h6>Any Question?</h6>
+                            <div class="content">
+                                <p class="call-us">
+                                    <span>Call Us:</span>
+                                    <span><i class="la la-headphones"></i> 800-567 890 576</span>
+                                </p>
+                                <p class="message-us">
+                                    <span>Or</span>
+                                    <a href="" class="btn btn-primary btn-sm btn-icon icon-left"><i class="la la-envelope"></i> Send Message</a>
+                                </p>
+                            </div>
+                        </div><!-- ends: .cta-widget -->
+                    </div><!-- ends: .col-lg-3 -->
+                    <div class="col-lg-9">
+                        <div class="tab-content" id="tabContent1">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <div class="tab-image m-bottom-50">
+                                    <img src="img/service1.jpg" alt="Images the foolda">
                                 </div>
-                                <div id="graphic-design-1" class="tab-pane">
-                                    <table class="table table-bordered" >
-                                        <tr>
-                                            <td>Size</td>
-                                            <td>Small, Medium & Large</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Color</td>
-                                            <td>Pink & White</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Rating</td>
-                                            <td><span class="rating-bx"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="far fa-star"></i> <i class="far fa-star"></i> </span> </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Waist</td>
-                                            <td>26 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Length</td>
-                                            <td>40 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chest</td>
-                                            <td>33 inches</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fabric</td>
-                                            <td>Cotton, Silk & Synthetic</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Warranty</td>
-                                            <td>3 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chest</td>
-                                            <td>33 inches</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div id="developement-1" class="tab-pane">
-                                    <div id="comments">
-                                        <ol class="commentlist">
-                                            <li class="comment">
-                                                <div class="comment_container"> <img class="avatar avatar-60 photo" src="images/testimonials/pic1.jpg" alt="">
-                                                    <div class="comment-text">
-                                                        <div  class="star-rating">
-                                                            <div data-rating='3'> <i class="fa fa-star" data-alt="1" title="regular"></i> <i class="fa fa-star" data-alt="2" title="regular"></i> <i class="far fa-star" data-alt="3" title="regular"></i> <i class="far fa-star" data-alt="4" title="regular"></i> <i class="far fa-star" data-alt="5" title="regular"></i> </div>
-                                                        </div>
-                                                        <p class="meta"> <strong class="author">Cobus Bester</strong> <span><i class="far fa-clock"></i> March 7, 2013</span> </p>
-                                                        <div class="description">
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="comment">
-                                                <div class="comment_container"> <img class="avatar avatar-60 photo" src="images/testimonials/pic2.jpg" alt="">
-                                                    <div class="comment-text">
-                                                        <div  class="star-rating">
-                                                            <div data-rating='3'> <i class="fa fa-star" data-alt="1" title="regular"></i> <i class="fa fa-star" data-alt="2" title="regular"></i> <i class="fa fa-star" data-alt="3" title="regular"></i> <i class="far fa-star" data-alt="4" title="regular"></i> <i class="far fa-star" data-alt="5" title="regular"></i> </div>
-                                                        </div>
-                                                        <p class="meta"> <strong class="author">Cobus Bester</strong> <span><i class="far fa-clock"></i> March 7, 2013</span> </p>
-                                                        <div class="description">
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="comment">
-                                                <div class="comment_container"> <img class="avatar avatar-60 photo" src="images/testimonials/pic3.jpg" alt="">
-                                                    <div class="comment-text">
-                                                        <div  class="star-rating">
-                                                            <div data-rating='3'> <i class="fa fa-star" data-alt="1" title="regular"></i> <i class="fa fa-star" data-alt="2" title="regular"></i> <i class="fa fa-star" data-alt="3" title="regular"></i> <i class="fa fa-star" data-alt="4" title="regular"></i> <i class="far fa-star" data-alt="5" title="regular"></i> </div>
-                                                        </div>
-                                                        <p class="meta"> <strong class="author">Cobus Bester</strong> <span><i class="far fa-clock"></i> March 7, 2013</span> </p>
-                                                        <div class="description">
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ol>
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Financial Overview &amp; Analysis</h3>
+                                        </div>
                                     </div>
-                                    <div id="review_form_wrapper">
-                                        <div id="review_form">
-                                            <div id="respond" class="comment-respond">
-                                                <h3 class="comment-reply-title" id="reply-title">Add a review</h3>
-                                                <form class="comment-form" method="post" >
-                                                    <div class="comment-form-author">
-                                                        <label>Name <span class="required">*</span></label>
-                                                        <input type="text" aria-required="true" size="30" value="" name="author" id="author">
-                                                    </div>
-                                                    <div class="comment-form-email">
-                                                        <label>Email <span class="required">*</span></label>
-                                                        <input type="text" aria-required="true" size="30" value="" name="email" id="email">
-                                                    </div>
-                                                    <div class="comment-form-rating">
-                                                        <label class="pull-left m-r20">Your Rating</label>
-                                                        <div class='rating-widget'>
-                                                        <!-- Rating Stars Box -->
-                                                            <div class='rating-stars'>
-                                                            <ul id='stars'>
-                                                                <li class='star' title='Poor' data-value='1'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='Fair' data-value='2'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='Good' data-value='3'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='Excellent' data-value='4'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='WOW!!!' data-value='5'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                            </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comment-form-comment">
-                                                        <label>Your Review</label>
-                                                        <textarea aria-required="true" rows="8" cols="45" name="comment" id="comment"></textarea>
-                                                    </div>
-                                                    <div class="form-submit">
-                                                        <input type="submit" value="Submit" class="site-button" id="submit" name="submit">
-                                                    </div>
-                                                </form>
-                                            </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                </div>
+                                <div class="contents-2 m-top-60">
+                                    <div class="m-bottom-35">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Our Services Include</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="icon-box-four d-flex">
+                                                <div class="box-icon">
+                                                    <span class="icon-rounded-sm"><i class="la la-thumbs-up"></i></span>
+                                                </div>
+                                                <div class="box-content">
+                                                    <h6>Valuable Ideas</h6>
+                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
+                                                </div>
+                                            </div><!-- ends: .icon-box -->
+                                        </div><!-- ends: .col-md-6 -->
+                                        <div class="col-md-6">
+                                            <div class="icon-box-four d-flex">
+                                                <div class="box-icon">
+                                                    <span class="icon-rounded-sm"><i class="la la-bar-chart"></i></span>
+                                                </div>
+                                                <div class="box-content">
+                                                    <h6>Industry Experience</h6>
+                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
+                                                </div>
+                                            </div><!-- ends: .icon-box -->
+                                        </div><!-- ends: .col-md-6 -->
+                                        <div class="col-md-6">
+                                            <div class="icon-box-four d-flex">
+                                                <div class="box-icon">
+                                                    <span class="icon-rounded-sm"><i class="la la-money"></i></span>
+                                                </div>
+                                                <div class="box-content">
+                                                    <h6>Budget Friendly</h6>
+                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
+                                                </div>
+                                            </div><!-- ends: .icon-box -->
+                                        </div><!-- ends: .col-md-6 -->
+                                        <div class="col-md-6">
+                                            <div class="icon-box-four d-flex">
+                                                <div class="box-icon">
+                                                    <span class="icon-rounded-sm"><i class="la la-sun-o"></i></span>
+                                                </div>
+                                                <div class="box-content">
+                                                    <h6>Industry Experience</h6>
+                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
+                                                </div>
+                                            </div><!-- ends: .icon-box -->
+                                        </div><!-- ends: .col-md-6 -->
+                                    </div>
+                                </div>
+                                <div class="contents-2 m-top-10">
+                                    <div class="m-bottom-25">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Your Benefits</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 margin-md-60">
+                                            <p>Inves tiga tiones demonstr averun d lectores leg ere melius quod kequa legunt s aepius. Clar tas kdest etiam pro cessus dynamicus.</p>
+                                            <ul class="m-top-30">
+                                                <li class="bullet_list">Delivers solutions that help drive</li>
+                                                <li class="bullet_list">Human capital research analytics</li>
+                                                <li class="bullet_list">Complex problems bringing an approach</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="pie-chart_wrap">
+                                                <canvas class="pie-chart"></canvas>
+                                                <div class="legend pie-legend legend-list"></div>
+                                            </div><!-- End: .pie-chart_wrap -->
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="contents-2 m-top-90">
+                                    <div class="m-bottom-45">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Insights and Impact</h3>
+                                        </div>
+                                    </div>
+                                    <div class="tab tab--4">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="tab_nav4">
+                                                    <ul class="nav nav-tabs" id="tab9" role="tablist">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link active" id="tab9_nav1" data-toggle="tab" href="#tab9_content1" role="tab" aria-controls="tab9_nav1" aria-selected="true">Client Prospecting</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="tab9_nav2" data-toggle="tab" href="#tab9_content2" role="tab" aria-controls="tab9_nav2" aria-selected="false">Funding Research</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="tab9_nav3" data-toggle="tab" href="#tab9_content3" role="tab" aria-controls="tab9_nav3" aria-selected="false">Analytics</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!--end ./tab_nav4 -->
+                                            </div>
+                                        </div><!-- end /.row -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="tab-content tab--content4 tab--content9" id="tabcontent4">
+                                                    <div class="tab-pane fade show active" id="tab9_content1" role="tabpanel" aria-labelledby="tab9_content1">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-md-12">
+                                                                <div class="text_content">
+                                                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt
+                                                                        saepius.
+                                                                        Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem
+                                                                        consuetudium.
+                                                                        Investiga tiones demonstr averunt lectores legere me liusked quod kequa
+                                                                        legunt
+                                                                        saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium.
+                                                                        Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt
+                                                                        saepius. Claritas est etiam pro cessus.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end ./tab-pane -->
+                                                    <div class="tab-pane fade" id="tab9_content2" role="tabpanel" aria-labelledby="tab9_content2">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-md-12">
+                                                                <div class="text_content">
+                                                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt
+                                                                        saepius.
+                                                                        Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem
+                                                                        consuetudium.
+                                                                        Investiga tiones demonstr averunt lectores legere me liusked quod kequa
+                                                                        legunt
+                                                                        saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium.
+                                                                        Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt
+                                                                        saepius. Claritas est etiam pro cessus.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end ./tab-pane -->
+                                                    <div class="tab-pane fade" id="tab9_content3" role="tabpanel" aria-labelledby="tab9_content3">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-md-12">
+                                                                <div class="text_content">
+                                                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt
+                                                                        saepius.
+                                                                        Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem
+                                                                        consuetudium.
+                                                                        Investiga tiones demonstr averunt lectores legere me liusked quod kequa
+                                                                        legunt
+                                                                        saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium.
+                                                                        Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt
+                                                                        saepius. Claritas est etiam pro cessus.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end ./tab-pane -->
+                                                </div>
+                                            </div>
+                                        </div><!-- end /.row -->
+                                    </div><!-- end /.tab--4 -->
+                                </div>
+                            </div><!-- ends: .tab-pane -->
+                            <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2">
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Investment Planning</h3>
+                                        </div>
+                                    </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                    <div class="m-top-40">
+                                        <!-- start blockquote -->
+                                        <blockquote class="blockquote blockquote1 ">
+                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
+                                            <div class="quote-author">
+                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
+                                            </div>
+                                        </blockquote><!-- end: blockquote -->
+                                    </div>
+                                </div>
+                            </div><!-- ends: .tab-pane -->
+                            <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3">
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Savings &amp; Investments</h3>
+                                        </div>
+                                    </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                    <div class="m-top-40">
+                                        <!-- start blockquote -->
+                                        <blockquote class="blockquote blockquote1 ">
+                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
+                                            <div class="quote-author">
+                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
+                                            </div>
+                                        </blockquote><!-- end: blockquote -->
+                                    </div>
+                                </div>
+                            </div><!-- ends: .tab-pane -->
+                            <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4">
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Business Consulting</h3>
+                                        </div>
+                                    </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                    <div class="m-top-40">
+                                        <!-- start blockquote -->
+                                        <blockquote class="blockquote blockquote1 ">
+                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
+                                            <div class="quote-author">
+                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
+                                            </div>
+                                        </blockquote><!-- end: blockquote -->
+                                    </div>
+                                </div>
+                            </div><!-- ends: .tab-pane -->
+                            <div class="tab-pane fade" id="tab5" role="tabpanel" aria-labelledby="tab5">
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Online Consulting</h3>
+                                        </div>
+                                    </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                    <div class="m-top-40">
+                                        <!-- start blockquote -->
+                                        <blockquote class="blockquote blockquote1 ">
+                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
+                                            <div class="quote-author">
+                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
+                                            </div>
+                                        </blockquote><!-- end: blockquote -->
+                                    </div>
+                                </div>
+                            </div><!-- ends: .tab-pane -->
+                            <div class="tab-pane fade" id="tab6" role="tabpanel" aria-labelledby="tab6">
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Strategic Consulting</h3>
+                                        </div>
+                                    </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                    <div class="m-top-40">
+                                        <!-- start blockquote -->
+                                        <blockquote class="blockquote blockquote1 ">
+                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
+                                            <div class="quote-author">
+                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
+                                            </div>
+                                        </blockquote><!-- end: blockquote -->
+                                    </div>
+                                </div>
+                            </div><!-- ends: .tab-pane -->
+                            <div class="tab-pane fade" id="tab7" role="tabpanel" aria-labelledby="tab7">
+                                <div class="contents-1">
+                                    <div class="m-bottom-30">
+                                        <div class="divider divider-simple text-left">
+                                            <h3>Business Process Services</h3>
+                                        </div>
+                                    </div>
+                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
+                                    <div class="m-top-40">
+                                        <!-- start blockquote -->
+                                        <blockquote class="blockquote blockquote1 ">
+                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
+                                            <div class="quote-author">
+                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
+                                            </div>
+                                        </blockquote><!-- end: blockquote -->
+                                    </div>
+                                </div>
+                            </div><!-- ends: .tab-pane -->
                         </div>
-                    </div>
+                    </div><!-- ends: .col-lg-9 -->
                 </div>
             </div>
-        </div>
-    </div>
+        </div><!-- ends: .service--tabs -->
+    </section><!-- ends: .service-tab-wrapper -->
 @endsection
