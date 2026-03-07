@@ -78,7 +78,7 @@
             <!-- Brand Logo -->
             <a href="{{ url('dashboard') }}" class="brand-link">
                 <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Akuntansi</span>
+                <span class="brand-text font-weight-light">SPMB</span>
             </a>
 
             <!-- Sidebar -->
@@ -88,10 +88,8 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                             with font-awesome or any other icon font library -->
-
-
                         <li class="nav-item">
-                            <a href="{{ url('dashboard') }}" class="nav-link">
+                            <a href="{{ route('dashboard') }}" class="nav-link">
                             <i class="nav-icon fas fa-home"></i>
                             <p>Dashboard</p>
                             </a>
@@ -99,32 +97,45 @@
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-folder"></i>
-                                <p>Santri<i class="right fas fa-angle-left"></i></p>
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>User<i class="right fas fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="">
+                                    <a href="" class="nav-link">
                                         <i class="fas fa-chevron-right nav-icon"></i>
-                                        <p>Data Santri 1</p>
+                                        <p>Data Role</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="" class="nav-link">
                                         <i class="fas fa-chevron-right nav-icon"></i>
-                                        <p>Data Santri 2</p>
+                                        <p>Data User</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
 
                         <li class="nav-item">
-                            <a href="" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
-                            <p>Data User</p>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>Konfigurasi<i class="right fas fa-angle-left"></i></p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('slider.index') }}" class="nav-link">
+                                        <i class="fas fa-chevron-right nav-icon"></i>
+                                        <p>Slider</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <i class="fas fa-chevron-right nav-icon"></i>
+                                        <p>Data Berita</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-
 
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();
@@ -142,6 +153,8 @@
             </div>
             <!-- /.sidebar -->
         </aside>
+
+        @yield('content')
 
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
