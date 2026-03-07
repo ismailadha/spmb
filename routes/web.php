@@ -1,12 +1,12 @@
 <?php
 
+
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SliderController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('frontend.index');
-});
+Route::get('/', [FrontendController::class, 'index'])->name('home');
 
 Route::get('juknis', function () {
     return view('frontend.juknis');
@@ -19,8 +19,6 @@ Route::get('persyaratan', function () {
 Route::get('datasekolah', function () {
     return view('frontend.datasekolah');
 });
-
-
 
 Route::middleware('auth')->group(function () {
 
