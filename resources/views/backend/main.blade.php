@@ -95,6 +95,33 @@
                             </a>
                         </li>
 
+                        <li class="nav-item @yield('menu-open')">
+                            <a href="#" class="nav-link @yield('menu-active')">
+                                <i class="nav-icon fas fa-folder"></i>
+                                <p>Berita<i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('posts.index') }}" class="nav-link @yield('menu-active')">
+                                        <i class="fas fa-chevron-right nav-icon"></i>
+                                        <p>Data Berita</p>
+                                    </a>
+                                </li>
+                                {{-- <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <i class="fas fa-chevron-right nav-icon"></i>
+                                        <p>Kategori</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <i class="fas fa-chevron-right nav-icon"></i>
+                                        <p>Tagar Berita</p>
+                                    </a>
+                                </li> --}}
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
@@ -126,12 +153,6 @@
                                     <a href="{{ route('slider.index') }}" class="nav-link">
                                         <i class="fas fa-chevron-right nav-icon"></i>
                                         <p>Slider</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="" class="nav-link">
-                                        <i class="fas fa-chevron-right nav-icon"></i>
-                                        <p>Data Berita</p>
                                     </a>
                                 </li>
                             </ul>
@@ -240,5 +261,7 @@
 			$('[data-toggle="tooltip"]').tooltip()
 		})
 	</script>
+    @stack('javascript-internal')
+    @stack('javascript-external')
 </body>
 </html>
