@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tejarat - Multipurpose Business & Corporate HTML Template</title>
+    <title>Sistem Penerimaan Siswa Baru</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,900|Mirza:400,700&amp;subset=arabic" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Allura" rel="stylesheet">
     <!-- inject:css-->
@@ -39,28 +39,7 @@
                     <div class="col-md-12">
                         <div class="d-flex topbar_content justify-content-between">
                             <div class="top_bar--lang align-self-center order-2">
-                                <div class="dropdown">
-                                    <div class="dropdown-toggle d-flex align-items-center" id="dropdownMenuButton1" role="menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="lang">en</span>
-                                        <img class="lang_flag" src="img/en.jpg" alt="English">
-                                        <span class="la la-angle-down"></span>
-                                    </div>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <a class="dropdown-item" data-lang="en" href="#"><img src="img/en.jpg" alt="">English</a>
-                                        <a class="dropdown-item" data-lang="fr" href="#"><img src="img/fr.jpg" alt="">Français</a>
-                                        <a class="dropdown-item" data-lang="tr" href="#"><img src="img/tr.jpg" alt="">Türkçee</a>
-                                        <a class="dropdown-item" data-lang="es" href="#"><img src="img/es.jpg" alt="">Español</a>
-                                    </div>
-                                </div>
-                                <div class="drop-down">
-                                    <div class="options">
-                                        <ul>
-                                            <li><a href="#">User1<span class="value">1</span></a></li>
-                                            <li><a href="#">User2<span class="value">2</span></a></li>
-                                            <li><a href="#">User3<span class="value">3</span></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                <a class="btn btn-primary" href="">Buat Akun</a>
                             </div>
                             <div class="top_bar--info order-0 d-none d-lg-block align-self-center">
                                 <ul>
