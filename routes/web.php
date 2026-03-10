@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SliderController;
@@ -22,26 +23,29 @@ Route::get('datasekolah', function () {
 
 Route::middleware('auth')->group(function () {
 
-    //Home
+    // Home
     Route::get('/dashboard', function () {
         return view('backend.home');
     })->name('dashboard');
 
-    //Post
-	Route::resource('posts', PostController::class);
-	Route::get('/search-post', [PostController::class, 'search_post'])->name('search-post');
+    // Peserta
+    Route::resource('peserta', PesertaController::class);
+
+    // Post
+    Route::resource('posts', PostController::class);
+    Route::get('/search-post', [PostController::class, 'search_post'])->name('search-post');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    //Slider
-	Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
-	Route::get('slider/create', [SliderController::class, 'create'])->name('slider.create');
-	Route::post('slider/destroy/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
-	Route::get('slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
-	Route::put('slider/update/{id}', [SliderController::class, 'update'])->name('slider.update');
-	Route::post('slider/store', [SliderController::class, 'store'])->name('slider.store');
+    // Slider
+    Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('slider/create', [SliderController::class, 'create'])->name('slider.create');
+    Route::post('slider/destroy/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
+    Route::get('slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
+    Route::put('slider/update/{id}', [SliderController::class, 'update'])->name('slider.update');
+    Route::post('slider/store', [SliderController::class, 'store'])->name('slider.store');
 });
 
 require __DIR__.'/auth.php';

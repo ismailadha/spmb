@@ -2739,7 +2739,7 @@ input.input--rounded {
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
   background-image: none;
-  content: "\f17b";
+  content: "\f00c";
   font-family: "Line Awesome Free";
   left: 0;
   font-size: 0.86667rem;

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\PesertaController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -16,6 +17,10 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+
+    Route::get('register-peserta', [PesertaController::class, 'register_create'])->name('register-peserta');
+
+    Route::post('register-peserta', [PesertaController::class, 'register_store'])->name('register-peserta.store');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

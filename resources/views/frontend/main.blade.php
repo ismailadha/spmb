@@ -6,28 +6,8 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sistem Penerimaan Siswa Baru</title>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,900|Mirza:400,700&amp;subset=arabic" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Allura" rel="stylesheet">
-    <!-- inject:css-->
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/bootstrap/bootstrap.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/animate.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/brands.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/fontawesome.min.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/fontello.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/jquery-ui.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/jquery.mb.YTPlayer.min.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/line-awesome.min.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/lnr-icon.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/magnific-popup.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/navigation.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/owl.carousel.min.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/select2.min.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/settings.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/slick.css' }}">
-    <link rel="stylesheet" href="{{ 'front/vendor_assets/css/trumbowyg.min.css' }}">
-    <link rel="stylesheet" href="{{ 'front/style.css' }}">
-    <!-- endinject -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ 'front/img/favicon.png' }}">
+    @include('frontend.css')
 </head>
 
 <body>
@@ -39,7 +19,7 @@
                     <div class="col-md-12">
                         <div class="d-flex topbar_content justify-content-between">
                             <div class="top_bar--lang align-self-center order-2">
-                                <a class="btn btn-primary" href="">Buat Akun</a>
+                                <a class="btn btn-primary" href="{{ route('register-peserta') }}">Buat Akun</a>
                             </div>
                             <div class="top_bar--info order-0 d-none d-lg-block align-self-center">
                                 <ul>
@@ -54,14 +34,11 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="top_bar--social">
-                                <ul>
-                                    <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-vimeo-v"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-                                </ul>
-                            </div>
+                            @if (Auth::check())
+                                <div class="top_bar--social">
+                                    <p>Anda login sebagai {{ Auth::user()->name }}</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -214,46 +191,7 @@
     <div class="go_top">
         <span class="la la-angle-up"></span>
     </div>
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
-    <!-- inject:js-->
-    <script src="{{ 'front/vendor_assets/js/jquery/jquery-1.12.3.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery/uikit.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/bootstrap/popper.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/bootstrap/bootstrap.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/jquery.themepunch.tools.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/jquery.themepunch.revolution.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.actions.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.carousel.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.kenburn.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.layeranimation.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.migration.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.navigation.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.parallax.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.slideanims.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/revolution/extensions/revolution.extension.video.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/chart.bundle.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/dashboard.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/grid.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery-ui.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.barrating.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.camera.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.countdown.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.counterup.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.easing1.3.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.filterizr.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.magnific-popup.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/jquery.mb.YTPlayer.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/owl.carousel.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/parallax.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/select2.full.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/slick.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/tether.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/trumbowyg.min.js' }}"></script>
-    <script src="{{ 'front/vendor_assets/js/waypoints.min.js' }}"></script>
-    <script src="{{ 'front/theme_assets/js/main.js' }}"></script>
-    <script src="{{ 'front/theme_assets/js/map.js' }}"></script>
-    <script src="{{ 'front/theme_assets/js/revolution.slider.init.js' }}"></script>
-    <!-- endinject-->
+    @include('frontend.js')
 </body>
 
 </html>
