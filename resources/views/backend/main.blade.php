@@ -95,6 +95,13 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                            <i class="nav-icon fas fa-folder"></i>
+                            <p>Data Sekolah</p>
+                            </a>
+                        </li>
+
                         <li class="nav-item @yield('menu-open')">
                             <a href="#" class="nav-link @yield('menu-active')">
                                 <i class="nav-icon fas fa-folder"></i>

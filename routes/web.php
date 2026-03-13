@@ -21,6 +21,8 @@ Route::get('datasekolah', function () {
     return view('frontend.datasekolah');
 })->name('datasekolah');
 
+
+
 Route::middleware('auth')->group(function () {
 
     // Home
@@ -28,7 +30,14 @@ Route::middleware('auth')->group(function () {
         return view('backend.home');
     })->name('dashboard');
 
-    // Peserta
+    Route::get('registrasi-sd', function () {
+        return view('frontend.registrasi_sd');
+    })->name('registrasi-sd');
+
+    Route::get('registrasi-smp', function () {
+        return view('frontend.registrasi_smp');
+    })->name('registrasi-smp');
+
     Route::resource('peserta', PesertaController::class);
 
     // Post

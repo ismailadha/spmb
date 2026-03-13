@@ -91,7 +91,7 @@
                                                 Jalur Mutasi
                                             </li>
                                         </ul>
-                                        <a href="" class="btn btn-secondary btn-sm mt-2">Daftar</a>
+                                        <a href="{{ route('registrasi-sd') }}" class="btn btn-secondary btn-sm mt-2">Daftar</a>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                                                 Jalur Prestasi
                                             </li>
                                         </ul>
-                                        <a href="" class="btn btn-secondary btn-sm mt-2">Daftar</a>
+                                        <a href="{{ route('registrasi-smp') }}" class="btn btn-secondary btn-sm mt-2">Daftar</a>
                                     </div>
                                 </div>
                             </div>
