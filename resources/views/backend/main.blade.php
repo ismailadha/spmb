@@ -30,7 +30,7 @@
 					<div class="aside-logo flex-column-auto" id="kt_aside_logo">
 						<!--begin::Logo-->
 						<a href="{{ route('dashboard') }}">
-							<img alt="Logo" src="{{ asset('back/media/logos/logo-1.svg') }}" class="h-25px logo" />
+							<img alt="Logo" src="{{ asset('images/spmb-logo.png') }}" class="h-25px logo" />
 						</a>
 						<!--end::Logo-->
 						<!--begin::Aside toggler-->
@@ -54,7 +54,7 @@
 							<!--begin::Menu-->
 							<div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true" data-kt-menu-expand="false">
 								<div class="menu-item">
-									<a class="menu-link" href="https://preview.keenthemes.com/metronic8/demo1/layout-builder.html">
+									<a class="menu-link @yield('home-menu-active')" href="{{ route('dashboard') }}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
                                                 <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen001.svg-->
@@ -106,7 +106,7 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Utilitas dan Konfigurasi</span>
 									</div>
 								</div>
-								<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+								<div data-kt-menu-trigger="click" class="menu-item here @yield('utilitas-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/general/gen009.svg-->
@@ -123,7 +123,7 @@
 									</span>
 									<div class="menu-sub menu-sub-accordion menu-active-bg">
 										<div class="menu-item">
-											<a class="menu-link active" href="../../demo1/dist/layouts/aside/light.html">
+											<a class="menu-link @yield('slider-menu-active')" href="{{ route('slider.index') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -181,7 +181,7 @@
 							<!--begin::Mobile logo-->
 							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
 								<a href="../../demo1/dist/index.html" class="d-lg-none">
-									<img alt="Logo" src="{{  asset('back/media/logos/logo-2.svg') }}" class="h-30px" />
+									<img alt="Logo" src="{{  asset('images/spmb-logo.png') }}" class="h-30px" />
 								</a>
 							</div>
 							<!--end::Mobile logo-->
@@ -189,7 +189,7 @@
 							<div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
 								<!--begin::Navbar-->
 								<div class="d-flex align-items-stretch" id="kt_header_nav">
-                                    <h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">No Toolbar</h1>
+                                    <h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h1>
 								</div>
 								<!--end::Navbar-->
 								<!--begin::Toolbar wrapper-->
@@ -276,9 +276,10 @@
 													<!--end::Avatar-->
 													<!--begin::Username-->
 													<div class="d-flex flex-column">
-														<div class="fw-bolder d-flex align-items-center fs-5">Max Smith
-														<span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">Pro</span></div>
-														<a href="#" class="fw-bold text-muted text-hover-primary fs-7">max@kt.com</a>
+														<div class="fw-bolder d-flex align-items-center fs-5">
+                                                            {{ Auth::user()->name }}
+														</div>
+														<a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ Auth::user()->username }}</a>
 													</div>
 													<!--end::Username-->
 												</div>
@@ -296,29 +297,18 @@
 											<div class="separator my-2"></div>
 											<!--end::Menu separator-->
 											<!--begin::Menu item-->
-											<div class="menu-item px-5">
-												<a href="../../demo1/dist/authentication/flows/basic/sign-in.html" class="menu-link px-5">Sign Out</a>
-											</div>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+												@csrf
+                                                <div class="menu-item px-5">
+                                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="menu-link px-5">Sign Out</a>
+                                                </div>
+                                            </form>
 											<!--end::Menu item-->
 										</div>
 										<!--end::User account menu-->
 										<!--end::Menu wrapper-->
 									</div>
 									<!--end::User menu-->
-									<!--begin::Header menu toggle-->
-									<div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
-										<div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" id="kt_header_menu_mobile_toggle">
-											<!--begin::Svg Icon | path: icons/duotune/text/txt001.svg-->
-											<span class="svg-icon svg-icon-1">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M13 11H3C2.4 11 2 10.6 2 10V9C2 8.4 2.4 8 3 8H13C13.6 8 14 8.4 14 9V10C14 10.6 13.6 11 13 11ZM22 5V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4V5C2 5.6 2.4 6 3 6H21C21.6 6 22 5.6 22 5Z" fill="currentColor" />
-													<path opacity="0.3" d="M21 16H3C2.4 16 2 15.6 2 15V14C2 13.4 2.4 13 3 13H21C21.6 13 22 13.4 22 14V15C22 15.6 21.6 16 21 16ZM14 20V19C14 18.4 13.6 18 13 18H3C2.4 18 2 18.4 2 19V20C2 20.6 2.4 21 3 21H13C13.6 21 14 20.6 14 20Z" fill="currentColor" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</div>
-									</div>
-									<!--end::Header menu toggle-->
 								</div>
 								<!--end::Toolbar wrapper-->
 							</div>
@@ -333,13 +323,7 @@
 						<div class="post d-flex flex-column-fluid" id="kt_post">
 							<!--begin::Container-->
 							<div id="kt_content_container" class="container-xxl">
-                                <div class="row gy-5 g-xl-8">
-									<!--begin::Col-->
-									<div class="col-xl-4 border-black border-dashed border-2">
-                                        <h4>Dashboard</h4>
-                                    </div>
-                                    <!--end::Col-->
-                                </div>
+                                @yield('content')
 							</div>
 							<!--end::Container-->
 						</div>
@@ -352,23 +336,10 @@
 						<div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
 							<!--begin::Copyright-->
 							<div class="text-dark order-2 order-md-1">
-								<span class="text-muted fw-bold me-1">2022©</span>
-								<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
+								<span class="text-muted fw-bold me-1">{{ date('Y') }}©</span>
+								<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Dinas Pendidikan dan Kebudayaan Kota Lhokseumawe</a>
 							</div>
 							<!--end::Copyright-->
-							<!--begin::Menu-->
-							<ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
-								<li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-								</li>
-							</ul>
-							<!--end::Menu-->
 						</div>
 						<!--end::Container-->
 					</div>
