@@ -4,6 +4,7 @@
 		<title>Sistem Penerimaan Siswa Baru</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
 		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -18,7 +19,7 @@
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
 		<!--begin::Main-->
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root">
@@ -75,7 +76,7 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Data Master</span>
 									</div>
 								</div>
-								<div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+								<div data-kt-menu-trigger="click" class="menu-item here @yield('sekolah-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/general/gen009.svg-->
@@ -92,7 +93,7 @@
 									</span>
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link" href="../../demo1/dist/layouts/aside/light.html">
+											<a class="menu-link @yield('sekolah-menu-active')" href="{{ route('sekolah.index') }}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -189,7 +190,10 @@
 							<div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
 								<!--begin::Navbar-->
 								<div class="d-flex align-items-stretch" id="kt_header_nav">
-                                    <h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h1>
+                                    <!--begin::Page title-->
+									<div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_header_nav'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                                        <h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h1>
+                                    </div>
 								</div>
 								<!--end::Navbar-->
 								<!--begin::Toolbar wrapper-->
@@ -373,6 +377,7 @@
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->
 		<script src="{{  asset('back/js/custom/utilities/modals/users-search.js') }}"></script>
+		@yield('scripts')
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
 	</body>

@@ -3,7 +3,8 @@
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
+// use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,14 +22,16 @@ Route::get('datasekolah', function () {
     return view('frontend.datasekolah');
 })->name('datasekolah');
 
-
-
 Route::middleware('auth')->group(function () {
 
     // Home
     Route::get('/dashboard', function () {
         return view('backend.home');
     })->name('dashboard');
+
+    Route::resource('sekolah', SekolahController::class);
+
+    Route::resource('peserta', PesertaController::class);
 
     Route::get('registrasi-sd', function () {
         return view('frontend.registrasi_sd');
@@ -38,15 +41,9 @@ Route::middleware('auth')->group(function () {
         return view('frontend.registrasi_smp');
     })->name('registrasi-smp');
 
-    Route::resource('peserta', PesertaController::class);
-
     // Post
     Route::resource('posts', PostController::class);
     Route::get('/search-post', [PostController::class, 'search_post'])->name('search-post');
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Slider
     Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
@@ -55,6 +52,10 @@ Route::middleware('auth')->group(function () {
     Route::get('slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
     Route::put('slider/update/{id}', [SliderController::class, 'update'])->name('slider.update');
     Route::post('slider/store', [SliderController::class, 'store'])->name('slider.store');
+
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
