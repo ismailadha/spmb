@@ -49,6 +49,7 @@
                         <th class="min-w-125px">Alamat</th>
                         <th class="min-w-125px">Telepon</th>
                         <th class="min-w-125px">Email</th>
+                        <th class="min-w-125px">Status Perbatasan</th>
                         <th class="text-end min-w-70px">Actions</th>
                     </tr>
                 </thead>
@@ -87,6 +88,7 @@ $(document).ready(function() {
             { data: 'alamat', name: 'alamat' },
             { data: 'telepon', name: 'telepon' },
             { data: 'email', name: 'email' },
+            { data: 'status_perbatasan', name: 'status_perbatasan', orderable: false, searchable: false },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ]
     });

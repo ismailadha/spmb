@@ -36,6 +36,10 @@
                             <td>{{ $sekolah->nama_sekolah }}</td>
                         </tr>
                         <tr>
+                            <th>Jenjang:</th>
+                            <td>{{ $sekolah->jenjang }}</td>
+                        </tr>
+                        <tr>
                             <th>NPSN:</th>
                             <td>{{ $sekolah->npsn }}</td>
                         </tr>
@@ -58,6 +62,21 @@
                         <tr>
                             <th>Desa:</th>
                             <td>{{ $sekolah->desa->nama_desa ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status Perbatasan:</th>
+                            <td>
+                                @if ($sekolah->status_perbatasan == 1)
+                                    <span class="badge badge-success">
+                                        <i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>
+                                        Sekolah Perbatasan
+                                    </span>
+                                @elseif ($sekolah->status_perbatasan == 0)
+                                    <span class="badge badge-secondary">Sekolah Non-Perbatasan</span>
+                                @else
+                                    <span class="badge badge-light text-dark">Belum ditentukan</span>
+                                @endif
+                            </td>
                         </tr>
                     </table>
                 </div>

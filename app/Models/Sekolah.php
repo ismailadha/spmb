@@ -12,6 +12,7 @@ class Sekolah extends Model
         'id',
         'nama_sekolah',
         'npsn',
+        'jenjang',
         'id_provinsi',
         'id_kabupaten',
         'id_kecamatan',
@@ -23,6 +24,7 @@ class Sekolah extends Model
         'telepon',
         'latitude',
         'longitude',
+        'status_perbatasan',
     ];
 
     public function provinsi()

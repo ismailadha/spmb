@@ -19,6 +19,15 @@ class SekolahController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('status_perbatasan', function ($row) {
+                    if ($row->status_perbatasan == 1) {
+                        return '<span class="badge badge-success"><i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>Perbatasan</span>';
+                    } elseif ($row->status_perbatasan == 0) {
+                        return '<span class="badge badge-secondary">Non-Perbatasan</span>';
+                    } else {
+                        return '<span class="badge badge-light text-dark">-</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return '<div class="btn-group" role="group">
                                 <a href="'.route('sekolah.show', $row->id).'" class="btn btn-sm btn-info">View</a>
@@ -30,7 +39,7 @@ class SekolahController extends Controller
                                 </form>
                             </div>';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['status_perbatasan', 'action'])
                 ->make(true);
         }
 
