@@ -1,48 +1,51 @@
 @extends('backend.main')
 
-@section('menu-open')
-    menu-open
-@endsection
-
-@section('menu-active')
+@section('post-menu-active')
     active
 @endsection
 
-@section('content')
-<div class="content-wrapper">
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row pt-4">
-                <div class="col-md-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h3 class="card-title">Post Detail</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    @if ($post->thumbnail)
-                                        <img src="{{ asset('storage/thumbnails/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="img-fluid mt-2" style="max-width: 400px;">
-                                    @endif
-                                    <h5 class="m-2">{{ $post->title }}</h5>
-                                    <small class="text-muted ml-2">
-                                        By {{ $post->user_name }} on {{ date('d-M-Y', strtotime($post->tanggal)) }} | Status:
-                                        @if ($post->status == 'Draft')
-                                            <span class="badge bg-secondary">Draft</span>
-                                        @elseif ($post->status == 'Published')
-                                            <span class="badge bg-success">Published</span>
-                                        @endif
-                                    </small>
-                                    <p class="m-2">{!! $post->content !!}</p>
+@section('utilitas-menu-open')
+    show
+@endsection
 
-                                </div>
-                            </div>
-                        </div>
+@section('content')
+    <!--begin::Card-->
+    <div class="card">
+        <!--begin::Card header-->
+        <div class="card-header border-0 pt-6">
+            <!--begin::Card title-->
+            <div class="card-title">
+                <h3>Post Detail</h3>
+            </div>
+            <!--begin::Card title-->
+        </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
+        <div class="card-body py-4">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    @if ($post->thumbnail)
+                        <img src="{{ asset('storage/thumbnails/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="img-fluid mt-2" style="max-width: 400px; border-radius: 8px;">
+                    @endif
+                    <h5 class="mt-5 mb-2">{{ $post->title }}</h5>
+                    <small class="text-muted">
+                        By {{ $post->user_name }} on {{ date('d-M-Y', strtotime($post->tanggal)) }} | Status:
+                        @if ($post->status == 'Draft')
+                            <span class="badge badge-light-secondary fw-bolder">Draft</span>
+                        @elseif ($post->status == 'Published')
+                            <span class="badge badge-light-success fw-bolder">Published</span>
+                        @endif
+                    </small>
+                    <div class="mt-5" style="font-size: 1.1rem; line-height: 1.6;">
+                        {!! $post->content !!}
                     </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-end mt-5">
+                <a href="{{ route('posts.index') }}" class="btn btn-secondary me-2">Back to List</a>
+                <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning">Edit Post</a>
+            </div>
         </div>
     </div>
-</div>
+    <!--end::Card-->
 @endsection

@@ -1,81 +1,78 @@
 @extends('backend.main')
 
-@section('menu-open')
-    menu-open
-@endsection
-
-@section('menu-active')
+@section('post-menu-active')
     active
 @endsection
 
+@section('utilitas-menu-open')
+    show
+@endsection
+
 @section('content')
-<div class="content-wrapper">
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row pt-4">
-                <div class="col-md-12">
-                    <div class="card mb-4">
-                        <div class="card-header"><h3 class="card-title">New Post</h3></div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-8">
-                                        <div class="mb-3">
-                                            <label for="title" class="form-label">Title</label>
-                                            <input type="text" class="form-control" id="input_post_title" name="title">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="slug" class="form-label">Slug</label>
-                                            <input type="text" class="form-control" id="input_post_slug" name="slug" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="thumbnail" class="form-label">Thumbnail</label>
-                                            <input type="file" class="form-control" id="input_post_thumbnail" name="thumbnail">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="content" class="form-label">Content</label>
-                                            <textarea class="form-control" id="input_post_content" name="content" rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="mb-3">
-                                            <label for="published_at" class="form-label">Published At</label>
-                                            <input type="date" class="form-control" id="input_post_published_at" name="published_at" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                        {{-- Publish status --}}
-                                        <div class="mb-3">
-                                            <label for="status" class="form-label">Status</label>
-                                            <select class="form-control" id="input_post_status" name="status">
-                                                <option value="Draft">Draft</option>
-                                                <option value="Published">Published</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+    <!--begin::Card-->
+    <div class="card">
+        <!--begin::Card header-->
+        <div class="card-header border-0 pt-6">
+            <!--begin::Card title-->
+            <div class="card-title">
+                <h3>New Post</h3>
+            </div>
+            <!--begin::Card title-->
+        </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
+        <div class="card-body py-4">
+            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="col-8">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="input_post_title" name="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug</label>
+                            <input type="text" class="form-control" id="input_post_slug" name="slug" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="thumbnail" class="form-label">Thumbnail</label>
+                            <input type="file" class="form-control" id="input_post_thumbnail" name="thumbnail">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea class="form-control" id="input_post_content" name="content" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="mb-3">
+                            <label for="published_at" class="form-label">Published At</label>
+                            <input type="date" class="form-control" id="input_post_published_at" name="published_at" value="{{ date('Y-m-d') }}">
+                        </div>
+                        {{-- Publish status --}}
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-control" id="input_post_status" name="status">
+                                <option value="Draft">Draft</option>
+                                <option value="Published">Published</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="d-flex justify-content-end mt-5">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+    <!--end::Card-->
 @endsection
 
-@push('javascript-external')
+@section('scripts')
     <script src="{{ asset('tinymce5/jquery.tinymce.min.js') }}"></script>
     <script src="{{ asset('tinymce5/tinymce.min.js') }}"></script>
-@endpush
-
-@push('javascript-internal')
 <script>
     $(document).ready(function(){
         $("#input_post_title").change(function (event) {
@@ -122,4 +119,4 @@
         });
     });
 </script>
-@endpush
+@endsection

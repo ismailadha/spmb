@@ -131,6 +131,14 @@
 												<span class="menu-title">Slider</span>
 											</a>
 										</div>
+										<div class="menu-item">
+											<a class="menu-link @yield('post-menu-active')" href="{{ route('posts.index') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Berita</span>
+											</a>
+										</div>
 									</div>
 								</div>
 							</div>

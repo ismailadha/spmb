@@ -13,7 +13,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('tanggal', 'desc')->paginate(10);
+        $posts = Post::orderBy('tanggal', 'desc')->get();
+
         return view('backend.post.index', compact('posts'));
     }
 
@@ -37,13 +38,13 @@ class PostController extends Controller
             'content' => 'required',
         ]);
 
-        $thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
-        //store to public/storage/thumbnails
+        $thumbnailName = time().'_'.$request->file('thumbnail')->getClientOriginalName();
+        // store to public/storage/thumbnails
         $request->file('thumbnail')->storeAs('thumbnails', $thumbnailName, 'public');
 
         DB::beginTransaction();
 
-        try{
+        try {
             $post = Post::create([
                 'title' => $request->title,
                 'slug' => $request->slug,
@@ -57,8 +58,9 @@ class PostController extends Controller
             return redirect()->route('posts.index')->with('success', 'Post created successfully.');
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->route('posts.index')
-                ->with('error', 'Failed to create post: ' . $e->getMessage());
+                ->with('error', 'Failed to create post: '.$e->getMessage());
         } finally {
             DB::commit();
         }
@@ -87,7 +89,7 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:120',
-            'slug' => 'required|unique:posts,slug,' . $post->id,
+            'slug' => 'required|unique:posts,slug,'.$post->id,
             'content' => 'required',
         ]);
 
@@ -103,11 +105,11 @@ class PostController extends Controller
             ]);
 
             if ($request->hasFile('thumbnail')) {
-                //delete old thumbnail from public/storage/thumbnails
-                \Storage::disk('public')->delete('thumbnails/' . $post->thumbnail);
+                // delete old thumbnail from public/storage/thumbnails
+                \Storage::disk('public')->delete('thumbnails/'.$post->thumbnail);
 
-                $thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
-                //store to public/storage/thumbnails
+                $thumbnailName = time().'_'.$request->file('thumbnail')->getClientOriginalName();
+                // store to public/storage/thumbnails
                 $request->file('thumbnail')->storeAs('thumbnails', $thumbnailName, 'public');
 
                 $post->update(['thumbnail' => $thumbnailName]);
@@ -116,8 +118,9 @@ class PostController extends Controller
             return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->route('posts.index')
-                ->with('error', 'Failed to update post: ' . $e->getMessage());
+                ->with('error', 'Failed to update post: '.$e->getMessage());
         } finally {
             DB::commit();
         }
@@ -129,8 +132,8 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
-        //delete thumbnail from public/storage/thumbnails
-        \Storage::disk('public')->delete('thumbnails/' . $post->thumbnail);
+        // delete thumbnail from public/storage/thumbnails
+        \Storage::disk('public')->delete('thumbnails/'.$post->thumbnail);
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');

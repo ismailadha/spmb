@@ -1,75 +1,112 @@
 @extends('backend.main')
 
-@section('menu-open')
-    menu-open
-@endsection
-
-@section('menu-active')
+@section('post-menu-active')
     active
 @endsection
 
-@section('content')
-<div class="content-wrapper">
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row pt-4">
-                <div class="col-md-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h3 class="card-title">Post</h3>
-                            <div class="card-tools">
-                                <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm">Add New</a>
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            @if ($posts ->isEmpty())
-                                <p>No posts available.</p>
-                            @else
-                                @foreach ($posts as $post)
-                                    <div class="row mb-3">
-                                        <div class="col-md-2">
-                                            <img src="{{ asset('storage/thumbnails/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="img-fluid">
-                                        </div>
-                                        <div class="col-md-10">
-                                            <small class="text-muted">
-                                                By {{ $post->user_name }} on {{ date('d-M-Y', strtotime($post->tanggal)) }} | Status:
-                                                @if ($post->status == 'Draft')
-                                                    <span class="badge bg-secondary">Draft</span>
-                                                @elseif ($post->status == 'Published')
-                                                    <span class="badge bg-success">Published</span>
-                                                @endif
-                                            </small>
-                                            <h5>{{ $post->title }}</h5>
-                                            <p>{!! Str::limit($post->content, 150) !!}</p>
-                                            <div class="btn-group float-right">
-                                                <a href="{{ route('posts.show', ['post' => $post]) }}" class="btn btn-info btn-sm">View</a>
-                                                <a href="{{ route('posts.edit', ['post' => $post]) }}" class="btn btn-warning btn-sm">Edit</a>
-                                                <form action="{{ route('posts.destroy', ['post' => $post]) }}" method="POST" style="display: inline-block;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
-                                                </form>
-                                            </div>
+@section('utilitas-menu-open')
+    show
+@endsection
 
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        {{-- <div class="card-footer clearfix">
-                            <ul class="pagination pagination-sm m-0 float-end">
-                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                            </ul>
-                        </div> --}}
-                    </div>
+@section('content')
+    <!--begin::Card-->
+    <div class="card">
+        <!--begin::Card header-->
+        <div class="card-header border-0 pt-6">
+            <!--begin::Card title-->
+            <div class="card-title">
+                <h3 class="card-label">Data Berita (Post)</h3>
+            </div>
+            <!--begin::Card title-->
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                    <a href="{{ route('posts.create') }}" class="btn btn-primary">
+                        <span class="svg-icon svg-icon-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
+                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
+                            </svg>
+                        </span>
+                        Add Post
+                    </a>
                 </div>
+                <!--end::Toolbar-->
             </div>
         </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
+		<div class="card-body py-4">
+            <!--begin::Table-->
+            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_posts">
+                <!--begin::Table head-->
+                <thead>
+                    <!--begin::Table row-->
+                    <tr class="text-start text-dark-400 fw-bolder fs-7 text-uppercase gs-0">
+                        <th class="w-10px pe-2">No</th>
+                        <th class="min-w-125px">Thumbnail</th>
+                        <th class="min-w-200px">Title</th>
+                        <th class="min-w-125px">Date</th>
+                        <th class="min-w-100px">Status</th>
+                        <th class="text-end min-w-150px">Actions</th>
+                    </tr>
+                </thead>
+                <!--end::Table head-->
+                <!--begin::Table body-->
+                <tbody class="fw-bold text-gray-600">
+                    @if ($posts->isEmpty())
+                        <tr>
+                            <td colspan="6" class="text-center">No posts available.</td>
+                        </tr>
+                    @else
+                        @foreach ($posts as $index => $post)
+                            <tr class="align-middle">
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    <img src="{{ asset('storage/thumbnails/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="img-fluid" style="max-width: 100px; border-radius: 4px;">
+                                </td>
+                                <td>
+                                    <a href="{{ route('posts.show', ['post' => $post]) }}" class="text-gray-800 text-hover-primary mb-1">{{ $post->title }}</a>
+                                </td>
+                                <td>{{ date('d-M-Y', strtotime($post->tanggal)) }}</td>
+                                <td>
+                                    @if ($post->status == 'Draft')
+                                        <div class="badge badge-light-secondary fw-bolder">Draft</div>
+                                    @elseif ($post->status == 'Published')
+                                        <div class="badge badge-light-success fw-bolder">Published</div>
+                                    @endif
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm">View</a>
+                                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+                <!--end::Table body-->
+            </table>
+            <!--end::Table-->
+        </div>
     </div>
-</div>
+    <!--end::Card-->
+@endsection
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#kt_table_posts').DataTable();
+});
+</script>
 @endsection
