@@ -1,37 +1,55 @@
 @extends('backend.main')
 
+@section('slider-menu-active')
+    active
+@endsection
+
+@section('slider-menu-open')
+    show
+@endsection
+
 @section('content')
-<div class="content-wrapper">
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row pt-4">
-                <div class="col-md-12">
-                    <div class="card mb-4">
-                        <div class="card-header"><h3 class="card-title">Slider</h3></div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <form action="{{ route('slider.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="caption" class="form-label">Caption</label>
-                                    <input type="text" class="form-control" id="caption" name="caption" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="gambar" class="form-label">Gambar</label>
-                                    <input type="file" class="form-control" id="gambar" name="gambar" required>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+    <!--begin::Card-->
+    <div class="card">
+        <!--begin::Card header-->
+        <div class="card-header border-0 pt-6">
+            <!--begin::Card title-->
+            <div class="card-title">
+                <h3>Tambah Slider</h3>
+            </div>
+            <!--begin::Card title-->
+        </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
+        <div class="card-body py-4">
+            <form action="{{ route('slider.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <!-- Caption - Full Width -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="caption" class="form-label">Caption</label>
+                        <input type="text" class="form-control" id="caption" name="caption" required>
                     </div>
                 </div>
-            </div>
+
+                <!-- Gambar -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="gambar" class="form-label">Gambar</label>
+                        <input type="file" class="form-control" id="gambar" name="gambar" required>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <a href="{{ route('slider.index') }}" class="btn btn-secondary">Batal</a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+    <!--end::Card-->
 @endsection
