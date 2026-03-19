@@ -37,6 +37,14 @@ Route::middleware('auth')->group(function () {
         return view('frontend.registrasi_sd');
     })->name('registrasi-sd');
 
+    Route::get('pendaftaran-sd', function () {
+        return view('backend.pendaftaran.formulir_sd');
+    })->name('pendaftaran-sd');
+
+    Route::get('pendaftaran-smp', function () {
+        return view('backend.pendaftaran.formulir_smp');
+    })->name('pendaftaran-smp');
+
     Route::get('registrasi-smp', function () {
         return view('frontend.registrasi_smp');
     })->name('registrasi-smp');
