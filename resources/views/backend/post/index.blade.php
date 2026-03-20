@@ -79,9 +79,9 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info btn-sm">View</a>
-                                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        <a href="{{ route('posts.show', $post->slug) }}" class="btn btn-info btn-sm">View</a>
+                                        <a href="{{ route('posts.edit', $post->slug) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('posts.destroy', $post->slug) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Delete</button>

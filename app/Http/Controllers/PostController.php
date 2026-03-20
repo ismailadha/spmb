@@ -129,9 +129,8 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($id);
         // delete thumbnail from public/storage/thumbnails
         \Storage::disk('public')->delete('thumbnails/'.$post->thumbnail);
         $post->delete();

@@ -43,7 +43,7 @@
             </div>
             <div class="d-flex justify-content-end mt-5">
                 <a href="{{ route('posts.index') }}" class="btn btn-secondary me-2">Back to List</a>
-                <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning">Edit Post</a>
+                <a href="{{ route('posts.edit', $post->slug) }}" class="btn btn-warning">Edit Post</a>
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Slider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
@@ -13,6 +14,7 @@ class SliderController extends Controller
     public function index()
     {
         $sliders = Slider::all();
+
         return view('backend.slider.index', compact('sliders'));
     }
 
@@ -34,9 +36,16 @@ class SliderController extends Controller
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $slider = new Slider();
+        $slider = new Slider;
         $slider->caption = $request->caption;
-        $slider->gambar = $request->file('gambar')->store('sliders', 'public');
+        $path = $request->file('gambar')->store('sliders', 'public');
+        $slider->gambar = $path;
+
+        // Jika tidak menggunakan php artisan storage:link, copy file secara manual
+        if (!file_exists(public_path('storage/sliders'))) {
+            mkdir(public_path('storage/sliders'), 0755, true);
+        }
+        copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
         $slider->save();
 
         return redirect()->route('slider.index')->with('success', 'Slider created successfully.');
@@ -56,6 +65,7 @@ class SliderController extends Controller
     public function edit($id)
     {
         $slider = Slider::findOrFail($id);
+
         return view('backend.slider.edit', compact('slider'));
     }
 
@@ -87,7 +97,7 @@ class SliderController extends Controller
     public function destroy($id)
     {
         $slider = Slider::findOrFail($id);
-            // Delete image if exists
+        // Delete image if exists
         if ($slider->gambar) {
             \Storage::disk('public')->delete($slider->gambar);
         }
