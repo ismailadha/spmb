@@ -39,7 +39,8 @@
         <!--begin::Card body-->
 		<div class="card-body py-4">
             <!--begin::Table-->
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_posts">
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_posts">
                 <!--begin::Table head-->
                 <thead>
                     <!--begin::Table row-->
@@ -94,6 +95,7 @@
                 </tbody>
                 <!--end::Table body-->
             </table>
+            </div>
             <!--end::Table-->
         </div>
     </div>
@@ -106,7 +108,9 @@
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#kt_table_posts').DataTable();
+    $('#kt_table_posts').DataTable({
+        responsive: true
+    });
 });
 </script>
 @endsection

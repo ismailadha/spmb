@@ -39,7 +39,8 @@
         <!--begin::Card body-->
 		<div class="card-body py-4">
 <!--begin::Table-->
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
+            <div class="table-responsive">
+            <table class="table align-middle table-row-dashed fs-6 gy-5 min-w-full" id="kt_table_users">
                 <!--begin::Table head-->
                 <thead>
                     <!--begin::Table row-->
@@ -47,8 +48,6 @@
                         <th class="w-10px pe-2">No</th>
                         <th class="min-w-125px">Sekolah</th>
                         <th class="min-w-125px">Alamat</th>
-                        <th class="min-w-125px">Telepon</th>
-                        <th class="min-w-125px">Email</th>
                         <th class="min-w-125px">Status Perbatasan</th>
                         <th class="text-end min-w-70px">Actions</th>
                     </tr>
@@ -60,6 +59,7 @@
                 </tbody>
                 <!--end::Table body-->
             </table>
+            </div>
             <!--end::Table-->
         </div>
     </div>
@@ -70,6 +70,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script>
 $.ajaxSetup({
     headers: {
@@ -81,15 +82,24 @@ $(document).ready(function() {
     $('#kt_table_users').DataTable({
         processing: true,
         serverSide: true,
+        responsive: {
+            details: {
+                type: 'column',
+                target: 'tr'
+            }
+        },
         ajax: "{{ route('sekolah.index') }}",
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
             { data: 'nama_sekolah', name: 'nama_sekolah' },
             { data: 'alamat', name: 'alamat' },
-            { data: 'telepon', name: 'telepon' },
-            { data: 'email', name: 'email' },
             { data: 'status_perbatasan', name: 'status_perbatasan', orderable: false, searchable: false },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
+            { data: 'action', name: 'action', orderable: false, searchable: false, responsivePriority: 1, className: 'dtr-control' }
+        ],
+        columnDefs: [
+            { responsivePriority: 2, targets: 1 }, // Nama Sekolah
+            { responsivePriority: 3, targets: 2 }, // Alamat
+            { responsivePriority: 4, targets: 3 }  // Status Perbatasan
         ]
     });
 });

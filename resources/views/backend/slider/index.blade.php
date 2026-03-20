@@ -39,6 +39,7 @@
         <!--begin::Card body-->
 		<div class="card-body py-4">
 <!--begin::Table-->
+            <div class="table-responsive">
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_sliders">
                 <!--begin::Table head-->
                 <thead>
@@ -80,6 +81,7 @@
                 </tbody>
                 <!--end::Table body-->
             </table>
+            </div>
             <!--end::Table-->
         </div>
     </div>
@@ -90,9 +92,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#kt_table_sliders').DataTable();
+    $('#kt_table_sliders').DataTable({
+        responsive: true
+    });
 });
 </script>
 @endsection
