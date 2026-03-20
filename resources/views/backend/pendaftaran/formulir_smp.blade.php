@@ -145,22 +145,22 @@
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="kartu_pkh_container" style="display: none;">
                                 <label for="kartu_pkh" class="form-label">Kartu PKH (Jalur Afirmasi)</label>
                                 <input type="file" class="form-control" id="kartu_pkh" name="kartu_pkh">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="surat_dokter_container" style="display: none;">
                                 <label for="surat_dokter" class="form-label">Surat Keterangan Dokter/Disabilitas (Afirmasi)</label>
                                 <input type="file" class="form-control" id="surat_dokter" name="surat_dokter">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="surat_pindah_container" style="display: none;">
                                 <label for="surat_pindah" class="form-label">Surat Keterangan Pindah (Jalur Mutasi)</label>
                                 <input type="file" class="form-control" id="surat_pindah" name="surat_pindah">
                             </div>
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="prestasi_akademik_container" style="display: none;">
                                 <h5 class="mb-3">Dokumen Prestasi Akademik (Jalur Prestasi)</h5>
                                 <div class="mb-3">
                                     <label for="nilai_tka" class="form-label">Nilai TKA</label>
@@ -171,7 +171,7 @@
                                     <input type="file" class="form-control" id="dokumen_tka" name="dokumen_tka">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="prestasi_nonakademik_container" style="display: none;">
                                 <h5 class="mb-3">Dokumen Prestasi Non-Akademik (Jalur Prestasi)</h5>
                                 <div class="mb-3">
                                     <label for="nama_perlombaan" class="form-label">Nama Perlombaan</label>
@@ -232,7 +232,7 @@
                                 <span>Pastikan semua data dan dokumen telah diisi dengan benar sebelum menyimpan pendaftaran ini.</span>
                             </div>
                         </div>
-                        
+
                         <div class="form-check form-check-custom form-check-solid mb-5">
                             <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required/>
                             <label class="form-check-label" for="terms">
@@ -254,50 +254,39 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const jalur = document.getElementById('jalur');
-            const kartuPkhInput = document.getElementById('kartu_pkh');
-            const suratDokterInput = document.getElementById('surat_dokter');
-            const suratPindahInput = document.getElementById('surat_pindah');
-            const nilaiTkaInput = document.getElementById('nilai_tka');
-            const dokumenTkaInput = document.getElementById('dokumen_tka');
-            const namaPerlombaanInput = document.getElementById('nama_perlombaan');
-            const sertifikatPenghargaanInput = document.getElementById('sertifikat_penghargaan');
             const nextBtn = document.getElementById('nextToProfil');
 
             function toggleDokumen() {
-                if (!jalur || !jalur.value) return;
-                
+                const kartuPkhContainer = document.getElementById('kartu_pkh_container');
+                const suratDokterContainer = document.getElementById('surat_dokter_container');
+                const suratPindahContainer = document.getElementById('surat_pindah_container');
+                const prestasiAkademikContainer = document.getElementById('prestasi_akademik_container');
+                const prestasiNonakademikContainer = document.getElementById('prestasi_nonakademik_container');
+
                 if (jalur.value === 'Mutasi') {
-                    kartuPkhInput.disabled = true;
-                    suratDokterInput.disabled = true;
-                    suratPindahInput.disabled = false;
-                    nilaiTkaInput.disabled = true;
-                    dokumenTkaInput.disabled = true;
-                    namaPerlombaanInput.disabled = true;
-                    sertifikatPenghargaanInput.disabled = true;
+                    kartuPkhContainer.style.display = 'none';
+                    suratDokterContainer.style.display = 'none';
+                    suratPindahContainer.style.display = 'block';
+                    prestasiAkademikContainer.style.display = 'none';
+                    prestasiNonakademikContainer.style.display = 'none';
                 } else if (jalur.value === 'Afirmasi') {
-                    kartuPkhInput.disabled = false;
-                    suratDokterInput.disabled = false;
-                    suratPindahInput.disabled = true;
-                    nilaiTkaInput.disabled = true;
-                    dokumenTkaInput.disabled = true;
-                    namaPerlombaanInput.disabled = true;
-                    sertifikatPenghargaanInput.disabled = true;
+                    kartuPkhContainer.style.display = 'block';
+                    suratDokterContainer.style.display = 'block';
+                    suratPindahContainer.style.display = 'none';
+                    prestasiAkademikContainer.style.display = 'none';
+                    prestasiNonakademikContainer.style.display = 'none';
                 } else if (jalur.value === 'Prestasi') {
-                    kartuPkhInput.disabled = true;
-                    suratDokterInput.disabled = true;
-                    suratPindahInput.disabled = true;
-                    nilaiTkaInput.disabled = false;
-                    dokumenTkaInput.disabled = false;
-                    namaPerlombaanInput.disabled = false;
-                    sertifikatPenghargaanInput.disabled = false;
+                    kartuPkhContainer.style.display = 'none';
+                    suratDokterContainer.style.display = 'none';
+                    suratPindahContainer.style.display = 'none';
+                    prestasiAkademikContainer.style.display = 'block';
+                    prestasiNonakademikContainer.style.display = 'block';
                 } else {
-                    kartuPkhInput.disabled = true;
-                    suratDokterInput.disabled = true;
-                    suratPindahInput.disabled = true;
-                    nilaiTkaInput.disabled = true;
-                    dokumenTkaInput.disabled = true;
-                    namaPerlombaanInput.disabled = true;
-                    sertifikatPenghargaanInput.disabled = true;
+                    kartuPkhContainer.style.display = 'none';
+                    suratDokterContainer.style.display = 'none';
+                    suratPindahContainer.style.display = 'none';
+                    prestasiAkademikContainer.style.display = 'none';
+                    prestasiNonakademikContainer.style.display = 'none';
                 }
             }
 
@@ -316,7 +305,7 @@
                         });
                     }
                 });
-                
+
                 // Run on initial load
                 toggleDokumen();
             }
@@ -329,7 +318,7 @@
                 btn.addEventListener('click', function() {
                     let nextTabId = this.getAttribute('data-next');
                     let nextTabNode = document.getElementById(nextTabId + '-tab');
-                    
+
                     if (nextTabNode && !nextTabNode.classList.contains('disabled')) {
                         let nextTab = new bootstrap.Tab(nextTabNode);
                         nextTab.show();
@@ -341,7 +330,7 @@
                 btn.addEventListener('click', function() {
                     let prevTabId = this.getAttribute('data-prev');
                     let prevTabNode = document.getElementById(prevTabId + '-tab');
-                    
+
                     if (prevTabNode) {
                         let prevTab = new bootstrap.Tab(prevTabNode);
                         prevTab.show();

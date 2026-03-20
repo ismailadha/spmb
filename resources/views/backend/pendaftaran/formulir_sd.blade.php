@@ -144,15 +144,15 @@
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="kartu_pkh_container" style="display: none;">
                                 <label for="kartu_pkh" class="form-label">Kartu PKH (Jalur Afirmasi)</label>
                                 <input type="file" class="form-control" id="kartu_pkh" name="kartu_pkh">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="surat_dokter_container" style="display: none;">
                                 <label for="surat_dokter" class="form-label">Surat Keterangan Dokter/Disabilitas (Afirmasi)</label>
                                 <input type="file" class="form-control" id="surat_dokter" name="surat_dokter">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="surat_pindah_container" style="display: none;">
                                 <label for="surat_pindah" class="form-label">Surat Keterangan Pindah (Jalur Mutasi)</label>
                                 <input type="file" class="form-control" id="surat_pindah" name="surat_pindah">
                             </div>
@@ -205,7 +205,7 @@
                                 <span>Pastikan semua data dan dokumen telah diisi dengan benar sebelum menyimpan pendaftaran ini.</span>
                             </div>
                         </div>
-                        
+
                         <div class="form-check form-check-custom form-check-solid mb-5">
                             <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required/>
                             <label class="form-check-label" for="terms">
@@ -227,24 +227,25 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const jalur = document.getElementById('jalur');
-            const kartuPkhInput = document.getElementById('kartu_pkh');
-            const suratDokterInput = document.getElementById('surat_dokter');
-            const suratPindahInput = document.getElementById('surat_pindah');
             const nextBtn = document.getElementById('nextToProfil');
 
             function toggleDokumen() {
+                const kartuPkhContainer = document.getElementById('kartu_pkh_container');
+                const suratDokterContainer = document.getElementById('surat_dokter_container');
+                const suratPindahContainer = document.getElementById('surat_pindah_container');
+
                 if (jalur.value === 'Mutasi') {
-                    kartuPkhInput.disabled = true;
-                    suratDokterInput.disabled = true;
-                    suratPindahInput.disabled = false;
+                    kartuPkhContainer.style.display = 'none';
+                    suratDokterContainer.style.display = 'none';
+                    suratPindahContainer.style.display = 'block';
                 } else if (jalur.value === 'Afirmasi') {
-                    kartuPkhInput.disabled = false;
-                    suratDokterInput.disabled = false;
-                    suratPindahInput.disabled = true;
+                    kartuPkhContainer.style.display = 'block';
+                    suratDokterContainer.style.display = 'block';
+                    suratPindahContainer.style.display = 'none';
                 } else {
-                    kartuPkhInput.disabled = true;
-                    suratDokterInput.disabled = true;
-                    suratPindahInput.disabled = true;
+                    kartuPkhContainer.style.display = 'none';
+                    suratDokterContainer.style.display = 'none';
+                    suratPindahContainer.style.display = 'none';
                 }
             }
 
@@ -263,7 +264,7 @@
                         });
                     }
                 });
-                
+
                 // Run on initial load
                 toggleDokumen();
             }
@@ -276,7 +277,7 @@
                 btn.addEventListener('click', function() {
                     let nextTabId = this.getAttribute('data-next');
                     let nextTabNode = document.getElementById(nextTabId + '-tab');
-                    
+
                     if (nextTabNode && !nextTabNode.classList.contains('disabled')) {
                         let nextTab = new bootstrap.Tab(nextTabNode);
                         nextTab.show();
@@ -288,7 +289,7 @@
                 btn.addEventListener('click', function() {
                     let prevTabId = this.getAttribute('data-prev');
                     let prevTabNode = document.getElementById(prevTabId + '-tab');
-                    
+
                     if (prevTabNode) {
                         let prevTab = new bootstrap.Tab(prevTabNode);
                         prevTab.show();
