@@ -33,19 +33,12 @@ class SliderController extends Controller
     {
         $request->validate([
             'caption' => 'required|string|max:255',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'gambar' => 'required|string',
         ]);
 
         $slider = new Slider;
         $slider->caption = $request->caption;
-        $path = $request->file('gambar')->store('sliders', 'public');
-        $slider->gambar = $path;
-
-        // Jika tidak menggunakan php artisan storage:link, copy file secara manual
-        if (!file_exists(public_path('storage/sliders'))) {
-            mkdir(public_path('storage/sliders'), 0755, true);
-        }
-        copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
+        $slider->gambar = $request->gambar;
         $slider->save();
 
         return redirect()->route('slider.index')->with('success', 'Slider created successfully.');
@@ -74,16 +67,17 @@ class SliderController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'caption' => 'required|string|max:255',
+            'gambar' => 'required|string',
+        ]);
+
         $slider = Slider::findOrFail($id);
 
         $slider->caption = $request->caption;
 
-        if ($request->hasFile('gambar')) {
-            // Delete old image if exists
-            if ($slider->gambar) {
-                \Storage::disk('public')->delete($slider->gambar);
-            }
-            $slider->gambar = $request->file('gambar')->store('sliders', 'public');
+        if ($request->has('gambar') && $request->gambar) {
+            $slider->gambar = $request->gambar;
         }
 
         $slider->save();
@@ -97,10 +91,6 @@ class SliderController extends Controller
     public function destroy($id)
     {
         $slider = Slider::findOrFail($id);
-        // Delete image if exists
-        if ($slider->gambar) {
-            \Storage::disk('public')->delete($slider->gambar);
-        }
         $slider->delete();
 
         return redirect()->route('slider.index')->with('success', 'Slider deleted successfully.');

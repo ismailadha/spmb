@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 
+Route::get('beranda-baru', function () {
+    $sliders = \App\Models\Slider::all();
+    return view('frontend.index2', compact('sliders'));
+})->name('beranda-baru');
+
 Route::get('juknis', function () {
     return view('frontend.juknis');
 })->name('juknis');

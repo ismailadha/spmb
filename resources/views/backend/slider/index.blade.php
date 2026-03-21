@@ -64,7 +64,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $slider->caption }}</td>
                                 <td>
-                                    <img src="{{ asset('storage/' . $slider->gambar) }}" alt="Slider Image" class="img-fluid" style="max-width: 150px;">
+                                    <img src="{{ Str::startsWith($slider->gambar, ['http', '/']) ? $slider->gambar : asset('storage/' . $slider->gambar) }}" alt="Slider Image" class="img-fluid" style="max-width: 150px;">
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end flex-shrink-0">
