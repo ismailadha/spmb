@@ -34,26 +34,24 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:120',
             'slug' => 'required|unique:posts,slug',
-            'thumbnail' => 'required',
+            'thumbnail' => 'required|string',
             'content' => 'required',
         ]);
-
-        $thumbnailName = time().'_'.$request->file('thumbnail')->getClientOriginalName();
-        // store to public/storage/thumbnails
-        $request->file('thumbnail')->storeAs('thumbnails', $thumbnailName, 'public');
 
         DB::beginTransaction();
 
         try {
-            $post = Post::create([
+            Post::create([
                 'title' => $request->title,
                 'slug' => $request->slug,
-                'thumbnail' => $thumbnailName,
+                'thumbnail' => $request->thumbnail,
                 'content' => $request->content,
                 'tanggal' => $request->published_at,
                 'status' => $request->status,
                 'user_name' => auth()->user()->name,
             ]);
+
+            DB::commit();
 
             return redirect()->route('posts.index')->with('success', 'Post created successfully.');
         } catch (\Exception $e) {
@@ -61,8 +59,6 @@ class PostController extends Controller
 
             return redirect()->route('posts.index')
                 ->with('error', 'Failed to create post: '.$e->getMessage());
-        } finally {
-            DB::commit();
         }
     }
 
@@ -96,24 +92,21 @@ class PostController extends Controller
         DB::beginTransaction();
 
         try {
-            $post->update([
+            $data = [
                 'title' => $request->title,
                 'slug' => $request->slug,
                 'content' => $request->content,
                 'tanggal' => $request->published_at,
                 'status' => $request->status,
-            ]);
+            ];
 
-            if ($request->hasFile('thumbnail')) {
-                // delete old thumbnail from public/storage/thumbnails
-                \Storage::disk('public')->delete('thumbnails/'.$post->thumbnail);
-
-                $thumbnailName = time().'_'.$request->file('thumbnail')->getClientOriginalName();
-                // store to public/storage/thumbnails
-                $request->file('thumbnail')->storeAs('thumbnails', $thumbnailName, 'public');
-
-                $post->update(['thumbnail' => $thumbnailName]);
+            if ($request->filled('thumbnail')) {
+                $data['thumbnail'] = $request->thumbnail;
             }
+
+            $post->update($data);
+
+            DB::commit();
 
             return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
         } catch (\Exception $e) {
@@ -121,8 +114,6 @@ class PostController extends Controller
 
             return redirect()->route('posts.index')
                 ->with('error', 'Failed to update post: '.$e->getMessage());
-        } finally {
-            DB::commit();
         }
     }
 
@@ -131,8 +122,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        // delete thumbnail from public/storage/thumbnails
-        \Storage::disk('public')->delete('thumbnails/'.$post->thumbnail);
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');

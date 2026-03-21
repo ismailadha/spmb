@@ -65,7 +65,7 @@
                             <tr class="align-middle">
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <img src="{{ asset('storage/thumbnails/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="img-fluid" style="max-width: 100px; border-radius: 4px;">
+                                    <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="img-fluid" style="max-width: 100px; border-radius: 4px;">
                                 </td>
                                 <td>
                                     <a href="{{ route('posts.show', ['post' => $post]) }}" class="text-gray-800 text-hover-primary mb-1">{{ $post->title }}</a>

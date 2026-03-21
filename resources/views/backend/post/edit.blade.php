@@ -22,7 +22,7 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            <form action="{{ route('posts.update', $post->slug) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('posts.update', $post->slug) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -37,10 +37,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="thumbnail" class="form-label">Thumbnail</label>
-                            <input type="file" class="form-control" id="input_post_thumbnail" name="thumbnail">
-                            @if ($post->thumbnail)
-                                <img src="{{ asset('storage/thumbnails/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="img-fluid mt-2" style="max-width: 200px;">
-                            @endif
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="input_post_thumbnail" name="thumbnail"
+                                    readonly value="{{ old('thumbnail', $post->thumbnail) }}"
+                                    placeholder="Klik Browse untuk memilih gambar...">
+                                <button type="button" class="btn btn-secondary" id="lfm_thumbnail_trigger">Browse</button>
+                            </div>
+                            <div id="thumbnail_preview" class="mt-2" {{ $post->thumbnail ? '' : 'style="display:none;"' }}>
+                                <img id="thumbnail_img" src="{{ old('thumbnail', $post->thumbnail) }}"
+                                    alt="{{ $post->title }}" class="img-fluid" style="max-width:200px; border-radius:4px;">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">Content</label>
@@ -90,6 +96,18 @@
             );
         });
 
+        // LFM thumbnail picker
+        $('#lfm_thumbnail_trigger').on('click', function () {
+            window.top.SetUrl = function (items) {
+                var imageUrl = items[0].url;
+                $('#input_post_thumbnail').val(imageUrl);
+                $('#thumbnail_img').attr('src', imageUrl);
+                $('#thumbnail_preview').show();
+            };
+            window.open('/filemanager?type=image', 'lfm', 'width=900,height=600,scrollbars=yes,resizable=yes');
+        });
+
+        // TinyMCE
         tinymce.init({
             selector: '#input_post_content',
             height: 500,
@@ -100,26 +118,11 @@
             automatic_uploads: true,
             file_picker_types: 'image',
             file_picker_callback: function (cb, value, meta) {
-                var input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
-
-                input.onchange = function () {
-                    var file = this.files[0];
-                    var reader = new FileReader();
-                    reader.onload = function () {
-                        var id = 'blobid' + (new Date()).getTime();
-                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                        var base64 = reader.result.split(',')[1];
-                        var blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
-                        cb(blobInfo.blobUri(), { title: file.name });
-                    };
-                    reader.readAsDataURL(file);
+                window.top.SetUrl = function (items) {
+                    cb(items[0].url, { title: items[0].name });
                 };
-
-                input.click();
-            }
+                window.open('/filemanager?type=image', 'lfm', 'width=900,height=600,scrollbars=yes,resizable=yes');
+            },
         });
     });
 </script>
