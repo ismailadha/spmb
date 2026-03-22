@@ -4,14 +4,17 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\PostController;
 // use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
+use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 
 Route::get('beranda-baru', function () {
-    $sliders = \App\Models\Slider::all();
+    $sliders = Slider::all();
+
     return view('frontend.index2', compact('sliders'));
 })->name('beranda-baru');
 
@@ -57,6 +60,14 @@ Route::middleware('auth')->group(function () {
     // Post
     Route::resource('posts', PostController::class);
     Route::get('/search-post', [PostController::class, 'search_post'])->name('search-post');
+
+    // Sambutan
+    Route::get('sambutan', [SambutanController::class, 'index'])->name('sambutan.index');
+    Route::get('sambutan/create', [SambutanController::class, 'create'])->name('sambutan.create');
+    Route::post('sambutan/destroy/{id}', [SambutanController::class, 'destroy'])->name('sambutan.destroy');
+    Route::get('sambutan/edit/{id}', [SambutanController::class, 'edit'])->name('sambutan.edit');
+    Route::put('sambutan/update/{id}', [SambutanController::class, 'update'])->name('sambutan.update');
+    Route::post('sambutan/store', [SambutanController::class, 'store'])->name('sambutan.store');
 
     // Slider
     Route::get('slider', [SliderController::class, 'index'])->name('slider.index');

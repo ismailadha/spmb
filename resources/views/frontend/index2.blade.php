@@ -43,7 +43,7 @@
             {{-- Walikota --}}
             <div class="col-lg-5 col-md-6 mb-4">
                 <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:36px;text-align:center;height:100%;">
-                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&q=80"
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&q=80"
                          alt="Walikota" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #e74c3c;margin-bottom:16px;">
                     <h5 style="font-weight:700;margin-bottom:4px;">H. Ahmad Fauzan, S.IP., M.M.</h5>
                     <p style="color:#e74c3c;font-size:.85rem;font-weight:600;margin-bottom:16px;">Walikota</p>

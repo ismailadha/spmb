@@ -4,7 +4,7 @@
     active
 @endsection
 
-@section('slider-menu-open')
+@section('utilitas-menu-open')
     show
 @endsection
 
