@@ -29,15 +29,24 @@ class SekolahController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    return '<div class="btn-group" role="group">
-                                <a href="'.route('sekolah.show', $row->id).'" class="btn btn-sm btn-info">View</a>
-                                <a href="'.route('sekolah.edit', $row->id).'" class="btn btn-sm btn-primary">Edit</a>
-                                <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="display: inline;">
-                                    '.csrf_field().'
-                                    '.method_field('DELETE').'
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>
-                                </form>
-                            </div>';
+                    return '
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.route('sekolah.show', $row->id).'">View</a></li>
+                                <li><a class="dropdown-item" href="'.route('sekolah.edit', $row->id).'">Edit</a></li>
+                                <li>
+                                    <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
+                                        '.csrf_field().'
+                                        '.method_field('DELETE').'
+                                        <button type="submit" class="dropdown-item text-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    ';
                 })
                 ->rawColumns(['status_perbatasan', 'action'])
                 ->make(true);

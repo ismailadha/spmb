@@ -70,7 +70,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script>
 $.ajaxSetup({
     headers: {
@@ -82,24 +81,14 @@ $(document).ready(function() {
     $('#kt_table_users').DataTable({
         processing: true,
         serverSide: true,
-        responsive: {
-            details: {
-                type: 'column',
-                target: 'tr'
-            }
-        },
+        scrollX: true,
         ajax: "{{ route('sekolah.index') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
             { data: 'nama_sekolah', name: 'nama_sekolah' },
             { data: 'alamat', name: 'alamat' },
             { data: 'status_perbatasan', name: 'status_perbatasan', orderable: false, searchable: false },
-            { data: 'action', name: 'action', orderable: false, searchable: false, responsivePriority: 1, className: 'dtr-control' }
-        ],
-        columnDefs: [
-            { responsivePriority: 2, targets: 1 }, // Nama Sekolah
-            { responsivePriority: 3, targets: 2 }, // Alamat
-            { responsivePriority: 4, targets: 3 }  // Status Perbatasan
+            { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
         ]
     });
 });

@@ -9,6 +9,17 @@
 @endsection
 
 @section('content')
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            z-index: 1;
+        }
+    </style>
+
     <!--begin::Card-->
     <div class="card">
         <!--begin::Card header-->
@@ -96,6 +107,15 @@
                     </div>
                 </div>
 
+                <!-- Map Container -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Tentukan Lokasi pada Peta</label>
+                        <div id="map"></div>
+                        <small class="text-muted">Klik pada peta atau geser marker untuk menentukan koordinat.</small>
+                    </div>
+                </div>
+
                 <!-- Status Perbatasan -->
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -119,4 +139,61 @@
         </div>
     </div>
     <!--end::Card-->
+@endsection
+
+@section('scripts')
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var latInput = document.getElementById('latitude');
+            var lngInput = document.getElementById('longitude');
+            
+            // Default location: Islamic Center Lhokseumawe or existing coordinates
+            var startLat = latInput.value ? parseFloat(latInput.value) : 5.179967;
+            var startLng = lngInput.value ? parseFloat(lngInput.value) : 97.142055;
+
+            var map = L.map('map').setView([startLat, startLng], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            var marker = L.marker([startLat, startLng], {
+                draggable: true
+            }).addTo(map);
+
+            // Update inputs when marker is dragged
+            marker.on('dragend', function (e) {
+                var position = marker.getLatLng();
+                latInput.value = position.lat;
+                lngInput.value = position.lng;
+            });
+
+            // Update marker when map is clicked
+            map.on('click', function (e) {
+                var lat = e.latlng.lat;
+                var lng = e.latlng.lng;
+
+                marker.setLatLng([lat, lng]);
+                latInput.value = lat;
+                lngInput.value = lng;
+            });
+
+            // Update marker when inputs change manually
+            latInput.addEventListener('input', updateMapFromInputs);
+            lngInput.addEventListener('input', updateMapFromInputs);
+
+            function updateMapFromInputs() {
+                var lat = parseFloat(latInput.value);
+                var lng = parseFloat(lngInput.value);
+
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    marker.setLatLng([lat, lng]);
+                    map.setView([lat, lng]);
+                }
+            }
+        });
+    </script>
 @endsection

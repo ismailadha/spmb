@@ -9,6 +9,17 @@
 @endsection
 
 @section('content')
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            z-index: 1;
+        }
+    </style>
+
     <!--begin::Card-->
     <div class="card">
         <!--begin::Card header-->
@@ -110,7 +121,46 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Map Container -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h5>Peta Lokasi</h5>
+                    @if ($sekolah->latitude && $sekolah->longitude)
+                        <div id="map"></div>
+                    @else
+                        <div class="alert alert-warning">
+                            Koordinat lokasi belum ditentukan.
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
     <!--end::Card-->
+@endsection
+
+@section('scripts')
+    @if ($sekolah->latitude && $sekolah->longitude)
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var lat = {{ $sekolah->latitude }};
+            var lng = {{ $sekolah->longitude }};
+            var nama_sekolah = {!! json_encode($sekolah->nama_sekolah) !!};
+
+            var map = L.map('map').setView([lat, lng], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup("<b>" + nama_sekolah + "</b>")
+                .openPopup();
+        });
+    </script>
+    @endif
 @endsection
