@@ -33,12 +33,19 @@ class SliderController extends Controller
     {
         $request->validate([
             'caption' => 'required|string|max:255',
-            'gambar' => 'required|string',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         $slider = new Slider;
         $slider->caption = $request->caption;
-        $slider->gambar = $request->gambar;
+
+        if ($request->hasFile('gambar')) {
+            $image = $request->file('gambar');
+            $filename = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('uploads/slider'), $filename);
+            $slider->gambar = '/uploads/slider/'.$filename;
+        }
+
         $slider->save();
 
         return redirect()->route('slider.index')->with('success', 'Slider created successfully.');
@@ -69,15 +76,22 @@ class SliderController extends Controller
     {
         $request->validate([
             'caption' => 'required|string|max:255',
-            'gambar' => 'required|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         $slider = Slider::findOrFail($id);
 
         $slider->caption = $request->caption;
 
-        if ($request->has('gambar') && $request->gambar) {
-            $slider->gambar = $request->gambar;
+        if ($request->hasFile('gambar')) {
+            if ($slider->gambar && file_exists(public_path(ltrim($slider->gambar, '/')))) {
+                @unlink(public_path(ltrim($slider->gambar, '/')));
+            }
+
+            $image = $request->file('gambar');
+            $filename = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('uploads/slider'), $filename);
+            $slider->gambar = '/uploads/slider/'.$filename;
         }
 
         $slider->save();
@@ -91,6 +105,11 @@ class SliderController extends Controller
     public function destroy($id)
     {
         $slider = Slider::findOrFail($id);
+
+        if ($slider->gambar && file_exists(public_path(ltrim($slider->gambar, '/')))) {
+            @unlink(public_path(ltrim($slider->gambar, '/')));
+        }
+
         $slider->delete();
 
         return redirect()->route('slider.index')->with('success', 'Slider deleted successfully.');

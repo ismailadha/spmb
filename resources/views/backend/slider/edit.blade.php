@@ -22,7 +22,7 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            <form action="{{ url('slider/update' , $slider->id) }}" method="POST">
+            <form action="{{ url('slider/update' , $slider->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -37,17 +37,12 @@
                 <!-- Gambar via LFM -->
                 <div class="row mb-3">
                     <div class="col-12">
-                        <label class="form-label">Gambar</label>
-                        <input type="hidden" id="gambar" name="gambar" value="{{ $slider->gambar }}">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="gambar_display" placeholder="Pilih gambar..." value="{{ $slider->gambar }}" readonly>
-                            <button type="button" class="btn btn-secondary" id="lfm-btn">
-                                <i class="fa fa-image me-1"></i> Browse
-                            </button>
+                        <label for="gambar" class="form-label">Gambar</label>
+                        <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*" onchange="previewImage()">
+                        <div class="mt-3" id="preview-container" style="display: {{ $slider->gambar ? 'block' : 'none' }};">
+                            <img id="gambar_preview" src="{{ $slider->gambar ? (Str::startsWith($slider->gambar, ['http', '/']) ? $slider->gambar : asset('storage/' . $slider->gambar)) : '' }}" alt="Preview Gambar" class="img-fluid rounded" style="max-width: 250px; max-height: 200px; object-fit: cover;">
                         </div>
-                        <div class="mt-3">
-                            <img id="gambar_preview" src="{{ $slider->gambar ? $slider->gambar : '' }}" alt="Preview Gambar" class="img-fluid rounded" style="max-width: 250px; max-height: 200px; object-fit: cover; {{ $slider->gambar ? '' : 'display:none;' }}">
-                        </div>
+                        <small class="text-muted mt-2 d-block">Biarkan kosong jika tidak ingin mengubah gambar.</small>
                     </div>
                 </div>
 
@@ -65,26 +60,32 @@
 @endsection
 
 @section('scripts')
-    <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
     <script>
-        document.getElementById('lfm-btn').addEventListener('click', function () {
-            var lfmUrl = '/filemanager?type=Images';
-            var w = 900, h = 600;
-            var left = (screen.width / 2) - (w / 2);
-            var top = (screen.height / 2) - (h / 2);
-
-            window.open(lfmUrl, 'FileManager',
-                'width=' + w + ',height=' + h + ',top=' + top + ',left=' + left);
-        });
-
-        window.SetUrl = function (items) {
-            var fileUrl = items.map(function (item) { return item.url; }).join(',');
-            document.getElementById('gambar').value = fileUrl;
-            document.getElementById('gambar_display').value = fileUrl;
-
+        function previewImage() {
+            var input = document.getElementById('gambar');
+            var previewContainer = document.getElementById('preview-container');
             var preview = document.getElementById('gambar_preview');
-            preview.src = fileUrl;
-            preview.style.display = 'block';
-        };
+            
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                // Return to old image or clear
+                var oldImage = "{{ $slider->gambar ? (Str::startsWith($slider->gambar, ['http', '/']) ? $slider->gambar : asset('storage/' . $slider->gambar)) : '' }}";
+                if (oldImage) {
+                    preview.src = oldImage;
+                    previewContainer.style.display = 'block';
+                } else {
+                    preview.src = '';
+                    previewContainer.style.display = 'none';
+                }
+            }
+        }
     </script>
 @endsection
