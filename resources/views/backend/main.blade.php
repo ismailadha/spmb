@@ -81,9 +81,7 @@
                                                         <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM19.9 11H13V8.8999C14.9 8.6999 16.7 8.00005 18.1 6.80005C19.1 8.00005 19.7 9.4 19.9 11ZM11 19.8999C9.7 19.6999 8.39999 19.2 7.39999 18.5C8.49999 17.7 9.7 17.2001 11 17.1001V19.8999ZM5.89999 6.90002C7.39999 8.10002 9.2 8.8 11 9V11.1001H4.10001C4.30001 9.4001 4.89999 8.00002 5.89999 6.90002ZM7.39999 5.5C8.49999 4.7 9.7 4.19998 11 4.09998V7C9.7 6.8 8.39999 6.3 7.39999 5.5ZM13 17.1001C14.3 17.3001 15.6 17.8 16.6 18.5C15.5 19.3 14.3 19.7999 13 19.8999V17.1001ZM13 4.09998C14.3 4.29998 15.6 4.8 16.6 5.5C15.5 6.3 14.3 6.80002 13 6.90002V4.09998ZM4.10001 13H11V15.1001C9.1 15.3001 7.29999 16 5.89999 17.2C4.89999 16 4.30001 14.6 4.10001 13ZM18.1 17.1001C16.6 15.9001 14.8 15.2 13 15V12.8999H19.9C19.7 14.5999 19.1 16.0001 18.1 17.1001Z" fill="currentColor"/>
                                                     </svg>
                                                 </span>
-                                                <!--end::Svg Icon-->
 											</span>
-											<!--end::Svg Icon-->
 										</span>
 										<span class="menu-title">Website</span>
 									</a>
@@ -102,9 +100,8 @@
 													<path d="M10 22H3C2.4 22 2 21.6 2 21V3C2 2.4 2.4 2 3 2H10C10.6 2 11 2.4 11 3V21C11 21.6 10.6 22 10 22Z" fill="currentColor" />
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
 										</span>
-										<span class="menu-title">Utilitas</span>
+										<span class="menu-title">Informasi</span>
 										<span class="menu-arrow"></span>
 									</span>
 									<div class="menu-sub menu-sub-accordion menu-active-bg">
@@ -139,20 +136,49 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Pendaftaran</span>
 									</div>
 								</div>
-								<div class="menu-item">
-									<a class="menu-link @yield('pendaftaran-menu-active')" href="#">
+								<div data-kt-menu-trigger="click" class="menu-item here @yield('master-pendaftaran-menu-open') menu-accordion">
+									<span class="menu-link">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
-                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen001.svg-->
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
+													<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
+												</svg>
+											</span>
+										</span>
+										<span class="menu-title">Data Master</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<div class="menu-sub menu-sub-accordion menu-active-bg">
+										<div class="menu-item">
+											<a class="menu-link @yield('periode-menu-active')" href="#">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Periode Pendaftaran</span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<a class="menu-link @yield('jalur-menu-active')" href="#">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Jalur Pendaftaran</span>
+											</a>
+										</div>
+									</div>
+								</div>
+								<div class="menu-item">
+									<a class="menu-link @yield('jadwal-menu-active')" href="{{ route('jadwal.index') }}">
+										<span class="menu-icon">
+											<span class="svg-icon svg-icon-2">
                                                 <span class="svg-icon svg-icon-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
 														<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
 													</svg>
                                                 </span>
-                                                <!--end::Svg Icon-->
 											</span>
-											<!--end::Svg Icon-->
 										</span>
 										<span class="menu-title">Jadwal</span>
 									</a>
@@ -166,7 +192,6 @@
 													<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
 										</span>
 										<span class="menu-title">Formulir</span>
 										<span class="menu-arrow"></span>
@@ -194,16 +219,13 @@
 									<a class="menu-link @yield('pendaftaran-menu-active')" href="#">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
-                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen001.svg-->
                                                 <span class="svg-icon svg-icon-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
 														<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
 													</svg>
                                                 </span>
-                                                <!--end::Svg Icon-->
 											</span>
-											<!--end::Svg Icon-->
 										</span>
 										<span class="menu-title">Data Peserta</span>
 									</a>
@@ -223,9 +245,7 @@
 														<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
 													</svg>
                                                 </span>
-                                                <!--end::Svg Icon-->
 											</span>
-											<!--end::Svg Icon-->
 										</span>
 										<span class="menu-title">Data Sekolah</span>
 									</a>

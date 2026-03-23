@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\JadwalDaftarController;
 use App\Http\Controllers\PesertaController;
-use App\Http\Controllers\PostController;
 // use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
@@ -11,8 +12,6 @@ use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontendController::class, 'index'])->name('home');
-
-
 
 Route::get('juknis', function () {
     return view('frontend.juknis');
@@ -32,6 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('backend.home');
     })->name('dashboard');
+
+    Route::get('jadwal', [JadwalDaftarController::class, 'index'])->name('jadwal.index');
+    Route::get('jadwal/create', [JadwalDaftarController::class, 'create'])->name('jadwal.create');
+    Route::post('jadwal/store', [JadwalDaftarController::class, 'store'])->name('jadwal.store');
 
     Route::resource('sekolah', SekolahController::class);
 
