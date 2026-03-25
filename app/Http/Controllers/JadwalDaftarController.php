@@ -62,4 +62,9 @@ class JadwalDaftarController extends Controller
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil disimpan!');
     }
+
+    public function show($id)
+    {
+        return view('backend.pendaftaran.jadwal.detail');
+    }
 }

@@ -86,7 +86,10 @@
                         </td>
                         <td class="text-end">
                             <div class="btn-group" role="group" aria-label="Aksi Jadwal">
-                                <a href="#" class="btn btn-icon btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+                                <button type="button" class="btn btn-icon btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_tahapan_{{ $jadwal->id }}" title="Inspek Tahapan">
+                                    <i class="fas fa-list fs-4 text-white"></i>
+                                </button>
+                                <a href="{{ route('jadwal.show', $jadwal->id) }}" class="btn btn-icon btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
                                     <i class="fas fa-eye fs-4 text-white"></i>
                                 </a>
                                 <a href="#" class="btn btn-icon btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
@@ -105,6 +108,45 @@
     </div>
 </div>
 <!--end::Card-->
+
+<!-- Modals for Tahapan (Dummy) -->
+@foreach($jadwals as $jadwal)
+<div class="modal fade" id="modal_tahapan_{{ $jadwal->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tahapan Pendaftaran - {{ $jadwal->nama_sekolah }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Data tahapan di bawah ini masih merupakan data dummy/sementara untuk direview strukturnya.</p>
+                <div class="timeline mt-5">
+                    <div class="mb-4">
+                        <div class="fw-bolder">1. Pendaftaran & Submit Berkas</div>
+                        <div class="text-muted fs-7">01 Jan - 10 Jan 2025</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="fw-bolder">2. Seleksi Administrasi</div>
+                        <div class="text-muted fs-7">11 Jan - 15 Jan 2025</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="fw-bolder">3. Ujian Seleksi / Tes Wawancara</div>
+                        <div class="text-muted fs-7">18 Jan - 20 Jan 2025</div>
+                    </div>
+                    <div>
+                        <div class="fw-bolder">4. Pengumuman Kelulusan</div>
+                        <div class="text-muted fs-7">25 Jan 2025</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 @endsection
 
 @section('scripts')

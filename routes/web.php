@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('jadwal', [JadwalDaftarController::class, 'index'])->name('jadwal.index');
     Route::get('jadwal/create', [JadwalDaftarController::class, 'create'])->name('jadwal.create');
     Route::post('jadwal/store', [JadwalDaftarController::class, 'store'])->name('jadwal.store');
+    Route::get('jadwal/{id}', [JadwalDaftarController::class, 'show'])->name('jadwal.show');
 
     Route::resource('sekolah', SekolahController::class);
 
