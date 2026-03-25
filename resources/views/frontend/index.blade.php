@@ -40,34 +40,19 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            {{-- Walikota --}}
+            @foreach($sambutans as $key => $sambutan)
             <div class="col-lg-5 col-md-6 mb-4">
                 <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:36px;text-align:center;height:100%;">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&q=80"
-                         alt="Walikota" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #e74c3c;margin-bottom:16px;">
-                    <h5 style="font-weight:700;margin-bottom:4px;">H. Ahmad Fauzan, S.IP., M.M.</h5>
-                    <p style="color:#e74c3c;font-size:.85rem;font-weight:600;margin-bottom:16px;">Walikota</p>
+                    <img src="{{ $sambutan->foto ?? 'https://ui-avatars.com/api/?name='.urlencode($sambutan->nama_pejabat).'&background=random' }}"
+                         alt="{{ $sambutan->nama_pejabat }}" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid {{ $loop->index % 2 == 0 ? '#e74c3c' : '#3498db' }};margin-bottom:16px;">
+                    <h5 style="font-weight:700;margin-bottom:4px;">{{ $sambutan->nama_pejabat }}</h5>
+                    <p style="color:{{ $loop->index % 2 == 0 ? '#e74c3c' : '#3498db' }};font-size:.85rem;font-weight:600;margin-bottom:16px;">{{ $sambutan->jabatan }}</p>
                     <p style="color:#555;font-size:.95rem;line-height:1.8;">
-                        Dengan semangat membangun generasi unggul, saya menyambut baik pelaksanaan SPMB Tahun Ajaran 2025/2026.
-                        Proses penerimaan yang transparan dan berkeadilan adalah komitmen kami demi masa depan anak-anak bangsa.
+                        {!! $sambutan->isi_sambutan !!}
                     </p>
-                    <p style="color:#888;font-size:.85rem;margin-top:12px;font-style:italic;">"Pendidikan adalah investasi terbaik untuk masa depan bangsa."</p>
                 </div>
             </div>
-            {{-- Kepala Dinas --}}
-            <div class="col-lg-5 col-md-6 mb-4">
-                <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:36px;text-align:center;height:100%;">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&q=80"
-                         alt="Kepala Dinas" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #3498db;margin-bottom:16px;">
-                    <h5 style="font-weight:700;margin-bottom:4px;">Dr. Hj. Siti Rahmawati, M.Pd.</h5>
-                    <p style="color:#3498db;font-size:.85rem;font-weight:600;margin-bottom:16px;">Kepala Dinas Pendidikan</p>
-                    <p style="color:#555;font-size:.95rem;line-height:1.8;">
-                        Dinas Pendidikan berkomitmen untuk memastikan setiap anak mendapatkan hak pendidikan yang layak.
-                        SPMB tahun ini hadir dengan sistem yang lebih mudah, cepat, dan dapat diakses seluruh lapisan masyarakat.
-                    </p>
-                    <p style="color:#888;font-size:.85rem;margin-top:12px;font-style:italic;">"Sekolah terbaik adalah yang dekat dengan hati masyarakat."</p>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -156,43 +141,20 @@
             </div>
         </div>
         <div class="row">
-            @php
-            $berita = [
-                [
-                    'img'   => 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&q=80',
-                    'title' => 'Pendaftaran SPMB 2025/2026 Resmi Dibuka',
-                    'date'  => '15 Juni 2025',
-                    'cat'   => 'Pengumuman',
-                    'desc'  => 'Dinas Pendidikan resmi membuka pendaftaran penerimaan murid baru tahun ajaran 2025/2026 untuk jenjang SD dan SMP mulai tanggal 15 Juni 2025.',
-                ],
-                [
-                    'img'   => 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&q=80',
-                    'title' => 'Kuota Jalur Afirmasi Ditingkatkan 25%',
-                    'date'  => '10 Juni 2025',
-                    'cat'   => 'Kebijakan',
-                    'desc'  => 'Pemerintah daerah resmi meningkatkan kuota jalur afirmasi sebesar 25% untuk memastikan akses pendidikan bagi keluarga tidak mampu semakin luas.',
-                ],
-                [
-                    'img'   => 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80',
-                    'title' => 'Sosialisasi SPMB di Seluruh Kelurahan',
-                    'date'  => '5 Juni 2025',
-                    'cat'   => 'Kegiatan',
-                    'desc'  => 'Dinas Pendidikan menggelar sosialisasi tata cara pendaftaran SPMB di seluruh kelurahan agar masyarakat dapat memahami prosedur pendaftaran dengan baik.',
-                ],
-            ];
-            @endphp
-            @foreach($berita as $b)
+            @foreach($posts as $post)
             <div class="col-lg-4 col-md-6 mb-4">
                 <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07);height:100%;transition:transform .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <img src="{{ $b['img'] }}" alt="{{ $b['title'] }}" style="width:100%;height:200px;object-fit:cover;">
+                    <a href="{{ route('post.detail', $post->slug) }}">
+                        <img src="{{ $post->thumbnail ?? 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=600&q=80' }}" alt="{{ $post->title }}" style="width:100%;height:200px;object-fit:cover;">
+                    </a>
                     <div style="padding:20px;">
                         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                            <span style="background:#8e44ad;color:#fff;font-size:.75rem;padding:3px 10px;border-radius:20px;">{{ $b['cat'] }}</span>
-                            <span style="color:#999;font-size:.8rem;"><i class="la la-calendar"></i> {{ $b['date'] }}</span>
+                            <span style="background:#8e44ad;color:#fff;font-size:.75rem;padding:3px 10px;border-radius:20px;">Informasi</span>
+                            <span style="color:#999;font-size:.8rem;"><i class="la la-calendar"></i> {{ \Carbon\Carbon::parse($post->tanggal)->format('d M Y') }}</span>
                         </div>
-                        <h6 style="font-weight:700;margin-bottom:10px;line-height:1.5;">{{ $b['title'] }}</h6>
-                        <p style="color:#666;font-size:.9rem;line-height:1.7;margin-bottom:16px;">{{ $b['desc'] }}</p>
-                        <a href="#" style="color:#8e44ad;font-size:.88rem;font-weight:600;">Baca Selengkapnya <i class="la la-arrow-right"></i></a>
+                        <h6 style="font-weight:700;margin-bottom:10px;line-height:1.5;">{{ $post->title }}</h6>
+                        <p style="color:#666;font-size:.9rem;line-height:1.7;margin-bottom:16px;">{{ \Illuminate\Support\Str::limit(strip_tags($post->content), 100) }}</p>
+                        <a href="{{ route('post.detail', $post->slug) }}" style="color:#8e44ad;font-size:.88rem;font-weight:600;">Baca Selengkapnya <i class="la la-arrow-right"></i></a>
                     </div>
                 </div>
             </div>

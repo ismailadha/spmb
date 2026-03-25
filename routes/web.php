@@ -25,6 +25,8 @@ Route::get('datasekolah', function () {
     return view('frontend.datasekolah');
 })->name('datasekolah');
 
+Route::get('berita/{slug}', [FrontendController::class, 'showPost'])->name('post.detail');
+
 Route::middleware('auth')->group(function () {
 
     // Home
