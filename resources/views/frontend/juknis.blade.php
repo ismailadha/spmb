@@ -12,347 +12,117 @@
                         <h3 class="page_title">Petunjuk Teknis</h3>
                     </div>
                 </div>
-            </div><!-- ends: .row -->
+            </div>
         </div>
     </section>
-    <section class="service-tab-wrapper section-padding">
-        <div class="tab service--tabs">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 sidebar">
-                        <div class="tab_nav tab_nav2 m-bottom-50">
-                            <div class="nav flex-column" id="tab_nav1" role="tablist" aria-orientation="vertical">
-                                <a class="nav-link active" id="v-pills-tab1" data-toggle="pill" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Financial Analysis</a>
-                                <a class="nav-link" id="v-pills-tab2" data-toggle="pill" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Investment Planning</a>
-                                <a class="nav-link" id="v-pills-tab3" data-toggle="pill" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Savings & Investments</a>
-                                <a class="nav-link" id="v-pills-tab4" data-toggle="pill" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Investment Planning</a>
-                                <a class="nav-link" id="v-pills-tab5" data-toggle="pill" href="#tab5" role="tab" aria-controls="tab5" aria-selected="false">Online Consulting</a>
-                                <a class="nav-link" id="v-pills-tab6" data-toggle="pill" href="#tab6" role="tab" aria-controls="tab6" aria-selected="false">Strategic Consulting</a>
-                                <a class="nav-link" id="v-pills-tab7" data-toggle="pill" href="#tab7" role="tab" aria-controls="tab7" aria-selected="false">Business Process Services</a>
-                            </div>
-                        </div><!-- ends: .tab_nav -->
-                        <div class="download-widget m-bottom-30">
-                            <div class="header">
-                                <h6>Company Brochure</h6>
-                            </div>
-                            <div class="content">
-                                <img src="img/brochure.jpg" alt="">
-                                <p>
-                                    <a href="" class="btn btn-secondary btn-sm btn-icon icon-left"><i class="la la-cloud-download"></i> Download (PDF)</a>
-                                    <span>165.64 KB</span>
-                                </p>
-                            </div>
-                        </div><!-- ends: .download-widget -->
-                        <div class="cta-widget m-bottom-50">
-                            <h6>Any Question?</h6>
-                            <div class="content">
-                                <p class="call-us">
-                                    <span>Call Us:</span>
-                                    <span><i class="la la-headphones"></i> 800-567 890 576</span>
-                                </p>
-                                <p class="message-us">
-                                    <span>Or</span>
-                                    <a href="" class="btn btn-primary btn-sm btn-icon icon-left"><i class="la la-envelope"></i> Send Message</a>
-                                </p>
-                            </div>
-                        </div><!-- ends: .cta-widget -->
-                    </div><!-- ends: .col-lg-3 -->
-                    <div class="col-lg-9">
-                        <div class="tab-content" id="tabContent1">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="tab-image m-bottom-50">
-                                    <img src="img/service1.jpg" alt="Images the foolda">
-                                </div>
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Financial Overview &amp; Analysis</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                </div>
-                                <div class="contents-2 m-top-60">
-                                    <div class="m-bottom-35">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Our Services Include</h3>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="icon-box-four d-flex">
-                                                <div class="box-icon">
-                                                    <span class="icon-rounded-sm"><i class="la la-thumbs-up"></i></span>
-                                                </div>
-                                                <div class="box-content">
-                                                    <h6>Valuable Ideas</h6>
-                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
-                                                </div>
-                                            </div><!-- ends: .icon-box -->
-                                        </div><!-- ends: .col-md-6 -->
-                                        <div class="col-md-6">
-                                            <div class="icon-box-four d-flex">
-                                                <div class="box-icon">
-                                                    <span class="icon-rounded-sm"><i class="la la-bar-chart"></i></span>
-                                                </div>
-                                                <div class="box-content">
-                                                    <h6>Industry Experience</h6>
-                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
-                                                </div>
-                                            </div><!-- ends: .icon-box -->
-                                        </div><!-- ends: .col-md-6 -->
-                                        <div class="col-md-6">
-                                            <div class="icon-box-four d-flex">
-                                                <div class="box-icon">
-                                                    <span class="icon-rounded-sm"><i class="la la-money"></i></span>
-                                                </div>
-                                                <div class="box-content">
-                                                    <h6>Budget Friendly</h6>
-                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
-                                                </div>
-                                            </div><!-- ends: .icon-box -->
-                                        </div><!-- ends: .col-md-6 -->
-                                        <div class="col-md-6">
-                                            <div class="icon-box-four d-flex">
-                                                <div class="box-icon">
-                                                    <span class="icon-rounded-sm"><i class="la la-sun-o"></i></span>
-                                                </div>
-                                                <div class="box-content">
-                                                    <h6>Industry Experience</h6>
-                                                    <p>Investig ationes demons travge vunt lectores legere lyrus quodk legunt saepius claritas est.</p>
-                                                </div>
-                                            </div><!-- ends: .icon-box -->
-                                        </div><!-- ends: .col-md-6 -->
-                                    </div>
-                                </div>
-                                <div class="contents-2 m-top-10">
-                                    <div class="m-bottom-25">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Your Benefits</h3>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 margin-md-60">
-                                            <p>Inves tiga tiones demonstr averun d lectores leg ere melius quod kequa legunt s aepius. Clar tas kdest etiam pro cessus dynamicus.</p>
-                                            <ul class="m-top-30">
-                                                <li class="bullet_list">Delivers solutions that help drive</li>
-                                                <li class="bullet_list">Human capital research analytics</li>
-                                                <li class="bullet_list">Complex problems bringing an approach</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="pie-chart_wrap">
-                                                <canvas class="pie-chart"></canvas>
-                                                <div class="legend pie-legend legend-list"></div>
-                                            </div><!-- End: .pie-chart_wrap -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="contents-2 m-top-90">
-                                    <div class="m-bottom-45">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Insights and Impact</h3>
-                                        </div>
-                                    </div>
-                                    <div class="tab tab--4">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="tab_nav4">
-                                                    <ul class="nav nav-tabs" id="tab9" role="tablist">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" id="tab9_nav1" data-toggle="tab" href="#tab9_content1" role="tab" aria-controls="tab9_nav1" aria-selected="true">Client Prospecting</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="tab9_nav2" data-toggle="tab" href="#tab9_content2" role="tab" aria-controls="tab9_nav2" aria-selected="false">Funding Research</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="tab9_nav3" data-toggle="tab" href="#tab9_content3" role="tab" aria-controls="tab9_nav3" aria-selected="false">Analytics</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <!--end ./tab_nav4 -->
-                                            </div>
-                                        </div><!-- end /.row -->
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="tab-content tab--content4 tab--content9" id="tabcontent4">
-                                                    <div class="tab-pane fade show active" id="tab9_content1" role="tabpanel" aria-labelledby="tab9_content1">
-                                                        <div class="row no-gutters">
-                                                            <div class="col-md-12">
-                                                                <div class="text_content">
-                                                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt
-                                                                        saepius.
-                                                                        Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem
-                                                                        consuetudium.
-                                                                        Investiga tiones demonstr averunt lectores legere me liusked quod kequa
-                                                                        legunt
-                                                                        saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium.
-                                                                        Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt
-                                                                        saepius. Claritas est etiam pro cessus.</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!--end ./tab-pane -->
-                                                    <div class="tab-pane fade" id="tab9_content2" role="tabpanel" aria-labelledby="tab9_content2">
-                                                        <div class="row no-gutters">
-                                                            <div class="col-md-12">
-                                                                <div class="text_content">
-                                                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt
-                                                                        saepius.
-                                                                        Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem
-                                                                        consuetudium.
-                                                                        Investiga tiones demonstr averunt lectores legere me liusked quod kequa
-                                                                        legunt
-                                                                        saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium.
-                                                                        Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt
-                                                                        saepius. Claritas est etiam pro cessus.</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!--end ./tab-pane -->
-                                                    <div class="tab-pane fade" id="tab9_content3" role="tabpanel" aria-labelledby="tab9_content3">
-                                                        <div class="row no-gutters">
-                                                            <div class="col-md-12">
-                                                                <div class="text_content">
-                                                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt
-                                                                        saepius.
-                                                                        Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem
-                                                                        consuetudium.
-                                                                        Investiga tiones demonstr averunt lectores legere me liusked quod kequa
-                                                                        legunt
-                                                                        saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium.
-                                                                        Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt
-                                                                        saepius. Claritas est etiam pro cessus.</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!--end ./tab-pane -->
-                                                </div>
-                                            </div>
-                                        </div><!-- end /.row -->
-                                    </div><!-- end /.tab--4 -->
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                            <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2">
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Investment Planning</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                    <div class="m-top-40">
-                                        <!-- start blockquote -->
-                                        <blockquote class="blockquote blockquote1 ">
-                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
-                                            <div class="quote-author">
-                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
-                                            </div>
-                                        </blockquote><!-- end: blockquote -->
-                                    </div>
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                            <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3">
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Savings &amp; Investments</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                    <div class="m-top-40">
-                                        <!-- start blockquote -->
-                                        <blockquote class="blockquote blockquote1 ">
-                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
-                                            <div class="quote-author">
-                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
-                                            </div>
-                                        </blockquote><!-- end: blockquote -->
-                                    </div>
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                            <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4">
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Business Consulting</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                    <div class="m-top-40">
-                                        <!-- start blockquote -->
-                                        <blockquote class="blockquote blockquote1 ">
-                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
-                                            <div class="quote-author">
-                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
-                                            </div>
-                                        </blockquote><!-- end: blockquote -->
-                                    </div>
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                            <div class="tab-pane fade" id="tab5" role="tabpanel" aria-labelledby="tab5">
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Online Consulting</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                    <div class="m-top-40">
-                                        <!-- start blockquote -->
-                                        <blockquote class="blockquote blockquote1 ">
-                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
-                                            <div class="quote-author">
-                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
-                                            </div>
-                                        </blockquote><!-- end: blockquote -->
-                                    </div>
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                            <div class="tab-pane fade" id="tab6" role="tabpanel" aria-labelledby="tab6">
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Strategic Consulting</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                    <div class="m-top-40">
-                                        <!-- start blockquote -->
-                                        <blockquote class="blockquote blockquote1 ">
-                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
-                                            <div class="quote-author">
-                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
-                                            </div>
-                                        </blockquote><!-- end: blockquote -->
-                                    </div>
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                            <div class="tab-pane fade" id="tab7" role="tabpanel" aria-labelledby="tab7">
-                                <div class="contents-1">
-                                    <div class="m-bottom-30">
-                                        <div class="divider divider-simple text-left">
-                                            <h3>Business Process Services</h3>
-                                        </div>
-                                    </div>
-                                    <p>Investiga tiones demonstr averun d lectores legere melius quod kequa legunt saepius. Claritas est etiam pro cessus dynamicus, qui sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me liusked quod kequa legunt saepius. Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr averunt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.<br><br> Claritas est etiam pro cessus. Sequitur mutatin onem consuetudium. Investiga tiones demonstr aver unt lectores legere me lius quod ii qua legunt saepius. Claritas est etiam pro cessus.</p>
-                                    <div class="m-top-40">
-                                        <!-- start blockquote -->
-                                        <blockquote class="blockquote blockquote1 ">
-                                            <p>My focus areas are on global standardization and harmonization of business processes lorem dolor is reorganization of marketing and customer standardization and harmonization.</p>
-                                            <div class="quote-author">
-                                                <p><span>Jeff Collins,</span> Founder of Tizara Inc.</p>
-                                            </div>
-                                        </blockquote><!-- end: blockquote -->
-                                    </div>
-                                </div>
-                            </div><!-- ends: .tab-pane -->
-                        </div>
-                    </div><!-- ends: .col-lg-9 -->
+    <section class="juknis_area section-padding" style="padding: 80px 0; background-color: #f8f9fa;">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <h2 class="mb-3" style="color: #1e2a4a; font-weight: 700;">Alur Pendaftaran Siswa Baru</h2>
+                    <p class="text-muted" style="font-size: 1.1rem; line-height: 1.8;">Berikut adalah petunjuk teknis langkah demi langkah untuk melakukan pendaftaran secara online. Pastikan Anda memahami setiap prosedur yang diberikan agar proses pendaftaran berjalan lancar.</p>
                 </div>
             </div>
-        </div><!-- ends: .service--tabs -->
-    </section><!-- ends: .service-tab-wrapper -->
+
+            <div class="row">
+                <!-- Step 1 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)'">
+                         <div class="card-body text-center p-5">
+                            <div class="icon_box mb-4 d-inline-block" style="width: 80px; height: 80px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; line-height: 80px;">
+                                <i class="la la-user-plus" style="font-size: 2.5rem; color: #3498db;"></i>
+                            </div>
+                            <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">1. Buat Akun Pendaftar</h4>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Calon peserta didik wajib membuat akun menggunakan alamat email yang aktif dan memasukkan password yang mudah diingat.</p>
+                         </div>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)'">
+                         <div class="card-body text-center p-5">
+                            <div class="icon_box mb-4 d-inline-block" style="width: 80px; height: 80px; background: rgba(26, 188, 156, 0.1); border-radius: 50%; line-height: 80px;">
+                                <i class="la la-edit" style="font-size: 2.5rem; color: #1abc9c;"></i>
+                            </div>
+                            <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">2. Pengisian Biodata</h4>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Login ke dalam sistem, lalu lengkapi formulir pendaftaran yang meliputi data diri, data orang tua/wali, serta data asal sekolah pelamar.</p>
+                         </div>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)'">
+                         <div class="card-body text-center p-5">
+                            <div class="icon_box mb-4 d-inline-block" style="width: 80px; height: 80px; background: rgba(243, 156, 18, 0.1); border-radius: 50%; line-height: 80px;">
+                                <i class="la la-cloud-upload" style="font-size: 2.5rem; color: #f39c12;"></i>
+                            </div>
+                            <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">3. Unggah Dokumen</h4>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Upload hasil scan dokumen persyaratan asli seperti Kartu Keluarga, Akta Kelahiran, dan Ijazah dalam format PDF atau JPG maksimal 2MB.</p>
+                         </div>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)'">
+                         <div class="card-body text-center p-5">
+                            <div class="icon_box mb-4 d-inline-block" style="width: 80px; height: 80px; background: rgba(155, 89, 182, 0.1); border-radius: 50%; line-height: 80px;">
+                                <i class="la la-check-circle" style="font-size: 2.5rem; color: #9b59b6;"></i>
+                            </div>
+                            <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">4. Verifikasi Berkas</h4>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Panitia SPMB akan memverifikasi keabsahan dokumen. Anda dapat mengecek status verifikasi secara berkala lewat dashboard akun.</p>
+                         </div>
+                    </div>
+                </div>
+                <!-- Step 5 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)'">
+                         <div class="card-body text-center p-5">
+                            <div class="icon_box mb-4 d-inline-block" style="width: 80px; height: 80px; background: rgba(231, 76, 60, 0.1); border-radius: 50%; line-height: 80px;">
+                                <i class="la la-print" style="font-size: 2.5rem; color: #e74c3c;"></i>
+                            </div>
+                            <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">5. Cetak Bukti Daftar</h4>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Setelah berkas dinyatakan terverifikasi/valid, peserta wajib mencetak formulir atau tanda bukti pendaftaran sebagai syarat tes if applicable.</p>
+                         </div>
+                    </div>
+                </div>
+                <!-- Step 6 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)'">
+                         <div class="card-body text-center p-5">
+                            <div class="icon_box mb-4 d-inline-block" style="width: 80px; height: 80px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; line-height: 80px;">
+                                <i class="la la-bullhorn" style="font-size: 2.5rem; color: #2ecc71;"></i>
+                            </div>
+                            <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">6. Pengumuman Kelulusan</h4>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Hasil akhir seleksi peserta didik baru akan diumumkan secara online pada menu Hasil Seleksi sesuai dengan jadwal yang telah ditetapkan.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes or Warning Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                     <div class="alert fade show p-4" style="background-color: #fff; border-left: 5px solid #e74c3c; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        <div class="d-flex align-items-center">
+                            <i class="la la-exclamation-triangle mr-4 d-none d-sm-block" style="font-size: 3.5rem; color: #e74c3c;"></i>
+                            <div>
+                                <h4 class="alert-heading font-weight-bold mb-2" style="color: #1e2a4a;">Perhatian Penting Bagi Pendaftar</h4>
+                                <p class="mb-0 text-muted" style="line-height: 1.7; font-size: 1.05rem;">Segala bentuk pemalsuan data atau dokumen akan mengakibatkan <strong>GUGUR / DISKUALIFIKASI</strong> dari proses seleksi. Pastikan semua data yang Anda isikan serta dokumen yang diunggah adalah sah dan benar. Pastikan juga Anda menyimpan password dengan baik.</p>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+            <div class="row mt-5 pt-3">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <h3 class="font-weight-bold mb-3" style="color: #1e2a4a;">Mengalami Kendala Teknis?</h3>
+                    <p class="text-muted mb-4" style="font-size: 1.1rem;">Tim bantuan kami bersedia untuk membantu Anda jika terdapat permasalahan selama proses pendaftaran. Silakan hubungi kami di jam kerja (Senin - Sabtu: 08:00 WIB - 15:00 WIB).</p>
+                    <a href="#" class="btn btn-outline-primary px-5 py-3 mx-2 my-1" style="border-radius: 50px; font-weight: 600; font-size: 1rem; border-width: 2px;">
+                        <i class="la la-whatsapp mr-1"></i> WhatsApp Center
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection

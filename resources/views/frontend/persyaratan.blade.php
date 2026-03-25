@@ -1,161 +1,166 @@
 @extends('frontend.main')
 
 @section('content')
-    <div class="content-area">
-        <div class="container">
-            <div class="row justify-content-center">
-                <!-- Left part start -->
+    <section class="breadcrumb_area breadcrumb2 bgimage biz_overlay">
+        <div class="bg_image_holder">
+            <img src="{{ asset('front/img/breadbg.jpg') }}" alt="">
+        </div>
+        <div class="container content_above">
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="blog-post blog-single">
-                        <div class="dlab-post-title ">
-                            <h2 class="post-title"><a href="#">Persyaratan</a></h2>
-                        </div>
-                        <div class="dlab-tabs product-description tabs-site-button pt-3">
-                            <ul class="nav nav-tabs ">
-                                <li><a data-bs-toggle="tab" href="#web-design-1" class="active show"><i class="fa fa-globe"></i> Description</a></li>
-                                <li><a data-bs-toggle="tab" href="#graphic-design-1"><i class="far fa-image"></i> Additional Information</a></li>
-                                <li><a data-bs-toggle="tab" href="#developement-1"><i class="fa fa-cog"></i> Product Review</a></li>
+                    <div class="breadcrumb_wrapper d-flex flex-column align-items-center">
+                        <h3 class="page_title">Persyaratan Pendaftaran</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="persyaratan_area section-padding" style="padding: 80px 0; background-color: #f8f9fa;">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <h2 class="mb-3" style="color: #1e2a4a; font-weight: 700;">Syarat dan Ketentuan Pendaftaran</h2>
+                    <p class="text-muted" style="font-size: 1.1rem; line-height: 1.8;">Berikut adalah persyaratan lengkap yang harus dipenuhi oleh calon siswa baru untuk dapat mengikuti proses seleksi penerimaan. Pastikan seluruh dokumen disiapkan dengan baik sebelum melanjutkan pendaftaran.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 mb-5">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 15px; border-top: 5px solid #3498db !important;">
+                        <div class="card-body p-5">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="icon-box mr-3" style="width: 50px; height: 50px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; line-height: 50px; text-align: center;">
+                                    <i class="la la-user-check" style="font-size: 2rem; color: #3498db;"></i>
+                                </div>
+                                <h3 class="font-weight-bold mb-0" style="color: #1e2a4a;">Persyaratan Umum</h3>
+                            </div>
+                            <ul class="list-unstyled">
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    Berusia maksimal 15 tahun pada tanggal 1 Juli tahun berjalan (untuk SMP) atau maksimal 12 tahun (untuk SD).
+                                </li>
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    Memiliki Ijazah / Surat Tanda Tamat Belajar (STTB) dari jenjang pendidikan sebelumnya (SD/MI untuk pendaftar SMP).
+                                </li>
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    Warga Negara Indonesia (WNI) dibuktikan dengan dokumen kependudukan (KTP Orang Tua dan Kartu Keluarga) yang sah.
+                                </li>
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    Bagi peserta luar kota/provinsi atau lulusan tahun sebelumnya wajib menyertakan surat rekomendasi pindah rayon dari instansi asal.
+                                </li>
                             </ul>
-                            <div class="tab-content">
-                                <div id="web-design-1" class="tab-pane active">
-                                    <p class="m-b10">Suspendisse et justo. Praesent mattis commyolk augue Aliquam ornare hendrerit augue Cras tellus In pulvinar lectus a est Curabitur eget orci Cras laoreet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse et justo. Praesent mattis  commyolk augue aliquam ornare augue.</p>
-                                    <p>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences</p>
-                                    <ul class="list-check primary">
-                                        <li>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and </li>
-                                        <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </li>
-                                    </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-5">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 15px; border-top: 5px solid #1abc9c !important;">
+                        <div class="card-body p-5">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="icon-box mr-3" style="width: 50px; height: 50px; background: rgba(26, 188, 156, 0.1); border-radius: 50%; line-height: 50px; text-align: center;">
+                                    <i class="la la-file-alt" style="font-size: 2rem; color: #1abc9c;"></i>
                                 </div>
-                                <div id="graphic-design-1" class="tab-pane">
-                                    <table class="table table-bordered" >
-                                        <tr>
-                                            <td>Size</td>
-                                            <td>Small, Medium & Large</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Color</td>
-                                            <td>Pink & White</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Rating</td>
-                                            <td><span class="rating-bx"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="far fa-star"></i> <i class="far fa-star"></i> </span> </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Waist</td>
-                                            <td>26 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Length</td>
-                                            <td>40 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chest</td>
-                                            <td>33 inches</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fabric</td>
-                                            <td>Cotton, Silk & Synthetic</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Warranty</td>
-                                            <td>3 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chest</td>
-                                            <td>33 inches</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div id="developement-1" class="tab-pane">
-                                    <div id="comments">
-                                        <ol class="commentlist">
-                                            <li class="comment">
-                                                <div class="comment_container"> <img class="avatar avatar-60 photo" src="images/testimonials/pic1.jpg" alt="">
-                                                    <div class="comment-text">
-                                                        <div  class="star-rating">
-                                                            <div data-rating='3'> <i class="fa fa-star" data-alt="1" title="regular"></i> <i class="fa fa-star" data-alt="2" title="regular"></i> <i class="far fa-star" data-alt="3" title="regular"></i> <i class="far fa-star" data-alt="4" title="regular"></i> <i class="far fa-star" data-alt="5" title="regular"></i> </div>
-                                                        </div>
-                                                        <p class="meta"> <strong class="author">Cobus Bester</strong> <span><i class="far fa-clock"></i> March 7, 2013</span> </p>
-                                                        <div class="description">
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="comment">
-                                                <div class="comment_container"> <img class="avatar avatar-60 photo" src="images/testimonials/pic2.jpg" alt="">
-                                                    <div class="comment-text">
-                                                        <div  class="star-rating">
-                                                            <div data-rating='3'> <i class="fa fa-star" data-alt="1" title="regular"></i> <i class="fa fa-star" data-alt="2" title="regular"></i> <i class="fa fa-star" data-alt="3" title="regular"></i> <i class="far fa-star" data-alt="4" title="regular"></i> <i class="far fa-star" data-alt="5" title="regular"></i> </div>
-                                                        </div>
-                                                        <p class="meta"> <strong class="author">Cobus Bester</strong> <span><i class="far fa-clock"></i> March 7, 2013</span> </p>
-                                                        <div class="description">
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="comment">
-                                                <div class="comment_container"> <img class="avatar avatar-60 photo" src="images/testimonials/pic3.jpg" alt="">
-                                                    <div class="comment-text">
-                                                        <div  class="star-rating">
-                                                            <div data-rating='3'> <i class="fa fa-star" data-alt="1" title="regular"></i> <i class="fa fa-star" data-alt="2" title="regular"></i> <i class="fa fa-star" data-alt="3" title="regular"></i> <i class="fa fa-star" data-alt="4" title="regular"></i> <i class="far fa-star" data-alt="5" title="regular"></i> </div>
-                                                        </div>
-                                                        <p class="meta"> <strong class="author">Cobus Bester</strong> <span><i class="far fa-clock"></i> March 7, 2013</span> </p>
-                                                        <div class="description">
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ol>
-                                    </div>
-                                    <div id="review_form_wrapper">
-                                        <div id="review_form">
-                                            <div id="respond" class="comment-respond">
-                                                <h3 class="comment-reply-title" id="reply-title">Add a review</h3>
-                                                <form class="comment-form" method="post" >
-                                                    <div class="comment-form-author">
-                                                        <label>Name <span class="required">*</span></label>
-                                                        <input type="text" aria-required="true" size="30" value="" name="author" id="author">
-                                                    </div>
-                                                    <div class="comment-form-email">
-                                                        <label>Email <span class="required">*</span></label>
-                                                        <input type="text" aria-required="true" size="30" value="" name="email" id="email">
-                                                    </div>
-                                                    <div class="comment-form-rating">
-                                                        <label class="pull-left m-r20">Your Rating</label>
-                                                        <div class='rating-widget'>
-                                                        <!-- Rating Stars Box -->
-                                                            <div class='rating-stars'>
-                                                            <ul id='stars'>
-                                                                <li class='star' title='Poor' data-value='1'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='Fair' data-value='2'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='Good' data-value='3'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='Excellent' data-value='4'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                                <li class='star' title='WOW!!!' data-value='5'>
-                                                                <i class='fa fa-star fa-fw'></i>
-                                                                </li>
-                                                            </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comment-form-comment">
-                                                        <label>Your Review</label>
-                                                        <textarea aria-required="true" rows="8" cols="45" name="comment" id="comment"></textarea>
-                                                    </div>
-                                                    <div class="form-submit">
-                                                        <input type="submit" value="Submit" class="site-button" id="submit" name="submit">
-                                                    </div>
-                                                </form>
+                                <h3 class="font-weight-bold mb-0" style="color: #1e2a4a;">Persyaratan Dokumen</h3>
+                            </div>
+                            <ul class="list-unstyled">
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    <div><span class="font-weight-bold text-dark">Pas Foto:</span> Foto terbaru ukuran 3x4 dan 4x6 (masing-masing 3 lembar, latar belakang menyesuaikan jenjang merah/biru).</div>
+                                </li>
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    <div><span class="font-weight-bold text-dark">Kartu Keluarga (KK):</span> Fotokopi KK asli (diterbitkan paling singkat 1 tahun sebelum tanggal pendaftaran).</div>
+                                </li>
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    <div><span class="font-weight-bold text-dark">Akta Kelahiran:</span> Fotokopi akta kelahiran / surat keterangan lahir pendaftar yang dilegalisir dari instansi berwenang.</div>
+                                </li>
+                                <li class="mb-3 d-flex" style="line-height: 1.7; color: #555;">
+                                    <i class="la la-check-circle mr-3 mt-1" style="color: #2ecc71; font-size: 1.3rem;"></i>
+                                    <div><span class="font-weight-bold text-dark">Nilai Rapor:</span> Fotokopi raport semester 1 s.d. 5 yang telah dilegalisir oleh kepala sekolah (khusus jalur prestasi akademik).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm mb-5" style="border-radius: 15px; border-left: 5px solid #f39c12 !important;">
+                        <div class="card-body p-5">
+                            <h3 class="font-weight-bold mb-4" style="color: #1e2a4a;"><i class="la la-map-marker text-warning mr-2"></i> Jalur Zonasi</h3>
+                            <div class="row align-items-center">
+                                <div class="col-md-9">
+                                    <p class="text-muted" style="line-height: 1.8; font-size: 1.05rem;">
+                                        Bagi pendaftar jalur zonasi, penentuan kelulusan sangat dipengaruhi oleh jarak dari domisili peserta (berdasarkan alamat pada Kartu Keluarga) ke sekolah tujuan. Domisili tersebut berupa Kartu Keluarga (KK) yang <strong>minimal sudah diterbitkan 1 (satu) tahun</strong> sebelum pelaksanaan pendaftaran.
+                                    </p>
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6 mb-2 text-muted">
+                                            <div class="d-flex align-items-center">
+                                                <i class="la la-angle-right mr-2 text-primary font-weight-bold"></i> 
+                                                <span><strong>Zona 1:</strong> Beririsan langsung kelurahan</span>
                                             </div>
+                                        </div>
+                                        <div class="col-sm-6 mb-2 text-muted">
+                                            <div class="d-flex align-items-center">
+                                                <i class="la la-angle-right mr-2 text-primary font-weight-bold"></i> 
+                                                <span><strong>Zona 2:</strong> Beririsan langsung kecamatan</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 mb-2 text-muted">
+                                            <div class="d-flex align-items-center">
+                                                <i class="la la-angle-right mr-2 text-primary font-weight-bold"></i> 
+                                                <span><strong>Zona 3:</strong> Satu kabupaten / kota</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 mb-2 text-muted">
+                                            <div class="d-flex align-items-center">
+                                                <i class="la la-angle-right mr-2 text-primary font-weight-bold"></i> 
+                                                <span><strong>Luar Zona:</strong> Luar wilayah kabupaten/kota</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-center mt-4 mt-md-0">
+                                    <div style="background-color: #fcebeb; color: #e74c3c; width: 120px; height: 120px; border-radius: 50%; line-height: 120px; text-align: center; margin: 0 auto; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);">
+                                        <i class="la la-compass" style="font-size: 4rem; vertical-align: middle;"></i>
+                                    </div>
+                                    <b class="d-block mt-3 text-danger">Kalkulasi Jarak Udara</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm" style="border-radius: 15px; border-left: 5px solid #9b59b6 !important;">
+                        <div class="card-body p-5">
+                            <h3 class="font-weight-bold mb-4" style="color: #1e2a4a;"><i class="la la-certificate mr-2" style="color: #9b59b6;"></i> Jalur Prestasi (Khusus SMP)</h3>
+                            <p class="text-muted mb-4" style="line-height: 1.8; font-size: 1.05rem;">
+                                Dikhususkan bagi calon siswa yang memiliki prestasi akademik maupun non-akademik di tingkat regional, nasional, maupun internasional. Adapun bukti fisik tambahan yang harus disiapkan peserta meliputi:
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex bg-light p-4 rounded h-100 align-items-center shadow-sm" style="border-left: 3px solid #ffca28;">
+                                        <i class="la la-trophy text-warning" style="font-size: 2.5rem; margin-right: 20px;"></i>
+                                        <div>
+                                            <h5 class="font-weight-bold mb-1" style="color: #1e2a4a;">Sertifikat Kejuaraan ASLI</h5>
+                                            <p class="text-muted text-sm mb-0" style="font-size: 0.9rem;">Menunjukkan Piagam/Sertifikat asli (Juara 1, 2, atau 3) berjenjang minimal tingkat Kabupaten.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex bg-light p-4 rounded h-100 align-items-center shadow-sm" style="border-left: 3px solid #29b6f6;">
+                                        <i class="la la-file-signature text-info" style="font-size: 2.5rem; margin-right: 20px;"></i>
+                                        <div>
+                                            <h5 class="font-weight-bold mb-1" style="color: #1e2a4a;">Surat Keterangan Penyelenggara</h5>
+                                            <p class="text-muted text-sm mb-0" style="font-size: 0.9rem;">Surat dilegalisir oleh pihak panitia pelaksana/induk organisasi terkait sesuai cabang perlombaannya.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -164,6 +169,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Call to Action -->
+            <div class="row mt-5 pt-4">
+                <div class="col-lg-12 text-center">
+                    <div class="p-5 d-flex flex-column flex-md-row justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e2a4a 0%, #2c3e50 100%); border-radius: 15px; color: white;">
+                        <div class="text-left mb-4 mb-md-0">
+                            <h2 class="font-weight-bold mb-2 text-white">Sudah Membaca Persyaratan?</h2>
+                            <p class="mb-0" style="font-size: 1.1rem; opacity: 0.9;">Jika semua dokumen Anda siap, mari mulai pendaftaran sekarang!</p>
+                        </div>
+                        <div class="d-flex flex-column flex-sm-row">
+                            <a href="{{ route('juknis') }}" class="btn btn-outline-light px-4 py-3 mb-2 mb-sm-0 mr-sm-3" style="border-radius: 50px; font-weight: 600; font-size: 1rem;">
+                                <i class="la la-book mr-2"></i> Baca Petunjuk Teknis
+                            </a>
+                            <a href="{{ route('register-peserta') }}" class="btn btn-primary px-4 py-3 shadow" style="border-radius: 50px; font-weight: 700; font-size: 1rem; background-color: #1abc9c; border: none; box-shadow: 0 4px 15px rgba(26, 188, 156, 0.4);">
+                                <i class="la la-user-plus mr-2"></i> Mulai Pendaftaran
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </div>
+    </section>
 @endsection
