@@ -26,9 +26,17 @@ Route::get('datasekolah', [FrontendController::class, 'datasekolah'])->name('dat
 
 Route::get('berita/{slug}', [FrontendController::class, 'showPost'])->name('post.detail');
 
+Route::get('hasil-seleksi', function () {
+    return view('frontend.hasil_seleksi');
+})->name('hasil-seleksi');
+
 Route::get('zonasi-sekolah', function () {
     return view('frontend.zonasi_sekolah');
 })->name('zonasi-sekolah');
+
+Route::get('kontak', function () {
+    return view('frontend.kontak');
+})->name('kontak');
 
 Route::middleware('auth')->group(function () {
 
