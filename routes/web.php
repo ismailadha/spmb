@@ -26,6 +26,10 @@ Route::get('datasekolah', [FrontendController::class, 'datasekolah'])->name('dat
 
 Route::get('berita/{slug}', [FrontendController::class, 'showPost'])->name('post.detail');
 
+Route::get('zonasi-sekolah', function () {
+    return view('frontend.zonasi_sekolah');
+})->name('zonasi-sekolah');
+
 Route::middleware('auth')->group(function () {
 
     // Home
