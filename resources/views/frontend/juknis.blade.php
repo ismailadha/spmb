@@ -33,7 +33,7 @@
                                 <i class="la la-user-plus" style="font-size: 2.5rem; color: #3498db;"></i>
                             </div>
                             <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">1. Buat Akun Pendaftar</h4>
-                            <p class="card-text text-muted" style="line-height: 1.6;">Calon peserta didik wajib membuat akun menggunakan alamat email yang aktif dan memasukkan password yang mudah diingat.</p>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Calon peserta didik wajib membuat akun menggunakan username dan password yang mudah diingat.</p>
                          </div>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                                 <i class="la la-print" style="font-size: 2.5rem; color: #e74c3c;"></i>
                             </div>
                             <h4 class="card-title font-weight-bold mb-3" style="color: #1e2a4a;">5. Cetak Bukti Daftar</h4>
-                            <p class="card-text text-muted" style="line-height: 1.6;">Setelah berkas dinyatakan terverifikasi/valid, peserta wajib mencetak formulir atau tanda bukti pendaftaran sebagai syarat tes if applicable.</p>
+                            <p class="card-text text-muted" style="line-height: 1.6;">Setelah berkas dinyatakan terverifikasi/valid, peserta wajib mencetak formulir atau tanda bukti pendaftaran sebagai syarat tes.</p>
                          </div>
                     </div>
                 </div>

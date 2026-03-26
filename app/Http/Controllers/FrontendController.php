@@ -28,4 +28,9 @@ class FrontendController extends Controller
 
         return view('frontend.detail_post', compact('post', 'recent_posts'));
     }
+
+    public function datasekolah()
+    {
+        return view('frontend.daftar_cari_sekolah');
+    }
 }
