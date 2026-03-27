@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\UserController;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('sekolah', SekolahController::class);
 
     Route::resource('peserta', PesertaController::class);
+    Route::resource('pengguna', UserController::class);
 
     Route::get('registrasi-sd', function () {
         return view('frontend.registrasi_sd');
