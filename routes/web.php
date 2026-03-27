@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::get('jadwal/create', [JadwalDaftarController::class, 'create'])->name('jadwal.create');
     Route::post('jadwal/store', [JadwalDaftarController::class, 'store'])->name('jadwal.store');
     Route::get('jadwal/{id}', [JadwalDaftarController::class, 'show'])->name('jadwal.show');
+    Route::post('jadwal/storeTahapan', [JadwalDaftarController::class, 'storeTahapan'])->name('jadwal.storeTahapan');
+    Route::delete('jadwal/destroyTahapan/{id}', [JadwalDaftarController::class, 'destroyTahapan'])->name('jadwal.destroyTahapan');
+    Route::put('jadwal/updateTahapan/{id}', [JadwalDaftarController::class, 'updateTahapan'])->name('jadwal.updateTahapan');
 
     Route::resource('sekolah', SekolahController::class);
 

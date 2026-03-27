@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JadwalDaftar;
+use App\Models\JadwalTahapan;
 use App\Models\JalurDaftar;
 use App\Models\PeriodeDaftar;
 use App\Models\Sekolah;
@@ -65,6 +66,67 @@ class JadwalDaftarController extends Controller
 
     public function show($id)
     {
-        return view('backend.pendaftaran.jadwal.detail');
+        $jadwal = DB::table('jadwal_pendaftaran')
+            ->join('sekolah_jalur', 'jadwal_pendaftaran.sekolah_jalur_id', '=', 'sekolah_jalur.id')
+            ->join('sekolah', 'sekolah_jalur.sekolah_id', '=', 'sekolah.id')
+            ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('periode_pendaftaran', 'sekolah_jalur.periode_id', '=', 'periode_pendaftaran.id')
+            ->select('jadwal_pendaftaran.*', 'sekolah.nama_sekolah', 'jalur_pendaftaran.nama_jalur', 'periode_pendaftaran.tahun_ajaran', 'periode_pendaftaran.tanggal_mulai as periode_mulai', 'periode_pendaftaran.tanggal_selesai as periode_selesai', 'sekolah_jalur.kuota')
+            ->where('jadwal_pendaftaran.id', $id)
+            ->first();
+
+        $tahapan = JadwalTahapan::where('jadwal_id', $id)->orderBy('tanggal_mulai', 'asc')->get();
+
+        return view('backend.pendaftaran.jadwal.detail', compact('jadwal', 'tahapan'));
+    }
+
+    // store jadwal tahapan
+    public function storeTahapan(Request $request)
+    {
+        $request->validate([
+            'jadwal_id' => 'required',
+            'nama_tahapan' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        $tahapan = JadwalTahapan::create([
+            'jadwal_id' => $request->jadwal_id,
+            'nama_tahapan' => $request->nama_tahapan,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('jadwal.show', $request->jadwal_id)->with('success', 'Tahapan berhasil ditambahkan!');
+    }
+
+    // hapus jadwal tahapan
+    public function destroyTahapan($id)
+    {
+        $tahapan = JadwalTahapan::find($id);
+        $tahapan->delete();
+
+        return redirect()->route('jadwal.show', $tahapan->jadwal_id)->with('success', 'Tahapan berhasil dihapus!');
+    }
+
+    // update jadwal tahapan
+    public function updateTahapan(Request $request, $id)
+    {
+        $request->validate([
+            'tahapan_id' => 'required',
+            'nama_tahapan' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        $tahapan = JadwalTahapan::find($request->tahapan_id);
+        $tahapan->nama_tahapan = $request->nama_tahapan;
+        $tahapan->tanggal_mulai = $request->tanggal_mulai;
+        $tahapan->tanggal_selesai = $request->tanggal_selesai;
+        $tahapan->keterangan = $request->keterangan;
+        $tahapan->save();
+
+        return redirect()->route('jadwal.show', $request->jadwal_id)->with('success', 'Tahapan berhasil diupdate!');
     }
 }
