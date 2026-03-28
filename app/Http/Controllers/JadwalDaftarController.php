@@ -80,6 +80,62 @@ class JadwalDaftarController extends Controller
         return view('backend.pendaftaran.jadwal.detail', compact('jadwal', 'tahapan'));
     }
 
+    public function edit($id)
+    {
+        $jadwal = DB::table('jadwal_pendaftaran')
+            ->join('sekolah_jalur', 'jadwal_pendaftaran.sekolah_jalur_id', '=', 'sekolah_jalur.id')
+            ->join('sekolah', 'sekolah_jalur.sekolah_id', '=', 'sekolah.id')
+            ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('periode_pendaftaran', 'sekolah_jalur.periode_id', '=', 'periode_pendaftaran.id')
+            ->select('jadwal_pendaftaran.*', 'sekolah.nama_sekolah', 'jalur_pendaftaran.nama_jalur', 'periode_pendaftaran.tahun_ajaran', 'periode_pendaftaran.tanggal_mulai as periode_mulai', 'periode_pendaftaran.tanggal_selesai as periode_selesai', 'sekolah_jalur.kuota', 'sekolah_jalur.sekolah_id', 'sekolah_jalur.jalur_id', 'sekolah_jalur.periode_id')
+            ->where('jadwal_pendaftaran.id', $id)
+            ->first();
+
+        $sekolahs = Sekolah::all();
+        $jalurs = JalurDaftar::all();
+        $periodes = PeriodeDaftar::all();
+
+        return view('backend.pendaftaran.jadwal.edit', compact('jadwal', 'sekolahs', 'jalurs', 'periodes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $jadwal = JadwalDaftar::findOrFail($id);
+
+        $sekolahJalur = SekolahJalur::firstOrCreate([
+            'sekolah_id' => $request->sekolah_id,
+            'jalur_id' => $request->jalur_id,
+            'periode_id' => $request->periode_id,
+        ], [
+            'kuota' => $request->kuota ?? 0,
+            'status' => 1,
+        ]);
+
+        if ($request->filled('kuota')) {
+            $sekolahJalur->update(['kuota' => $request->kuota]);
+        }
+
+        $jadwal->update([
+            'sekolah_jalur_id' => $sekolahJalur->id,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'status' => $request->status ?? 'draft',
+        ]);
+
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $jadwal = JadwalDaftar::findOrFail($id);
+        $jadwal->delete();
+        // delete sekolah jalur
+        $sekolahJalur = SekolahJalur::where('id', $jadwal->sekolah_jalur_id)->first();
+        $sekolahJalur->delete();
+
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
+    }
+
     // store jadwal tahapan
     public function storeTahapan(Request $request)
     {

@@ -86,18 +86,24 @@
                         </td>
                         <td class="text-end">
                             <div class="btn-group" role="group" aria-label="Aksi Jadwal">
-                                <button type="button" class="btn btn-icon btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_tahapan_{{ $jadwal->id }}" title="Inspek Tahapan">
-                                    <i class="fas fa-list fs-4 text-white"></i>
-                                </button>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Tahapan">
+                                    <button type="button" class="btn btn-icon btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_tahapan_{{ $jadwal->id }}">
+                                        <i class="fas fa-list fs-4 text-white"></i>
+                                    </button>
+                                </span>
                                 <a href="{{ route('jadwal.show', $jadwal->id) }}" class="btn btn-icon btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
                                     <i class="fas fa-eye fs-4 text-white"></i>
                                 </a>
-                                <a href="#" class="btn btn-icon btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                <a href="{{ route('jadwal.edit', $jadwal->id) }}" class="btn btn-icon btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                     <i class="fas fa-edit fs-4 text-white"></i>
                                 </a>
-                                <a href="#" class="btn btn-icon btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                    <i class="fas fa-trash fs-4 text-white"></i>
-                                </a>
+                                <form action="{{ route('jadwal.destroy', $jadwal->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data jadwal ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-icon btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
+                                        <i class="fas fa-trash fs-4 text-white"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -109,7 +115,7 @@
 </div>
 <!--end::Card-->
 
-<!-- Modals for Tahapan (Dummy) -->
+<!-- Modals for Tahapan -->
 @foreach($jadwals as $jadwal)
 <div class="modal fade" id="modal_tahapan_{{ $jadwal->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -119,25 +125,36 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="text-muted">Data tahapan di bawah ini masih merupakan data dummy/sementara untuk direview strukturnya.</p>
-                <div class="timeline mt-5">
-                    <div class="mb-4">
-                        <div class="fw-bolder">1. Pendaftaran & Submit Berkas</div>
-                        <div class="text-muted fs-7">01 Jan - 10 Jan 2025</div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="fw-bolder">2. Seleksi Administrasi</div>
-                        <div class="text-muted fs-7">11 Jan - 15 Jan 2025</div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="fw-bolder">3. Ujian Seleksi / Tes Wawancara</div>
-                        <div class="text-muted fs-7">18 Jan - 20 Jan 2025</div>
-                    </div>
-                    <div>
-                        <div class="fw-bolder">4. Pengumuman Kelulusan</div>
-                        <div class="text-muted fs-7">25 Jan 2025</div>
-                    </div>
+                @php
+                    $tahapans = \App\Models\JadwalTahapan::where('jadwal_id', $jadwal->id)->orderBy('tanggal_mulai', 'asc')->get();
+                @endphp
+                
+                @if($tahapans->count() > 0)
+                <div class="table-responsive mt-2">
+                    <table class="table table-row-dashed align-middle gs-0 gy-3 my-0">
+                        <thead>
+                            <tr class="fs-7 fw-bolder text-gray-400 border-bottom-0">
+                                <th class="p-0 pb-3 min-w-150px text-start">NAMA TAHAPAN</th>
+                                <th class="p-0 pb-3 min-w-100px text-end">TGL MULAI</th>
+                                <th class="p-0 pb-3 min-w-100px text-end">TGL SELESAI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($tahapans as $tahapan)
+                            <tr>
+                                <td><span class="text-dark fw-bolder d-block mb-1 fs-6">{{ $tahapan->nama_tahapan }}</span></td>
+                                <td class="text-end text-muted fw-bold">{{ \Carbon\Carbon::parse($tahapan->tanggal_mulai)->format('d M Y') }}</td>
+                                <td class="text-end text-muted fw-bold">{{ \Carbon\Carbon::parse($tahapan->tanggal_selesai)->format('d M Y') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+                @else
+                <div class="text-center pt-5 pb-5">
+                    <span class="text-muted">Belum ada data tahapan untuk jadwal pendaftaran ini.</span>
+                </div>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
