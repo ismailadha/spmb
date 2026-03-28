@@ -7,25 +7,51 @@ use Illuminate\Database\Eloquent\Model;
 class Peserta extends Model
 {
     protected $fillable = [
-        'jenjang',
-        'jalur',
+        'user_id',
         'nik',
         'nisn',
         'nama_lengkap',
         'tempat_lahir',
         'tanggal_lahir',
-        'nomor_kk',
-        'tanggal_kk',
-        'nama_orang_tua',
+        'jenis_kelamin',
+        'agama',
         'alamat',
-        'pasfoto',
-        'akta_lahir',
-        'kk',
-        'ktp_orang_tua',
-        'kartu_pkh',
-        'surat_dokter',
-        'surat_pindah',
-        'sekolah_pilihan_1',
-        'sekolah_pilihan_2',
+        'latitude',
+        'longitude',
+        'no_hp',
+        'provinsi_id',
+        'kabupaten_id',
+        'kecamatan_id',
+        'desa_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function pendaftaran()
+    {
+        return $this->hasOne(Pendaftaran::class);
+    }
+
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class);
+    }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class);
+    }
+
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class);
+    }
+
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class);
+    }
 }
