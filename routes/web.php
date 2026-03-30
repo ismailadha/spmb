@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\JadwalDaftarController;
+use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PesertaController;
 // use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
@@ -63,21 +64,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('peserta', PesertaController::class);
     Route::resource('pengguna', UserController::class);
 
-    Route::get('registrasi-sd', function () {
-        return view('frontend.registrasi_sd');
-    })->name('registrasi-sd');
+    Route::prefix('pendaftaran')->group(function () {
+        Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+        Route::get('/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+        Route::post('/', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
-    Route::get('pendaftaran-sd', function () {
-        return view('backend.pendaftaran.formulir_sd');
-    })->name('pendaftaran-sd');
-
-    Route::get('pendaftaran-smp', function () {
-        return view('backend.pendaftaran.formulir_smp');
-    })->name('pendaftaran-smp');
-
-    Route::get('registrasi-smp', function () {
-        return view('frontend.registrasi_smp');
-    })->name('registrasi-smp');
+        Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
+        Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+    });
 
     // Post
     Route::resource('posts', PostController::class);

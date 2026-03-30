@@ -25,6 +25,8 @@ class Peserta extends Model
         'desa_id',
     ];
 
+    public $timestamps = false;
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -53,5 +55,11 @@ class Peserta extends Model
     public function desa()
     {
         return $this->belongsTo(Desa::class);
+    }
+
+    // relasi ke orang tua
+    public function orang_tua()
+    {
+        return $this->hasOne(OrangTua::class);
     }
 }

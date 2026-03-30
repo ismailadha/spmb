@@ -95,19 +95,4 @@ class PesertaController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
-
-    public function registrasi_sd()
-    {
-        return view('frontend.registrasi_sd');
-    }
-
-    public function pendaftaran_sd()
-    {
-        return view('backend.pendaftaran.formulir_sd');
-    }
-
-    public function registrasi_smp()
-    {
-        return view('frontend.registrasi_smp');
-    }
 }
