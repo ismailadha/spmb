@@ -9,7 +9,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <h3>Formulir Pendaftaran SD</h3>
+                <h3>Form Pendaftaran Peserta Didik Baru Periode Tahun Ajaran {{ $data->tahun_ajaran }}</h3>
             </div>
             <!--begin::Card title-->
         </div>
@@ -48,10 +48,18 @@
                             <div class="col-md-6">
                                 <label for="jalur" class="form-label">Jalur Pendaftaran</label>
                                 <select class="form-control" id="jalur" name="jalur" required>
-                                    <option value="" disabled selected>Pilih Jalur Pendaftaran</option>
-                                    <option value="Domisili">Domisili</option>
-                                    <option value="Afirmasi">Afirmasi</option>
-                                    <option value="Mutasi">Mutasi</option>
+                                    {{-- data jalur yang telah diambil oleh peserta --}}
+                                    @if ($mode == 'edit')
+                                        <option value="" disabled selected>Pilih Jalur Pendaftaran</option>
+                                        @foreach ($jalur_pendaftaran as $jalur)
+                                            <option value="{{ $jalur->jalur_id }}" {{ $data->jalur_id == $jalur->jalur_id ? 'selected' : '' }}>{{ $jalur->nama_jalur }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled selected>Pilih Jalur Pendaftaran</option>
+                                        @foreach ($jalur_pendaftaran as $jalur)
+                                            <option value="{{ $jalur->jalur_id }}">{{ $jalur->nama_jalur }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -236,11 +244,16 @@
                 const suratDokterContainer = document.getElementById('surat_dokter_container');
                 const suratPindahContainer = document.getElementById('surat_pindah_container');
 
-                if (jalur.value === 'Mutasi') {
+                let selectedText = '';
+                if (jalur.selectedIndex !== -1) {
+                    selectedText = jalur.options[jalur.selectedIndex].text.toLowerCase();
+                }
+
+                if (selectedText.includes('mutasi')) {
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'block';
-                } else if (jalur.value === 'Afirmasi') {
+                } else if (selectedText.includes('afirmasi')) {
                     kartuPkhContainer.style.display = 'block';
                     suratDokterContainer.style.display = 'block';
                     suratPindahContainer.style.display = 'none';
@@ -269,6 +282,15 @@
 
                 // Run on initial load
                 toggleDokumen();
+
+                // Jika mode edit, tombol lanjut di tab1 tidak disabled dan bisa lanjut ke tab2
+                // dan juga tab2, tab3, tab4, tab5 tidak disabled
+                @if ($mode == 'edit')
+                    nextBtn.disabled = false;
+                    document.querySelectorAll('#step2-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
+                        tab.classList.remove('disabled');
+                    });
+                @endif
             }
 
             // Wizard navigation logic

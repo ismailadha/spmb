@@ -10,7 +10,9 @@ class Pendaftaran extends Model
 
     protected $fillable = [
         'peserta_id',
-        'sekolah_jalur_id',
+        'periode_id',
+        'jalur_id',
+        'sekolah_id',
         'nomor_pendaftaran',
         'tanggal_daftar',
         'status',
@@ -21,9 +23,19 @@ class Pendaftaran extends Model
         return $this->belongsTo(Peserta::class);
     }
 
-    public function sekolahJalur()
+    public function periode()
     {
-        return $this->belongsTo(SekolahJalur::class);
+        return $this->belongsTo(PeriodeDaftar::class);
+    }
+
+    public function jalur()
+    {
+        return $this->belongsTo(JalurDaftar::class);
+    }
+
+    public function sekolah()
+    {
+        return $this->belongsTo(Sekolah::class);
     }
 
     public function nilaiSeleksi()

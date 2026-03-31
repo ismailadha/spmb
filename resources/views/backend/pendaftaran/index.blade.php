@@ -16,10 +16,17 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            {{-- Status data sudah submit --}}
-            <div class="alert alert-success">
-                Data anda sudah submit
-            </div>
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
         </div>
         <!--end::Card body-->
     </div>

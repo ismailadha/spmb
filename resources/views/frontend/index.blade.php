@@ -92,7 +92,7 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('pendaftaran-sd') }}" class="btn btn-success btn-block"
+                        <a href="{{ route('register-peserta') }}" class="btn btn-success btn-block"
                            style="border-radius:8px;font-weight:600;">Daftar Sekarang</a>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('pendaftaran-smp') }}" class="btn btn-primary btn-block"
+                        <a href="{{ route('register-peserta') }}" class="btn btn-primary btn-block"
                            style="border-radius:8px;font-weight:600;">Daftar Sekarang</a>
                     </div>
                 </div>
