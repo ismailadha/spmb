@@ -10,6 +10,7 @@ use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WilayahController;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +72,12 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
         Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+    });
+
+    Route::prefix('wilayah')->group(function () {
+        Route::get('/kabupaten/{id}', [WilayahController::class, 'getKabupaten'])->name('wilayah.kabupaten');
+        Route::get('/kecamatan/{id}', [WilayahController::class, 'getKecamatan'])->name('wilayah.kecamatan');
+        Route::get('/desa/{id}', [WilayahController::class, 'getDesa'])->name('wilayah.desa');
     });
 
     // Post

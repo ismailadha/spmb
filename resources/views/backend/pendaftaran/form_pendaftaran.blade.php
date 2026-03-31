@@ -84,29 +84,29 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
+                                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ $peserta->nama_lengkap }}" required>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" required>
+                                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ $peserta->tempat_lahir }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
+                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ $peserta->tanggal_lahir }}" required>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nomor_kk" class="form-label">Nomor Kartu Keluarga (KK)</label>
-                                <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" required>
+                                <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ $peserta->nomor_kk }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_kk" class="form-label">Tanggal Penerbitan KK</label>
-                                <input type="date" class="form-control" id="tanggal_kk" name="tanggal_kk" required>
+                                <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" value="{{ $peserta->tanggal_terbit_kk }}" required>
                             </div>
                         </div>
 
@@ -114,6 +114,77 @@
                             <div class="col-md-12">
                                 <label for="nama_orang_tua" class="form-label">Nama Orang Tua / Wali</label>
                                 <input type="text" class="form-control" id="nama_orang_tua" name="nama_orang_tua" required>
+                            </div>
+                        </div>
+
+                        {{-- Wilayah --}}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="provinsi" class="form-label">Provinsi</label>
+                                <select class="form-control" id="provinsi" name="provinsi" required>
+                                    @if ($mode == 'edit')
+                                        <option value="" disabled>Pilih Provinsi</option>
+                                        @foreach ($provinsi as $item)
+                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->provinsi_id ? 'selected' : '' }}>{{ $item->nama_provinsi }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled selected>Pilih Provinsi</option>
+                                        @foreach ($provinsi as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_provinsi }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="kabupaten" class="form-label">Kabupaten/Kota</label>
+                                <select class="form-control" id="kabupaten" name="kabupaten" required>
+                                    @if ($mode == 'edit')
+                                        <option value="" disabled>Pilih Kabupaten/Kota</option>
+                                        @foreach ($kabupaten as $item)
+                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->kabupaten_id ? 'selected' : '' }}>{{ $item->nama_kabupaten }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled selected>Pilih Kabupaten/Kota</option>
+                                        @foreach ($kabupaten as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_kabupaten }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="kecamatan" class="form-label">Kecamatan</label>
+                                <select class="form-control" id="kecamatan" name="kecamatan" required>
+                                    @if ($mode == 'edit')
+                                        <option value="" disabled>Pilih Kecamatan</option>
+                                        @foreach ($kecamatan as $item)
+                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->kecamatan_id ? 'selected' : '' }}>{{ $item->nama_kecamatan }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled selected>Pilih Kecamatan</option>
+                                        @foreach ($kecamatan as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_kecamatan }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="desa" class="form-label">Desa/Kelurahan</label>
+                                <select class="form-control" id="desa" name="desa" required>
+                                    @if ($mode == 'edit')
+                                        <option value="" disabled>Pilih Desa/Kelurahan</option>
+                                        @foreach ($desa as $item)
+                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->desa_id ? 'selected' : '' }}>{{ $item->nama_desa }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled selected>Pilih Desa/Kelurahan</option>
+                                        @foreach ($desa as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_desa }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                         </div>
 
@@ -291,6 +362,87 @@
                         tab.classList.remove('disabled');
                     });
                 @endif
+            }
+
+            // Dynamics Cascading Default for Wilayah
+            const provinsiSelect = document.getElementById('provinsi');
+            const kabupatenSelect = document.getElementById('kabupaten');
+            const kecamatanSelect = document.getElementById('kecamatan');
+            const desaSelect = document.getElementById('desa');
+
+            if (provinsiSelect) {
+                provinsiSelect.addEventListener('change', function() {
+                    const provinsiId = this.value;
+                    
+                    // Reset children
+                    kabupatenSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+                    desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+
+                    if (provinsiId) {
+                        fetch(`/wilayah/kabupaten/${provinsiId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                kabupatenSelect.innerHTML = '<option value="" disabled selected>Pilih Kabupaten/Kota</option>';
+                                data.forEach(item => {
+                                    kabupatenSelect.innerHTML += `<option value="${item.id}">${item.nama_kabupaten}</option>`;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching kabupaten:', error);
+                                kabupatenSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                            });
+                    }
+                });
+            }
+
+            if (kabupatenSelect) {
+                kabupatenSelect.addEventListener('change', function() {
+                    const kabupatenId = this.value;
+                    
+                    // Reset children
+                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                    desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+
+                    if (kabupatenId) {
+                        fetch(`/wilayah/kecamatan/${kabupatenId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+                                data.forEach(item => {
+                                    kecamatanSelect.innerHTML += `<option value="${item.id}">${item.nama_kecamatan}</option>`;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching kecamatan:', error);
+                                kecamatanSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                            });
+                    }
+                });
+            }
+
+            if (kecamatanSelect) {
+                kecamatanSelect.addEventListener('change', function() {
+                    const kecamatanId = this.value;
+                    
+                    // Reset children
+                    desaSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+
+                    if (kecamatanId) {
+                        fetch(`/wilayah/desa/${kecamatanId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+                                data.forEach(item => {
+                                    desaSelect.innerHTML += `<option value="${item.id}">${item.nama_desa}</option>`;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching desa:', error);
+                                desaSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                            });
+                    }
+                });
             }
 
             // Wizard navigation logic

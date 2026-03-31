@@ -15,14 +15,16 @@ class Peserta extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'agama',
-        'alamat',
-        'latitude',
-        'longitude',
-        'no_hp',
         'provinsi_id',
         'kabupaten_id',
         'kecamatan_id',
         'desa_id',
+        'alamat',
+        'nomor_kk',
+        'tanggal_terbit_kk',
+        'latitude',
+        'longitude',
+        'no_hp',
     ];
 
     public $timestamps = false;
