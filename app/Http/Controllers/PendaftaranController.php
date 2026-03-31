@@ -86,9 +86,9 @@ class PendaftaranController extends Controller
             ->join('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
             ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
             ->join('desa', 'peserta.desa_id', '=', 'desa.id')
-            ->join('orang_tua', 'peserta.id', '=', 'orang_tua.peserta_id')
+            ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
             ->where('peserta.id', $pendaftaran->peserta_id)
-            ->select('peserta.*', 'provinsi.*', 'kabupaten.*', 'kecamatan.*', 'desa.*', 'orang_tua.*')
+            ->select('peserta.*', 'provinsi.*', 'kabupaten.*', 'kecamatan.*', 'desa.*', 'orang_tua_wali.*')
             ->first();
 
         // dd($peserta);

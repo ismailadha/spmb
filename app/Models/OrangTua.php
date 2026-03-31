@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrangTua extends Model
 {
-    protected $table = 'orang_tua';
+    protected $table = 'orang_tua_wali';
 
     protected $fillable = [
         'peserta_id',
-        'nama_ayah',
-        'pekerjaan_ayah',
-        'nama_ibu',
-        'pekerjaan_ibu',
-        'penghasilan_bulanan',
-        'alamat_ortu',
+        'nama_wali',
+        'alamat_wali',
+        'pekerjaan_wali',
         'no_hp',
     ];
 

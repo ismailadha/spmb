@@ -3,6 +3,9 @@
 @section('pendaftaran-menu-active', 'active')
 
 @section('content')
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
     <!--begin::Card-->
     <div class="card" style="background-color: #fff5f5; border: 1px solid #ffe2e5;">
         <!--begin::Card header-->
@@ -29,6 +32,9 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link disabled" id="step2-tab" data-bs-toggle="tab" href="#step2" role="tab">Data Profil</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link disabled" id="step-wali-tab" data-bs-toggle="tab" href="#step-wali" role="tab">Orang Tua Wali</a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link disabled" id="step3-tab" data-bs-toggle="tab" href="#step3" role="tab">Upload Dokumen</a>
@@ -73,11 +79,11 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nik" class="form-label">NIK</label>
-                                <input type="text" class="form-control" id="nik" name="nik" required>
+                                <input type="text" class="form-control" id="nik" name="nik" value="{{ $peserta->nik }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="nisn" class="form-label">Nomor Induk Siswa Nasional (NISN)</label>
-                                <input type="text" class="form-control" id="nisn" name="nisn" required>
+                                <input type="text" class="form-control" id="nisn" name="nisn" value="{{ $peserta->nisn }}" required>
                             </div>
                         </div>
 
@@ -85,6 +91,29 @@
                             <div class="col-md-12">
                                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                                 <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ $peserta->nama_lengkap }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                                <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
+                                    <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                                    <option value="L" {{ $peserta->jenis_kelamin == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="P" {{ $peserta->jenis_kelamin == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="agama" class="form-label">Agama</label>
+                                <select class="form-control" id="agama" name="agama" required>
+                                    <option value="" disabled selected>Pilih Agama</option>
+                                    <option value="Islam" {{ $peserta->agama == 'Islam' ? 'selected' : '' }}>Islam</option>
+                                    <option value="Kristen" {{ $peserta->agama == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                                    <option value="Katolik" {{ $peserta->agama == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                                    <option value="Hindu" {{ $peserta->agama == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                                    <option value="Buddha" {{ $peserta->agama == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                                    <option value="Konghucu" {{ $peserta->agama == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                                </select>
                             </div>
                         </div>
 
@@ -107,13 +136,6 @@
                             <div class="col-md-6">
                                 <label for="tanggal_kk" class="form-label">Tanggal Penerbitan KK</label>
                                 <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" value="{{ $peserta->tanggal_terbit_kk }}" required>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="nama_orang_tua" class="form-label">Nama Orang Tua / Wali</label>
-                                <input type="text" class="form-control" id="nama_orang_tua" name="nama_orang_tua" required>
                             </div>
                         </div>
 
@@ -191,11 +213,62 @@
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <label for="alamat" class="form-label">Alamat</label>
-                                <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
+                                <textarea class="form-control" id="alamat" name="alamat" rows="3" required>{{ $peserta->alamat }}</textarea>
                             </div>
                         </div>
+
+                        {{-- latitude dan longitude --}}
+                        <div class="row mb-3">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Titik Lokasi Tempat Tinggal</label>
+                                <div class="text-muted mb-2">Geser penanda (marker) biru pada peta di bawah ini untuk menentukan titik koordinat tempat tinggal yang tepat.</div>
+                                <div id="map" style="height: 400px; width: 100%; border-radius: 8px; z-index: 1;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="latitude" class="form-label">Latitude</label>
+                                <input type="text" class="form-control" id="latitude" name="latitude" value="{{ $peserta->latitude }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="longitude" class="form-label">Longitude</label>
+                                <input type="text" class="form-control" id="longitude" name="longitude" value="{{ $peserta->longitude }}" required>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-between mt-4">
                             <button type="button" class="btn btn-secondary btn-prev" data-prev="step1">Sebelumnya</button>
+                            <button type="button" class="btn btn-primary btn-next" data-next="step-wali">Selanjutnya</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2a: Orang Tua Wali -->
+                    <div class="tab-pane fade" id="step-wali" role="tabpanel">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="nama_wali" class="form-label">Nama Wali</label>
+                                <input type="text" class="form-control" id="nama_wali" name="nama_wali" value="{{ $peserta->nama_wali ?? '' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="pekerjaan_wali" class="form-label">Pekerjaan Wali</label>
+                                <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" value="{{ $peserta->pekerjaan_wali ?? '' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="no_hp_wali" class="form-label">No. HP Wali</label>
+                                <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ $peserta->no_hp_wali ?? '' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="alamat_wali" class="form-label">Alamat Wali</label>
+                                <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3" required>{{ $peserta->alamat_wali ?? '' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-secondary btn-prev" data-prev="step2">Sebelumnya</button>
                             <button type="button" class="btn btn-primary btn-next" data-next="step3">Selanjutnya</button>
                         </div>
                     </div>
@@ -239,7 +312,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between mt-4">
-                            <button type="button" class="btn btn-secondary btn-prev" data-prev="step2">Sebelumnya</button>
+                            <button type="button" class="btn btn-secondary btn-prev" data-prev="step-wali">Sebelumnya</button>
                             <button type="button" class="btn btn-primary btn-next" data-next="step4">Selanjutnya</button>
                         </div>
                     </div>
@@ -305,8 +378,86 @@
     </div>
     <!--end::Card-->
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // -- Leaflet Map Initialization --
+            let defaultLat = 5.179858; // Islamic Center Lhokseumawe
+            let defaultLng = 97.141969; // Islamic Center Lhokseumawe
+            
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+
+            // Override default if coordinates exist in inputs
+            if(latInput && latInput.value && !isNaN(latInput.value)) {
+                defaultLat = parseFloat(latInput.value);
+            } else if (latInput) {
+                latInput.value = defaultLat.toFixed(6);
+            }
+
+            if(lngInput && lngInput.value && !isNaN(lngInput.value)) {
+                defaultLng = parseFloat(lngInput.value);
+            } else if (lngInput) {
+                lngInput.value = defaultLng.toFixed(6);
+            }
+
+            const map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            let marker = L.marker([defaultLat, defaultLng], {
+                draggable: true
+            }).addTo(map);
+
+            // Update inputs when marker is dragged
+            marker.on('dragend', function (e) {
+                const position = marker.getLatLng();
+                latInput.value = position.lat.toFixed(6);
+                lngInput.value = position.lng.toFixed(6);
+            });
+
+            // Update marker and inputs when map is clicked
+            map.on('click', function(e) {
+                marker.setLatLng(e.latlng);
+                latInput.value = e.latlng.lat.toFixed(6);
+                lngInput.value = e.latlng.lng.toFixed(6);
+            });
+
+            // Update marker when input changed manually
+            function updateMapFromInputs() {
+                const lat = parseFloat(latInput.value);
+                const lng = parseFloat(lngInput.value);
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    const newLatLng = new L.LatLng(lat, lng);
+                    marker.setLatLng(newLatLng);
+                    map.panTo(newLatLng);
+                }
+            }
+
+            if(latInput && lngInput) {
+                latInput.addEventListener('input', updateMapFromInputs);
+                lngInput.addEventListener('input', updateMapFromInputs);
+            }
+
+            // Fix map rendering issue when it is hidden inside a tab
+            const tab2 = document.getElementById('step2-tab');
+            if (tab2) {
+                tab2.addEventListener('shown.bs.tab', function () {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                        map.panTo(marker.getLatLng());
+                    }, 100);
+                });
+            }
+
+
+            // -- End Leaflet Map Initialization --
+
             const jalur = document.getElementById('jalur');
             const nextBtn = document.getElementById('nextToProfil');
 
@@ -340,12 +491,12 @@
                     toggleDokumen();
                     if(this.value) {
                         nextBtn.disabled = false;
-                        document.querySelectorAll('#step2-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
+                        document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
                             tab.classList.remove('disabled');
                         });
                     } else {
                         nextBtn.disabled = true;
-                        document.querySelectorAll('#step2-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
+                        document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
                             tab.classList.add('disabled');
                         });
                     }
@@ -358,7 +509,7 @@
                 // dan juga tab2, tab3, tab4, tab5 tidak disabled
                 @if ($mode == 'edit')
                     nextBtn.disabled = false;
-                    document.querySelectorAll('#step2-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
+                    document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
                         tab.classList.remove('disabled');
                     });
                 @endif
