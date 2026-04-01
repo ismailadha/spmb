@@ -17,6 +17,24 @@ class PendaftaranController extends Controller
 
     public function create()
     {
+        // cek apakah user sudah pernah membuat pendaftaran sebelumnya
+        $user_id = Auth::user()->id;
+
+        // query builder version
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->where('peserta.user_id', $user_id)
+            ->first();
+
+        if ($pendaftaran) {
+            // jika status = draft, lanjut edit
+            if ($pendaftaran->status == 'draft') {
+                return redirect()->route('pendaftaran.edit', $pendaftaran->id);
+            } else {
+                return redirect()->route('pendaftaran.index')->with('error', 'Anda sudah menyelesaikan pendaftaran');
+            }
+        }
+
         // tanggal hari ini dari Carbon
         $tanggal_hari_ini = Carbon::now()->format('Y-m-d');
 
@@ -29,40 +47,67 @@ class PendaftaranController extends Controller
 
         if (! $jadwal) {
             return redirect()->route('pendaftaran.index')->with('error', 'Jadwal pendaftaran sudah ditutup');
-        } else {
-            // cek apakah user sudah pernah membuat pendaftaran sebelumnya
-            $user_id = Auth::user()->id;
-
-            // query builder version
-            $pendaftaran = DB::table('pendaftaran')
-                ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
-                ->where('peserta.user_id', $user_id)
-                ->first();
-
-            if ($pendaftaran) {
-                // jika status = draft, lanjut edit
-                if ($pendaftaran->status == 'draft') {
-                    return redirect()->route('pendaftaran.edit', $pendaftaran->id);
-                } else {
-                    return redirect()->route('pendaftaran.index')->with('error', 'Anda sudah menyelesaikan pendaftaran');
-                }
-            } else {
-                // ambil data provinsi untuk ditaruh di create
-                $provinsi = DB::table('provinsi')->get();
-
-                // jika belum daftar, tampilkan form pendaftaran dengan status create
-                return view('backend.pendaftaran.form_pendaftaran', [
-                    'mode' => 'create',
-                    'data' => null,
-                    'provinsi' => $provinsi,
-                    // Karena ini data baru (create), biarkan yang lain kosong
-                    // dan akan dimuat lewat ajax jika provinsi dipilih
-                    'kabupaten' => [],
-                    'kecamatan' => [],
-                    'desa' => [],
-                ]);
-            }
         }
+
+        // ambil data provinsi untuk ditaruh di create
+        $provinsi = DB::table('provinsi')->get();
+
+        // ambil semua data jalur_id dari tabel sekolah_jalur sebagai data pilihan jalur lainnya (distinct)
+        $jalur_pendaftaran = DB::table('sekolah_jalur')
+            ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
+            ->where('jadwal_pendaftaran.status', 'open')
+            ->select('sekolah_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
+            ->distinct()
+            ->get();
+
+        // Jika tidak ada jalur pendaftaran yang dibuka
+        if ($jalur_pendaftaran->isEmpty()) {
+            return redirect()->route('pendaftaran.index')->with('info', 'Pendaftaran sedang dalam proses persiapan. Belum ada jadwal jalur pendaftaran yang dibuka saat ini.');
+        }
+
+        // buat dummy data object untuk menampung field-field di view
+        $data = new \stdClass;
+        $data->tahun_ajaran = $jadwal->tahun_ajaran;
+        $data->jalur_id = '';
+        $data->sekolah_id = '';
+        $data->id = '';
+
+        $peserta = new \stdClass;
+        $peserta->nik = '';
+        $peserta->nisn = '';
+        $peserta->nama_lengkap = '';
+        $peserta->jenis_kelamin = '';
+        $peserta->agama = '';
+        $peserta->tempat_lahir = '';
+        $peserta->tanggal_lahir = '';
+        $peserta->nomor_kk = '';
+        $peserta->tanggal_terbit_kk = '';
+        $peserta->provinsi_id = '';
+        $peserta->kabupaten_id = '';
+        $peserta->kecamatan_id = '';
+        $peserta->desa_id = '';
+        $peserta->alamat = '';
+        $peserta->latitude = '';
+        $peserta->longitude = '';
+        $peserta->nama_wali = '';
+        $peserta->pekerjaan_wali = '';
+        $peserta->no_hp_wali = '';
+        $peserta->alamat_wali = '';
+
+        // jika belum daftar, tampilkan form pendaftaran dengan status create
+        return view('backend.pendaftaran.form_pendaftaran', [
+            'mode' => 'create',
+            'data' => $data,
+            'provinsi' => $provinsi,
+            'jalur_pendaftaran' => $jalur_pendaftaran,
+            'peserta' => $peserta,
+            // Karena ini data baru (create), biarkan yang lain kosong
+            // dan akan dimuat lewat ajax jika provinsi dipilih
+            'kabupaten' => [],
+            'kecamatan' => [],
+            'desa' => [],
+        ]);
     }
 
     public function store(Request $request)
@@ -96,6 +141,8 @@ class PendaftaranController extends Controller
         // ambil semua data jalur_id dari tabel sekolah_jalur sebagai data pilihan jalur lainnya (distinct)
         $jalur_pendaftaran = DB::table('sekolah_jalur')
             ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
+            ->where('jadwal_pendaftaran.status', 'open')
             ->select('sekolah_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
             ->distinct()
             ->get();
@@ -138,5 +185,26 @@ class PendaftaranController extends Controller
     public function destroy($id)
     {
         return view('backend.pendaftaran.index');
+    }
+
+    public function getSekolahByJalur($jalur_id)
+    {
+        $query = DB::table('sekolah')
+            ->join('sekolah_jalur', 'sekolah.id', '=', 'sekolah_jalur.sekolah_id')
+            ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'kecamatan.nama_kecamatan')
+            ->where('sekolah_jalur.jalur_id', $jalur_id)
+            ->where('jadwal_pendaftaran.status', 'open');
+
+        $sekolah = $query->get();
+
+        // Group by kecamatan
+        $grouped = [];
+        foreach ($sekolah as $s) {
+            $grouped[$s->nama_kecamatan][] = $s;
+        }
+
+        return response()->json($grouped);
     }
 }

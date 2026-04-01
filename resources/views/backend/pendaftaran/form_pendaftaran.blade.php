@@ -323,25 +323,15 @@
                             <div class="col-md-6">
                                 <label for="sekolah_pilihan_1" class="form-label">Pilihan 1</label>
                                 <select class="form-control select2" id="sekolah_pilihan_1" name="sekolah_pilihan_1" required>
-                                    <option value="">-- Pilih Sekolah --</option>
-                                    <optgroup label="Kecamatan Banda Sakti">
-                                        <option value="CA">SD Negeri 1 Banda Sakti</option>
-                                        <option value="NV">SD Negeri 2 Banda Sakti</option>
-                                        <option value="OR">SD Negeri 3 Banda Sakti</option>
-                                        <option value="WA">SD Negeri 4 Banda Sakti</option>
-                                    </optgroup>
+                                    <option value="" disabled selected>-- Pilih Sekolah --</option>
+                                    {{-- Data akan di-load via Ajax berdasarkan Jalur Pilihan --}}
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="sekolah_pilihan_2" class="form-label">Pilihan 2</label>
-                                <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2" required>
-                                    <option value="">-- Pilih Sekolah --</option>
-                                    <optgroup label="Kecamatan Banda Sakti">
-                                        <option value="CA">SD Negeri 1 Banda Sakti</option>
-                                        <option value="NV">SD Negeri 2 Banda Sakti</option>
-                                        <option value="OR">SD Negeri 3 Banda Sakti</option>
-                                        <option value="WA">SD Negeri 4 Banda Sakti</option>
-                                    </optgroup>
+                                <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2">
+                                    <option value="" disabled selected>-- Pilih Sekolah --</option>
+                                    {{-- Data akan di-load via Ajax berdasarkan Jalur Pilihan --}}
                                 </select>
                             </div>
                         </div>
@@ -504,6 +494,76 @@
 
                 // Run on initial load
                 toggleDokumen();
+
+                // Dynamic fetch for Sekolah Pilihan based on Jalur
+                const sekolahPilihan1 = document.getElementById('sekolah_pilihan_1');
+                const sekolahPilihan2 = document.getElementById('sekolah_pilihan_2');
+
+                function loadSekolahByJalur(jalurId) {
+                    sekolahPilihan1.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                    sekolahPilihan2.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+
+                    if (!jalurId) {
+                        sekolahPilihan1.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
+                        sekolahPilihan2.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
+                        return;
+                    }
+
+                    fetch(`/pendaftaran/sekolah/jalur/${jalurId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let optionsHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
+                            // data is grouped by kecamatan
+                            for (const kecamatan in data) {
+                                if (data.hasOwnProperty(kecamatan)) {
+                                    optionsHTML += `<optgroup label="Kecamatan ${kecamatan}">`;
+                                    data[kecamatan].forEach(sekolah => {
+                                        optionsHTML += `<option value="${sekolah.id}">${sekolah.nama_sekolah}</option>`;
+                                    });
+                                    optionsHTML += `</optgroup>`;
+                                }
+                            }
+                            sekolahPilihan1.innerHTML = optionsHTML;
+                            sekolahPilihan2.innerHTML = optionsHTML;
+
+                            @if ($mode == 'edit')
+                                // Set selected values for edit mode if necessary
+                                // Assuming we have target variables for selected sekolah
+                                const selectedSekolah1 = "{{ $data->sekolah_id ?? '' }}"; // Need to adjust this depending on how you store choices
+                                if (selectedSekolah1) {
+                                    sekolahPilihan1.value = selectedSekolah1;
+                                    // Pilihan 2 bisa diatur jika tersimpan di database
+                                }
+                            @endif
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data sekolah:', error);
+                            sekolahPilihan1.innerHTML = '<option value="" disabled selected>Gagal memuat data sekolah</option>';
+                            sekolahPilihan2.innerHTML = '<option value="" disabled selected>Gagal memuat data sekolah</option>';
+                        });
+                }
+
+                jalur.addEventListener('change', function() {
+                    toggleDokumen();
+                    loadSekolahByJalur(this.value);
+                    
+                    if(this.value) {
+                        nextBtn.disabled = false;
+                        document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
+                            tab.classList.remove('disabled');
+                        });
+                    } else {
+                        nextBtn.disabled = true;
+                        document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
+                            tab.classList.add('disabled');
+                        });
+                    }
+                });
+
+                // Run on initial load for edit mode
+                if (jalur.value) {
+                    loadSekolahByJalur(jalur.value);
+                }
 
                 // Jika mode edit, tombol lanjut di tab1 tidak disabled dan bisa lanjut ke tab2
                 // dan juga tab2, tab3, tab4, tab5 tidak disabled

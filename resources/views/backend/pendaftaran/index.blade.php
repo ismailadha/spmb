@@ -16,6 +16,12 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
+            @if (session('info'))
+                <div class="alert alert-info">
+                    {{ session('info') }}
+                </div>
+            @endif
+
             @if (session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
