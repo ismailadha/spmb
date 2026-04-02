@@ -60,8 +60,12 @@
                                     <a class="dropdown-item py-2" href="{{ route('datasekolah') }}">Data Sekolah</a>
                                 </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link font-weight-bold mx-2" href="{{ route('zonasi-sekolah') }}" style="color: #1e2a4a; font-size: 0.95rem;">Peta Zonasi</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle font-weight-bold mx-2" href="#" data-toggle="dropdown" style="color: #1e2a4a; font-size: 0.95rem;">Zonasi Sekolah</a>
+                                <div class="dropdown-menu border-0 shadow-sm" style="border-radius: 12px; margin-top: 10px;">
+                                    <a class="dropdown-item py-2" href="{{ route('zonasi-sd') }}">SD</a>
+                                    <a class="dropdown-item py-2" href="{{ route('zonasi-smp') }}">SMP</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bold mx-2" href="{{ route('hasil-seleksi') }}" style="color: #1e2a4a; font-size: 0.95rem;">Hasil Seleksi</a>

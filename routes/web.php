@@ -33,9 +33,11 @@ Route::get('hasil-seleksi', function () {
     return view('frontend.hasil_seleksi');
 })->name('hasil-seleksi');
 
-Route::get('zonasi-sekolah', function () {
-    return view('frontend.zonasi_sekolah');
-})->name('zonasi-sekolah');
+// zonasi sd
+Route::get('zonasi-sd', [FrontendController::class, 'zonasi_sd'])->name('zonasi-sd');
+
+// zonasi smp
+Route::get('zonasi-smp', [FrontendController::class, 'zonasi_smp'])->name('zonasi-smp');
 
 Route::get('kontak', function () {
     return view('frontend.kontak');

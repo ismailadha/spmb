@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Sambutan;
 use App\Models\Slider;
+use Illuminate\Support\Facades\DB;
 
 class FrontendController extends Controller
 {
@@ -32,5 +33,35 @@ class FrontendController extends Controller
     public function datasekolah()
     {
         return view('frontend.daftar_cari_sekolah');
+    }
+
+    public function zonasi_sd()
+    {
+        // ambil data sekolah berdasarkan jenjang SD, terurut berdasarkan kode kecamatan
+        $sekolah = DB::table('sekolah')
+            ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->select('sekolah.*', 'kecamatan.nama_kecamatan')
+            ->where('jenjang', 'SD')
+            ->orderBy('id_kecamatan', 'asc')
+            ->get();
+
+        // ambil data desa untuk wilayah domisili
+        $desa = DB::table('desa')->get()->groupBy('id_kecamatan');
+
+        return view('frontend.zonasi_sd', compact('sekolah', 'desa'));
+    }
+
+    public function zonasi_smp()
+    {
+        $sekolah = DB::table('sekolah')
+            ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->select('sekolah.*', 'kecamatan.nama_kecamatan')
+            ->where('jenjang', 'SMP')
+            ->orderBy('id_kecamatan', 'asc')
+            ->get();
+
+        $desa = DB::table('desa')->get()->groupBy('id_kecamatan');
+
+        return view('frontend.zonasi_smp', compact('sekolah', 'desa'));
     }
 }
