@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 
 class PesertaController extends Controller
@@ -76,16 +77,22 @@ class PesertaController extends Controller
 
     public function register_store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:'.User::class],
+            'nik' => ['required', 'min:16', 'unique:users,username', 'numeric'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'terms' => ['accepted'],
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $user = User::create([
             'name' => $request->name,
-            'username' => $request->username,
+            'username' => $request->nik,
+            'nik' => $request->nik,
+            'role' => 'peserta',
             'password' => Hash::make($request->password),
         ]);
 

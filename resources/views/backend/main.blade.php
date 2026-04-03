@@ -136,39 +136,22 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Pendaftaran</span>
 									</div>
 								</div>
-								<div data-kt-menu-trigger="click" class="menu-item here @yield('master-pendaftaran-menu-open') menu-accordion">
-									<span class="menu-link">
+								<div class="menu-item">
+									<a class="menu-link @yield('periode-menu-active')" href="{{ route('periode.index') }}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
-													<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
-												</svg>
+                                                <span class="svg-icon svg-icon-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
+														<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
+													</svg>
+                                                </span>
 											</span>
 										</span>
-										<span class="menu-title">Data Master</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<div class="menu-sub menu-sub-accordion menu-active-bg">
-										<div class="menu-item">
-											<a class="menu-link @yield('periode-menu-active')" href="#">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Periode Pendaftaran</span>
-											</a>
-										</div>
-										<div class="menu-item">
-											<a class="menu-link @yield('jalur-menu-active')" href="#">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Jalur Pendaftaran</span>
-											</a>
-										</div>
-									</div>
+										<span class="menu-title">Periode Pendaftaran</span>
+									</a>
 								</div>
-								<div class="menu-item">
+								{{-- <div class="menu-item">
 									<a class="menu-link @yield('jadwal-menu-active')" href="{{ route('jadwal.index') }}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
@@ -182,7 +165,7 @@
 										</span>
 										<span class="menu-title">Jadwal</span>
 									</a>
-								</div>
+								</div> --}}
 								<div class="menu-item">
 									<a class="menu-link @yield('pendaftaran-menu-active')" href="{{ route('pendaftaran.create') }}">
 										<span class="menu-icon">

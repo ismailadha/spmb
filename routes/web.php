@@ -3,6 +3,7 @@
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\JadwalDaftarController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\PeriodeDaftarController;
 use App\Http\Controllers\PesertaController;
 // use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
@@ -63,6 +64,9 @@ Route::middleware('auth')->group(function () {
     Route::put('jadwal/updateTahapan/{id}', [JadwalDaftarController::class, 'updateTahapan'])->name('jadwal.updateTahapan');
 
     Route::resource('sekolah', SekolahController::class);
+
+    // resource periode
+    Route::resource('periode', PeriodeDaftarController::class);
 
     Route::resource('peserta', PesertaController::class);
     Route::resource('pengguna', UserController::class);
