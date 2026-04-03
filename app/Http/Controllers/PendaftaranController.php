@@ -41,8 +41,8 @@ class PendaftaranController extends Controller
         // cek apakah periode pendaftaran masih dibuka
         $jadwal = DB::table('periode_pendaftaran')
             ->where('status_aktif', 1)
-            ->where('tanggal_mulai', '<=', $tanggal_hari_ini)
-            ->where('tanggal_selesai', '>=', $tanggal_hari_ini)
+            ->where('peserta_daftar_mulai', '<=', $tanggal_hari_ini)
+            ->where('peserta_daftar_selesai', '>=', $tanggal_hari_ini)
             ->first();
 
         if (! $jadwal) {
@@ -95,6 +95,17 @@ class PendaftaranController extends Controller
         $peserta->no_hp_wali = '';
         $peserta->alamat_wali = '';
 
+        // load semua sekolah dan group by jenjang dan kecamatan
+        $semuaSekolah = DB::table('sekolah')
+            ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'kecamatan.nama_kecamatan')
+            ->get();
+
+        $sekolahGrouped = [];
+        foreach ($semuaSekolah as $s) {
+            $sekolahGrouped[$s->jenjang][$s->nama_kecamatan][] = $s;
+        }
+
         // jika belum daftar, tampilkan form pendaftaran dengan status create
         return view('backend.pendaftaran.form_pendaftaran', [
             'mode' => 'create',
@@ -102,6 +113,7 @@ class PendaftaranController extends Controller
             'provinsi' => $provinsi,
             'jalur_pendaftaran' => $jalur_pendaftaran,
             'peserta' => $peserta,
+            'sekolahGrouped' => $sekolahGrouped,
             // Karena ini data baru (create), biarkan yang lain kosong
             // dan akan dimuat lewat ajax jika provinsi dipilih
             'kabupaten' => [],
@@ -120,10 +132,17 @@ class PendaftaranController extends Controller
         // tabel pendaftaran, periode_pendaftaran, peserta, orang_tua, sekolah, jalurDaftar
         $pendaftaran = DB::table('pendaftaran')
             ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
-            ->join('sekolah', 'pendaftaran.sekolah_id', '=', 'sekolah.id')
+            ->leftJoin('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+            ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->where('pendaftaran.id', $id)
-            ->select('pendaftaran.*', 'sekolah.*', 'jalur_pendaftaran.*', 'periode_pendaftaran.*')
+            ->select(
+                'pendaftaran.*', 
+                'sekolah1.nama_sekolah as sekolah1_nama', 
+                'sekolah2.nama_sekolah as sekolah2_nama', 
+                'jalur_pendaftaran.nama_jalur', 
+                'periode_pendaftaran.tahun_ajaran'
+            )
             ->first();
 
         $peserta = DB::table('peserta')
@@ -139,12 +158,18 @@ class PendaftaranController extends Controller
         // dd($peserta);
 
         // ambil semua data jalur_id dari tabel sekolah_jalur sebagai data pilihan jalur lainnya (distinct)
-        $jalur_pendaftaran = DB::table('sekolah_jalur')
-            ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
-            ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
-            ->where('jadwal_pendaftaran.status', 'open')
-            ->select('sekolah_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
-            ->distinct()
+        // $jalur_pendaftaran = DB::table('sekolah_jalur')
+        //     ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+        //     ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
+        //     ->where('jadwal_pendaftaran.status', 'open')
+        //     ->select('sekolah_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
+        //     ->distinct()
+        //     ->get();
+
+        $jalur_pendaftaran = DB::table('periode_jalur')
+            ->join('jalur_pendaftaran', 'periode_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->where('periode_jalur.periode_id', $pendaftaran->periode_id)
+            ->select('periode_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
             ->get();
 
         // ambil semua data provinsi
@@ -165,11 +190,23 @@ class PendaftaranController extends Controller
             ->where('id_kecamatan', $peserta->kecamatan_id)
             ->get();
 
+        // load semua sekolah dan group by jenjang dan kecamatan
+        $semuaSekolah = DB::table('sekolah')
+            ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'kecamatan.nama_kecamatan')
+            ->get();
+
+        $sekolahGrouped = [];
+        foreach ($semuaSekolah as $s) {
+            $sekolahGrouped[$s->jenjang][$s->nama_kecamatan][] = $s;
+        }
+
         return view('backend.pendaftaran.form_pendaftaran', [
             'mode' => 'edit',
             'data' => $pendaftaran,
             'peserta' => $peserta,
             'jalur_pendaftaran' => $jalur_pendaftaran,
+            'sekolahGrouped' => $sekolahGrouped,
             'provinsi' => $provinsi,
             'kabupaten' => $kabupaten,
             'kecamatan' => $kecamatan,

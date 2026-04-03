@@ -12,9 +12,11 @@ class Pendaftaran extends Model
         'peserta_id',
         'periode_id',
         'jalur_id',
-        'sekolah_id',
+        'jenjang',
         'nomor_pendaftaran',
         'tanggal_daftar',
+        'sekolah_pilihan_1',
+        'sekolah_pilihan_2',
         'status',
     ];
 
@@ -33,9 +35,14 @@ class Pendaftaran extends Model
         return $this->belongsTo(JalurDaftar::class);
     }
 
-    public function sekolah()
+    public function sekolahPilihan1()
     {
-        return $this->belongsTo(Sekolah::class);
+        return $this->belongsTo(Sekolah::class, 'sekolah_pilihan_1');
+    }
+
+    public function sekolahPilihan2()
+    {
+        return $this->belongsTo(Sekolah::class, 'sekolah_pilihan_2');
     }
 
     public function nilaiSeleksi()

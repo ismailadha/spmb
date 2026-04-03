@@ -47,6 +47,16 @@ class Sekolah extends Model
         return $this->belongsTo(Desa::class, 'id_desa');
     }
 
+    public function sekolahPilihan1()
+    {
+        return $this->hasMany(Pendaftaran::class, 'sekolah_pilihan_1');
+    }
+
+    public function sekolahPilihan2()
+    {
+        return $this->hasMany(Pendaftaran::class, 'sekolah_pilihan_2');
+    }
+
     // disable timestamps
     public $timestamps = false;
 }

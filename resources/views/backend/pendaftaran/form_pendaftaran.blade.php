@@ -24,8 +24,6 @@
                 @if ($mode == 'edit')
                     @method('PUT')
                 @endif
-                <input type="hidden" name="jenjang" value="SD">
-
                 <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6" id="wizardTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="step1-tab" data-bs-toggle="tab" href="#step1" role="tab">Pilih Jalur</a>
@@ -65,6 +63,22 @@
                                         @foreach ($jalur_pendaftaran as $jalur)
                                             <option value="{{ $jalur->jalur_id }}">{{ $jalur->nama_jalur }}</option>
                                         @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="jenjang" class="form-label">Jenjang</label>
+                                <select class="form-control" id="jenjang" name="jenjang" required>
+                                    {{-- data jenjang yang telah diambil oleh peserta --}}
+                                    @if ($mode == 'edit')
+                                        <option value="" disabled selected>Pilih Jenjang</option>
+                                    {{-- Dropdown biasa: SD, SMP --}}
+                                    <option value="SD" {{ $data->jenjang == 'SD' ? 'selected' : '' }}>SD</option>
+                                    <option value="SMP" {{ $data->jenjang == 'SMP' ? 'selected' : '' }}>SMP</option>
+                                    @else
+                                        <option value="" disabled selected>Pilih Jenjang</option>
+                                        <option value="SD">SD</option>
+                                        <option value="SMP">SMP</option>
                                     @endif
                                 </select>
                             </div>
@@ -311,6 +325,32 @@
                                 <input type="file" class="form-control" id="surat_pindah" name="surat_pindah">
                             </div>
                         </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6" id="prestasi_akademik_container" style="display: none;">
+                                <h5 class="mb-3">Dokumen Prestasi Akademik (Jalur Prestasi)</h5>
+                                <div class="mb-3">
+                                    <label for="nilai_tka" class="form-label">Nilai TKA</label>
+                                    <input type="number" class="form-control" id="nilai_tka" name="nilai_tka" placeholder="Masukkan Nilai TKA">
+                                </div>
+                                <div>
+                                    <label for="dokumen_tka" class="form-label">Dokumen Hasil Tes TKA</label>
+                                    <input type="file" class="form-control" id="dokumen_tka" name="dokumen_tka">
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="prestasi_nonakademik_container" style="display: none;">
+                                <h5 class="mb-3">Dokumen Prestasi Non-Akademik (Jalur Prestasi)</h5>
+                                <div class="mb-3">
+                                    <label for="nama_perlombaan" class="form-label">Nama Perlombaan</label>
+                                    <input type="text" class="form-control" id="nama_perlombaan" name="nama_perlombaan" placeholder="Masukkan Nama Perlombaan">
+                                </div>
+                                <div>
+                                    <label for="sertifikat_penghargaan" class="form-label">Sertifikat Penghargaan</label>
+                                    <input type="file" class="form-control" id="sertifikat_penghargaan" name="sertifikat_penghargaan">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-between mt-4">
                             <button type="button" class="btn btn-secondary btn-prev" data-prev="step-wali">Sebelumnya</button>
                             <button type="button" class="btn btn-primary btn-next" data-next="step4">Selanjutnya</button>
@@ -324,14 +364,12 @@
                                 <label for="sekolah_pilihan_1" class="form-label">Pilihan 1</label>
                                 <select class="form-control select2" id="sekolah_pilihan_1" name="sekolah_pilihan_1" required>
                                     <option value="" disabled selected>-- Pilih Sekolah --</option>
-                                    {{-- Data akan di-load via Ajax berdasarkan Jalur Pilihan --}}
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="sekolah_pilihan_2" class="form-label">Pilihan 2</label>
                                 <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2">
                                     <option value="" disabled selected>-- Pilih Sekolah --</option>
-                                    {{-- Data akan di-load via Ajax berdasarkan Jalur Pilihan --}}
                                 </select>
                             </div>
                         </div>
@@ -455,6 +493,9 @@
                 const kartuPkhContainer = document.getElementById('kartu_pkh_container');
                 const suratDokterContainer = document.getElementById('surat_dokter_container');
                 const suratPindahContainer = document.getElementById('surat_pindah_container');
+                const prestasiAkademikContainer = document.getElementById('prestasi_akademik_container');
+                const prestasiNonakademikContainer = document.getElementById('prestasi_nonakademik_container');
+                const jenjangSelect = document.getElementById('jenjang');
 
                 let selectedText = '';
                 if (jalur.selectedIndex !== -1) {
@@ -465,14 +506,43 @@
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'block';
+                    if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
+                    if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
                 } else if (selectedText.includes('afirmasi')) {
                     kartuPkhContainer.style.display = 'block';
                     suratDokterContainer.style.display = 'block';
                     suratPindahContainer.style.display = 'none';
+                    if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
+                    if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
+                } else if (selectedText.includes('prestasi')) {
+                    kartuPkhContainer.style.display = 'none';
+                    suratDokterContainer.style.display = 'none';
+                    suratPindahContainer.style.display = 'none';
+                    if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'block';
+                    if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'block';
                 } else {
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'none';
+                    if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
+                    if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
+                }
+
+                if (jenjangSelect) {
+                    const sdOption = jenjangSelect.querySelector('option[value="SD"]');
+                    if (sdOption) {
+                        if (selectedText.includes('prestasi')) {
+                            sdOption.disabled = true;
+                            if(jenjangSelect.value === 'SD') {
+                                jenjangSelect.value = '';
+                                if(typeof renderSekolah === 'function') {
+                                    renderSekolah('');
+                                }
+                            }
+                        } else {
+                            sdOption.disabled = false;
+                        }
+                    }
                 }
             }
 
@@ -495,75 +565,7 @@
                 // Run on initial load
                 toggleDokumen();
 
-                // Dynamic fetch for Sekolah Pilihan based on Jalur
-                const sekolahPilihan1 = document.getElementById('sekolah_pilihan_1');
-                const sekolahPilihan2 = document.getElementById('sekolah_pilihan_2');
 
-                function loadSekolahByJalur(jalurId) {
-                    sekolahPilihan1.innerHTML = '<option value="" disabled selected>Memuat...</option>';
-                    sekolahPilihan2.innerHTML = '<option value="" disabled selected>Memuat...</option>';
-
-                    if (!jalurId) {
-                        sekolahPilihan1.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
-                        sekolahPilihan2.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
-                        return;
-                    }
-
-                    fetch(`/pendaftaran/sekolah/jalur/${jalurId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            let optionsHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
-                            // data is grouped by kecamatan
-                            for (const kecamatan in data) {
-                                if (data.hasOwnProperty(kecamatan)) {
-                                    optionsHTML += `<optgroup label="Kecamatan ${kecamatan}">`;
-                                    data[kecamatan].forEach(sekolah => {
-                                        optionsHTML += `<option value="${sekolah.id}">${sekolah.nama_sekolah}</option>`;
-                                    });
-                                    optionsHTML += `</optgroup>`;
-                                }
-                            }
-                            sekolahPilihan1.innerHTML = optionsHTML;
-                            sekolahPilihan2.innerHTML = optionsHTML;
-
-                            @if ($mode == 'edit')
-                                // Set selected values for edit mode if necessary
-                                // Assuming we have target variables for selected sekolah
-                                const selectedSekolah1 = "{{ $data->sekolah_id ?? '' }}"; // Need to adjust this depending on how you store choices
-                                if (selectedSekolah1) {
-                                    sekolahPilihan1.value = selectedSekolah1;
-                                    // Pilihan 2 bisa diatur jika tersimpan di database
-                                }
-                            @endif
-                        })
-                        .catch(error => {
-                            console.error('Error fetching data sekolah:', error);
-                            sekolahPilihan1.innerHTML = '<option value="" disabled selected>Gagal memuat data sekolah</option>';
-                            sekolahPilihan2.innerHTML = '<option value="" disabled selected>Gagal memuat data sekolah</option>';
-                        });
-                }
-
-                jalur.addEventListener('change', function() {
-                    toggleDokumen();
-                    loadSekolahByJalur(this.value);
-                    
-                    if(this.value) {
-                        nextBtn.disabled = false;
-                        document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
-                            tab.classList.remove('disabled');
-                        });
-                    } else {
-                        nextBtn.disabled = true;
-                        document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
-                            tab.classList.add('disabled');
-                        });
-                    }
-                });
-
-                // Run on initial load for edit mode
-                if (jalur.value) {
-                    loadSekolahByJalur(jalur.value);
-                }
 
                 // Jika mode edit, tombol lanjut di tab1 tidak disabled dan bisa lanjut ke tab2
                 // dan juga tab2, tab3, tab4, tab5 tidak disabled
@@ -683,6 +685,52 @@
                     }
                 });
             });
+
+            // Sekolah Pilihan dynamically based on Jenjang
+            const sekolahData = @json($sekolahGrouped);
+            const jenjangSelect = document.getElementById('jenjang');
+            const sekolahPilihan1 = document.getElementById('sekolah_pilihan_1');
+            const sekolahPilihan2 = document.getElementById('sekolah_pilihan_2');
+
+            function renderSekolah(jenjang) {
+                let optionsHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
+                if (jenjang && sekolahData[jenjang]) {
+                    for (const kecamatan in sekolahData[jenjang]) {
+                        optionsHTML += `<optgroup label="Kecamatan ${kecamatan}">`;
+                        sekolahData[jenjang][kecamatan].forEach(sekolah => {
+                            optionsHTML += `<option value="${sekolah.id}">${sekolah.nama_sekolah}</option>`;
+                        });
+                        optionsHTML += `</optgroup>`;
+                    }
+                }
+                sekolahPilihan1.innerHTML = optionsHTML;
+                sekolahPilihan2.innerHTML = optionsHTML;
+            }
+
+            if (jenjangSelect) {
+                jenjangSelect.addEventListener('change', function() {
+                    renderSekolah(this.value);
+                });
+
+                // Initial load
+                if (jenjangSelect.value) {
+                    renderSekolah(jenjangSelect.value);
+                    
+                    @if ($mode == 'edit')
+                        // Set selected values for edit mode
+                        const selectedSekolah1 = "{{ $data->sekolah_pilihan_1 ?? '' }}";
+                        const selectedSekolah2 = "{{ $data->sekolah_pilihan_2 ?? '' }}";
+                        
+                        if (selectedSekolah1) {
+                            sekolahPilihan1.value = selectedSekolah1;
+                        }
+                        if (selectedSekolah2) {
+                            sekolahPilihan2.value = selectedSekolah2;
+                        }
+                    @endif
+                }
+            }
+
         });
     </script>
 @endsection
