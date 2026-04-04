@@ -27,6 +27,10 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    Route::get('login-peserta', [PesertaController::class, 'login_create'])->name('login-peserta');
+
+    Route::post('login-peserta', [PesertaController::class, 'login_store'])->name('login-peserta.store');
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 

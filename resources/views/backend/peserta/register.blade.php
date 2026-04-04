@@ -219,7 +219,7 @@
                                             </div>
                                             
                                             <div class="text-center mt-3">
-                                                <p class="text-muted mb-2">Sudah punya akun? <a href="{{ route('login') }}" class="login-link">Login di sini</a></p>
+                                                <p class="text-muted mb-2">Sudah punya akun? <a href="{{ route('login-peserta') }}" class="login-link">Login di sini</a></p>
                                                 <a href="{{ route('home') }}" class="back-home-btn">
                                                     &larr; Kembali ke Beranda
                                                 </a>

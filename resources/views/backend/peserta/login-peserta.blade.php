@@ -137,6 +137,43 @@
                 border-color: #ddd;
                 text-decoration: none;
             }
+
+            .register-section {
+                margin-top: 25px;
+                padding: 15px;
+                background-color: #f0f9ff;
+                border: 1px dashed #4facfe;
+                border-radius: 12px;
+                text-align: center;
+                transition: all 0.3s ease;
+            }
+
+            .register-section:hover {
+                background-color: #e0f2fe;
+                border-style: solid;
+            }
+
+            .register-section p {
+                font-size: 14px;
+                color: #475569;
+                margin-bottom: 8px;
+            }
+
+            .register-link {
+                color: #4facfe;
+                font-weight: 700;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 15px;
+                transition: gap 0.3s ease;
+            }
+
+            .register-link:hover {
+                color: #00f2fe;
+                gap: 8px;
+            }
         </style>
     </head>
     <body>
@@ -152,7 +189,7 @@
                                 <div class="form-wrapper">
                                     <div class="card interactive-card">
                                         <div class="card-header">
-                                            <h4 class="text-center">Login</h4>
+                                            <h4 class="text-center">Login Peserta</h4>
                                         </div>
                                         <div class="card-body">
                                             <!-- Session Status -->
@@ -166,7 +203,7 @@
                                                 @csrf
                                                 <div class="form-floating-custom">
                                                     <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" placeholder=" " required autofocus autocomplete="username">
-                                                    <label for="username">Username / NIK</label>
+                                                    <label for="username">NIK</label>
                                                     @error('username')
                                                         <span class="text-danger" style="font-size: 13px;">{{ $message }}</span>
                                                     @enderror
@@ -190,8 +227,15 @@
                                                 <div class="form-group mb-4">
                                                     <button class="btn btn-interactive" type="submit">Log in</button>
                                                 </div>
+
+                                                <div class="register-section">
+                                                    <p>Belum memiliki akun? Silakan daftar untuk dapat melakukan pendaftaran peserta baru.</p>
+                                                    <a href="{{ route('register-peserta') }}" class="register-link">
+                                                        Daftar Akun Peserta Baru <span aria-hidden="true">&rarr;</span>
+                                                    </a>
+                                                </div>
                                                 
-                                                <div class="text-center mt-3">
+                                                <div class="text-center mt-4">
                                                     <a href="{{ route('home') }}" class="back-home-btn">
                                                         &larr; Kembali ke Beranda
                                                     </a>

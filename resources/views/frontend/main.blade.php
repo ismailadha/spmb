@@ -84,8 +84,8 @@
                                     @csrf
                                 </form>
                             @else
-                                <a class="btn btn-primary px-4 py-2" style="border-radius: 50px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%); border: none; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);" href="{{ route('register-peserta') }}" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(52, 152, 219, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(52, 152, 219, 0.3)';">
-                                    <i class="la la-user-plus mr-1"></i> Daftar SPMB
+                                <a class="btn btn-primary px-4 py-2" style="border-radius: 50px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%); border: none; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);" href="{{ route('login-peserta') }}" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(52, 152, 219, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(52, 152, 219, 0.3)';">
+                                    <i class="la la-user-plus mr-1"></i> Login SPMB
                                 </a>
                             @endauth
                         </div>

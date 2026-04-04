@@ -102,4 +102,36 @@ class PesertaController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
+
+    public function login_create()
+    {
+        return view('backend.peserta.login-peserta');
+    }
+
+    public function login_store(Request $request): RedirectResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'nik' => ['required', 'min:16', 'unique:users,username', 'numeric'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'terms' => ['accepted'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'username' => $request->nik,
+            'nik' => $request->nik,
+            'role' => 'peserta',
+            'password' => Hash::make($request->password),
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('dashboard', absolute: false));
+    }
 }
