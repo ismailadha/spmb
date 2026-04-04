@@ -3,38 +3,351 @@
 @section('pendaftaran-menu-active', 'active')
 
 @section('content')
-    <!--begin::Card-->
-    <div class="card" style="background-color: #fff5f5; border: 1px solid #ffe2e5;">
-        <!--begin::Card header-->
-        <div class="card-header border-0 pt-6">
-            <!--begin::Card title-->
-            <div class="card-title">
-                <h3>Data Pendaftaran</h3>
+    <div class="mb-5">
+        @if (session('info'))
+            <div class="alert alert-info">
+                {{ session('info') }}
             </div>
-            <!--begin::Card title-->
-        </div>
-        <!--end::Card header-->
-        <!--begin::Card body-->
-        <div class="card-body py-4">
-            @if (session('info'))
-                <div class="alert alert-info">
-                    {{ session('info') }}
-                </div>
-            @endif
+        @endif
 
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-        </div>
-        <!--end::Card body-->
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
     </div>
-    <!--end::Card-->
+
+    @if ($pendaftaran)
+        <!--begin::Navbar-->
+        <div class="card mb-5 mb-xl-10">
+            <div class="card-body pt-9 pb-0">
+                <!--begin::Details-->
+                <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+                    <!--begin: Pic-->
+                    <div class="me-7 mb-4">
+                        <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                            <img src="{{ asset('back/media/avatars/blank.png') }}" alt="image" />
+                            <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
+                        </div>
+                    </div>
+                    <!--end::Pic-->
+                    <!--begin::Info-->
+                    <div class="flex-grow-1">
+                        <!--begin::Title-->
+                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                            <!--begin::User-->
+                            <div class="d-flex flex-column">
+                                <!--begin::Name-->
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="text-gray-900 fs-2 fw-bolder me-1">{{ $pendaftaran->nama_lengkap }}</span>
+                                    <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Terverifikasi Sistem</span>
+                                </div>
+                                <!--end::Name-->
+                                <!--begin::Info-->
+                                <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+                                    <span class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+                                        <i class="bi bi-person-badge fs-4 me-1"></i>NISN: {{ $pendaftaran->nisn }}
+                                    </span>
+                                    <span class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+                                        <i class="bi bi-geo-alt fs-4 me-1"></i>{{ $pendaftaran->nama_kecamatan }}, {{ $pendaftaran->nama_kabupaten }}
+                                    </span>
+                                    <span class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
+                                        <i class="bi bi-calendar-check fs-4 me-1"></i>Terdaftar: {{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->isoFormat('D MMMM YYYY') }}
+                                    </span>
+                                </div>
+                                <!--end::Info-->
+                            </div>
+                            <!--end::User-->
+                            <!--begin::Actions-->
+                            <div class="d-flex my-4">
+                                <a href="{{ route('pendaftaran.print', $pendaftaran->id) }}" target="_blank" class="btn btn-sm btn-primary me-2">
+                                    <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu
+                                </a>
+                            </div>
+                            <!--end::Actions-->
+                        </div>
+                        <!--end::Title-->
+                        <!--begin::Stats-->
+                        <div class="d-flex flex-wrap flex-stack">
+                            <!--begin::Wrapper-->
+                            <div class="d-flex flex-column flex-grow-1 pe-8">
+                                <!--begin::Stats-->
+                                <div class="d-flex flex-wrap">
+                                    <!--begin::Stat-->
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bolder">{{ $pendaftaran->nomor_pendaftaran ?? 'Menunggu...' }}</div>
+                                        </div>
+                                        <!--end::Number-->
+                                        <!--begin::Label-->
+                                        <div class="fw-bold fs-6 text-gray-400">Nomor Pendaftaran</div>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Stat-->
+                                    <!--begin::Stat-->
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bolder">{{ strtoupper($pendaftaran->jenjang) }}</div>
+                                        </div>
+                                        <!--end::Number-->
+                                        <!--begin::Label-->
+                                        <div class="fw-bold fs-6 text-gray-400">Jenjang</div>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Stat-->
+                                    <!--begin::Stat-->
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <!--begin::Number-->
+                                        <div class="d-flex align-items-center">
+                                            <div class="fs-2 fw-bolder text-primary">{{ $pendaftaran->nama_jalur }}</div>
+                                        </div>
+                                        <!--end::Number-->
+                                        <!--begin::Label-->
+                                        <div class="fw-bold fs-6 text-gray-400">Jalur Masuk</div>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Stat-->
+                                </div>
+                                <!--end::Stats-->
+                            </div>
+                            <!--end::Wrapper-->
+                        </div>
+                        <!--end::Stats-->
+                    </div>
+                    <!--end::Info-->
+                </div>
+                <!--end::Details-->
+            </div>
+        </div>
+        <!--end::Navbar-->
+
+        <!--begin::details View-->
+        <div class="row g-5 g-xl-10">
+            <!--begin::Col-->
+            <div class="col-xl-6">
+                <!--begin::Card-->
+                <div class="card card-flush h-lg-100">
+                    <!--begin::Card header-->
+                    <div class="card-header pt-7">
+                        <!--begin::Title-->
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Data Diri Peserta</span>
+                            <span class="text-gray-400 mt-1 fw-bold fs-7">Informasi lengkap identitas siswa</span>
+                        </h3>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body pt-5">
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Nama Lengkap</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bolder fs-6 text-gray-800">{{ $pendaftaran->nama_lengkap }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">NIK</label>
+                            <div class="col-lg-8 fv-row">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nik }}</span>
+                            </div>
+                        </div>
+                         <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">NISN</label>
+                            <div class="col-lg-8 fv-row">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nisn }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Tempat, Tgl Lahir</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->tempat_lahir }}, {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Jenis Kelamin</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Agama</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->agama }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Card-->
+            </div>
+            <!--end::Col-->
+
+            <!--begin::Col-->
+            <div class="col-xl-6">
+                 <!--begin::Card-->
+                 <div class="card card-flush h-lg-100">
+                    <!--begin::Card header-->
+                    <div class="card-header pt-7">
+                        <!--begin::Title-->
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Alamat & Domisili</span>
+                            <span class="text-gray-400 mt-1 fw-bold fs-7">Informasi tempat tinggal peserta saat ini</span>
+                        </h3>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Card header-->
+                    <!--begin::Card body-->
+                    <div class="card-body pt-5">
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Alamat Lengkap</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->alamat }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Desa/Kelurahan</label>
+                            <div class="col-lg-8 fv-row">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_desa }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Kecamatan</label>
+                            <div class="col-lg-8 fv-row">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_kecamatan }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Kabupaten/Kota</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_kabupaten }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Provinsi</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_provinsi }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">No. Kartu Keluarga</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nomor_kk }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Col-->
+
+            <!--begin::Col-->
+            <div class="col-xl-6">
+                <div class="card card-flush h-lg-100">
+                    <div class="card-header pt-7">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Data Orang Tua / Wali</span>
+                            <span class="text-gray-400 mt-1 fw-bold fs-7">Informasi penanggung jawab peserta</span>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-5">
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Nama Wali</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_wali }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Pekerjaan</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->pekerjaan_wali }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Nomor HP / WhatsApp</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->no_hp }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-7">
+                            <label class="col-lg-4 fw-bold text-muted">Alamat Wali</label>
+                            <div class="col-lg-8">
+                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->alamat_wali }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Col-->
+
+            <!--begin::Col-->
+            <div class="col-xl-6">
+                <div class="card card-flush h-lg-100">
+                    <div class="card-header pt-7">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Sekolah Pilihan</span>
+                            <span class="text-gray-400 mt-1 fw-bold fs-7">Daftar sekolah yang dipilih oleh peserta</span>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-5">
+                        <!--begin::Item-->
+                        <div class="d-flex align-items-center mb-7">
+                            <!--begin::Symbol-->
+                            <div class="symbol symbol-50px me-5">
+                                <span class="symbol-label bg-light-primary">
+                                    <i class="bi bi-bank fs-2x text-primary"></i>
+                                </span>
+                            </div>
+                            <!--end::Symbol-->
+                            <!--begin::Text-->
+                            <div class="d-flex flex-column">
+                                <span class="text-dark fw-bolder text-hover-primary fs-6">Pilihan 1</span>
+                                <span class="text-muted fw-bold">{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</span>
+                            </div>
+                            <!--end::Text-->
+                        </div>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+                        <div class="d-flex align-items-center mb-7">
+                            <!--begin::Symbol-->
+                            <div class="symbol symbol-50px me-5">
+                                <span class="symbol-label bg-light-info">
+                                    <i class="bi bi-bank fs-2x text-info"></i>
+                                </span>
+                            </div>
+                            <!--end::Symbol-->
+                            <!--begin::Text-->
+                            <div class="d-flex flex-column">
+                                <span class="text-dark fw-bolder text-hover-primary fs-6">Pilihan 2</span>
+                                <span class="text-muted fw-bold">{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</span>
+                            </div>
+                            <!--end::Text-->
+                        </div>
+                        <!--end::Item-->
+                    </div>
+                </div>
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::details View-->
+    @else
+        <!--begin::Card-->
+        <div class="card">
+            <div class="card-body p-10 text-center">
+                <div class="mb-10">
+                    <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-150px" alt="">
+                </div>
+                <h1 class="fw-bolder text-dark mb-4">Belum Ada Pendaftaran Terkirim</h1>
+                <p class="fs-6 text-gray-400 mb-8">Anda belum memiliki pendaftaran yang sudah dikirim (submit). <br> Silakan selesaikan proses pendaftaran Anda terlebih dahulu.</p>
+                <a href="{{ route('pendaftaran.create') }}" class="btn btn-primary px-10">Daftar Sekarang</a>
+            </div>
+        </div>
+        <!--end::Card-->
+    @endif
 @endsection

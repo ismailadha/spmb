@@ -2,19 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OrangTua;
 use App\Models\Pendaftaran;
 use App\Models\Peserta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PendaftaranController extends Controller
 {
     public function index()
     {
-        return view('backend.pendaftaran.index');
+        // ambil data pendaftaran berdasarkan user_id pada periode aktif yang statusnya sudah submit dengan query builder
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
+            ->join('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
+            ->join('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
+            ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
+            ->join('desa', 'peserta.desa_id', '=', 'desa.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+            ->join('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+            ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
+            ->where('peserta.user_id', Auth::id())
+            ->where('periode_pendaftaran.status_aktif', 1)
+            ->where('pendaftaran.status', 'submit')
+            ->select(
+                'pendaftaran.id',
+                'pendaftaran.status',
+                'pendaftaran.nomor_pendaftaran',
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.jalur_id',
+                'pendaftaran.jenjang',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'peserta.id as peserta_id',
+                'peserta.user_id',
+                'peserta.nik',
+                'peserta.nisn',
+                'peserta.nama_lengkap',
+                'peserta.jenis_kelamin',
+                'peserta.agama',
+                'peserta.tempat_lahir',
+                'peserta.tanggal_lahir',
+                'peserta.nomor_kk',
+                'peserta.tanggal_terbit_kk',
+                'peserta.provinsi_id',
+                'peserta.kabupaten_id',
+                'peserta.kecamatan_id',
+                'peserta.desa_id',
+                'peserta.alamat',
+                'peserta.latitude',
+                'peserta.longitude',
+                'periode_pendaftaran.id as periode_id',
+                'periode_pendaftaran.tahun_ajaran',
+                'periode_pendaftaran.status_aktif',
+                'periode_pendaftaran.peserta_daftar_mulai',
+                'periode_pendaftaran.peserta_daftar_selesai',
+                'provinsi.id as provinsi_id',
+                'provinsi.nama_provinsi',
+                'kabupaten.id as kabupaten_id',
+                'kabupaten.nama_kabupaten',
+                'kecamatan.id as kecamatan_id',
+                'kecamatan.nama_kecamatan',
+                'desa.id as desa_id',
+                'desa.nama_desa',
+                'jalur_pendaftaran.id as jalur_id',
+                'jalur_pendaftaran.nama_jalur',
+                'sekolah1.id as sekolah_pilihan_1_id',
+                'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
+                'sekolah1.jenjang as sekolah_pilihan_1_jenjang',
+                'sekolah2.id as sekolah_pilihan_2_id',
+                'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
+                'sekolah2.jenjang as sekolah_pilihan_2_jenjang',
+                'orang_tua_wali.id as orang_tua_wali_id',
+                'orang_tua_wali.nama_wali',
+                'orang_tua_wali.pekerjaan_wali',
+                'orang_tua_wali.no_hp',
+                'orang_tua_wali.alamat_wali',
+            )
+            ->first();
+
+        // dd($pendaftaran);
+
+        return view('backend.pendaftaran.index', compact('pendaftaran'));
     }
 
     public function create()
@@ -36,10 +109,10 @@ class PendaftaranController extends Controller
         // cek apakah user sudah pernah membuat pendaftaran sebelumnya
         $user_id = Auth::user()->id;
 
-        // query builder version
         $pendaftaran = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
             ->where('peserta.user_id', $user_id)
+            ->select('pendaftaran.id', 'pendaftaran.status')
             ->first();
 
         if ($pendaftaran) {
@@ -54,12 +127,11 @@ class PendaftaranController extends Controller
         // ambil data provinsi untuk ditaruh di create
         $provinsi = DB::table('provinsi')->get();
 
-        // ambil semua data jalur_id dari tabel sekolah_jalur sebagai data pilihan jalur lainnya (distinct)
-        $jalur_pendaftaran = DB::table('sekolah_jalur')
-            ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
-            ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
-            ->where('jadwal_pendaftaran.status', 'open')
-            ->select('sekolah_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
+        // ambil semua data jalur_id dari tabel periode_jalur
+        $jalur_pendaftaran = DB::table('periode_jalur')
+            ->join('jalur_pendaftaran', 'periode_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->where('periode_jalur.periode_id', $jadwal->id)
+            ->select('periode_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
             ->distinct()
             ->get();
 
@@ -126,10 +198,10 @@ class PendaftaranController extends Controller
 
     public function store(Request $request)
     {
-        $isSubmitted = $request->status == 'submitted';
+        $isSubmitted = $request->status == 'submit';
 
         $request->validate([
-            'status' => 'required|in:draft,submitted',
+            'status' => 'required|in:draft,submit',
             'jalur' => 'required',
             'jenjang' => 'required',
             'nik' => $isSubmitted ? 'required' : 'nullable',
@@ -158,8 +230,8 @@ class PendaftaranController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. Create Peserta
-            $peserta = Peserta::create([
+            // 1. Create Peserta (menggunakan query builder)
+            $peserta = DB::table('peserta')->insert([
                 'user_id' => Auth::id(),
                 'nik' => $request->nik,
                 'nisn' => $request->nisn,
@@ -179,9 +251,11 @@ class PendaftaranController extends Controller
                 'longitude' => $request->longitude,
             ]);
 
-            // 2. Create Orang Tua / Wali
-            OrangTua::create([
-                'peserta_id' => $peserta->id,
+            $peserta_id = DB::table('peserta')->where('user_id', Auth::id())->first()->id;
+
+            // 2. Create Orang Tua / Wali (menggunakan query builder)
+            DB::table('orang_tua_wali')->insert([
+                'peserta_id' => $peserta_id,
                 'nama_wali' => $request->nama_wali,
                 'pekerjaan_wali' => $request->pekerjaan_wali,
                 'no_hp' => $request->no_hp_wali,
@@ -191,13 +265,12 @@ class PendaftaranController extends Controller
             // 3. Get Periode Aktif
             $jadwal = DB::table('periode_pendaftaran')->where('status_aktif', 1)->first();
 
-            // 4. Create Pendaftaran
-            Pendaftaran::create([
-                'peserta_id' => $peserta->id,
+            // 4. Create Pendaftaran (menggunakan query builder)
+            DB::table('pendaftaran')->insert([
+                'peserta_id' => $peserta_id,
                 'periode_id' => $jadwal->id,
                 'jalur_id' => $request->jalur,
                 'jenjang' => $request->jenjang,
-                'nomor_pendaftaran' => 'REG-'.date('Ymd').'-'.strtoupper(Str::random(4)),
                 'tanggal_daftar' => now(),
                 'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
                 'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
@@ -206,7 +279,7 @@ class PendaftaranController extends Controller
 
             DB::commit();
 
-            $message = $request->status == 'submitted'
+            $message = $request->status == 'submit'
                 ? 'Pendaftaran berhasil dikirim! Data Anda telah dikunci untuk proses verifikasi.'
                 : 'Progres pendaftaran berhasil disimpan sebagai draf.';
 
@@ -296,10 +369,10 @@ class PendaftaranController extends Controller
 
     public function update(Request $request, $id)
     {
-        $isSubmitted = $request->status == 'submitted';
+        $isSubmitted = $request->status == 'submit';
 
         $request->validate([
-            'status' => 'required|in:draft,submitted',
+            'status' => 'required|in:draft,submit',
             'jalur' => 'required',
             'jenjang' => 'required',
             'nik' => $isSubmitted ? 'required' : 'nullable',
@@ -371,7 +444,7 @@ class PendaftaranController extends Controller
 
             DB::commit();
 
-            $message = $request->status == 'submitted'
+            $message = $request->status == 'submit'
                 ? 'Pendaftaran berhasil dikirim! Data Anda telah dikunci untuk proses verifikasi.'
                 : 'Progres pendaftaran berhasil diperbarui sebagai draf.';
 
@@ -386,6 +459,51 @@ class PendaftaranController extends Controller
     public function destroy($id)
     {
         return view('backend.pendaftaran.index');
+    }
+
+    public function print($id)
+    {
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+            ->join('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+            ->where('pendaftaran.id', $id)
+            ->where('pendaftaran.status', 'submit')
+            ->select(
+                'pendaftaran.nomor_pendaftaran',
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.jalur_id',
+                'pendaftaran.jenjang',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'peserta.nisn',
+                'peserta.nama_lengkap',
+                'peserta.tempat_lahir',
+                'peserta.tanggal_lahir',
+                'peserta.jenis_kelamin',
+                'periode_pendaftaran.id as periode_id',
+                'periode_pendaftaran.tahun_ajaran',
+                'jalur_pendaftaran.id as jalur_id',
+                'jalur_pendaftaran.nama_jalur',
+                'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
+                'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
+            )
+            ->first();
+
+        // dd($pendaftaran);
+
+        if (! $pendaftaran) {
+            abort(404);
+        }
+
+        // Dummy registration number as requested
+        if (empty($pendaftaran->nomor_pendaftaran)) {
+            $pendaftaran->nomor_pendaftaran = 'REG-'.strtoupper(Str::random(8));
+        }
+
+        return view('backend.pendaftaran.print_kartu', compact('pendaftaran'));
     }
 
     public function getSekolahByJalur($jalur_id)

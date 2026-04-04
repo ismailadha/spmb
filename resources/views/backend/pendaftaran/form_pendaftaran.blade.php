@@ -688,7 +688,7 @@
                                 <button type="button" class="btn btn-info shadow-sm" id="btnPreview">Preview</button>
                                 <div class="separator separator-vertical h-40px mx-2"></div>
                                 <button type="submit" name="status" value="draft" class="btn btn-primary shadow-sm" formnovalidate>Simpan Sebagai Draft</button>
-                                <button type="submit" name="status" value="submitted" class="btn btn-success shadow-sm">Submit</button>
+                                <button type="submit" name="status" value="submit" class="btn btn-success shadow-sm">Submit</button>
                             </div>
                         </div>
                     </div>

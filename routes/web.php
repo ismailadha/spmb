@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
         Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
+        Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
         Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
         Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
     });
