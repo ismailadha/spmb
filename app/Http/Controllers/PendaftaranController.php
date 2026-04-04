@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrangTua;
 use App\Models\Pendaftaran;
+use App\Models\Peserta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +19,20 @@ class PendaftaranController extends Controller
 
     public function create()
     {
+        // tanggal hari ini dari Carbon
+        $tanggal_hari_ini = Carbon::now()->format('Y-m-d');
+
+        // cek apakah periode pendaftaran masih dibuka
+        $jadwal = DB::table('periode_pendaftaran')
+            ->where('status_aktif', 1)
+            ->where('peserta_daftar_mulai', '<=', $tanggal_hari_ini)
+            ->where('peserta_daftar_selesai', '>=', $tanggal_hari_ini)
+            ->first();
+
+        if (! $jadwal) {
+            return redirect()->route('pendaftaran.index')->with('error', 'Jadwal pendaftaran sudah ditutup');
+        }
+
         // cek apakah user sudah pernah membuat pendaftaran sebelumnya
         $user_id = Auth::user()->id;
 
@@ -33,20 +49,6 @@ class PendaftaranController extends Controller
             } else {
                 return redirect()->route('pendaftaran.index')->with('error', 'Anda sudah menyelesaikan pendaftaran');
             }
-        }
-
-        // tanggal hari ini dari Carbon
-        $tanggal_hari_ini = Carbon::now()->format('Y-m-d');
-
-        // cek apakah periode pendaftaran masih dibuka
-        $jadwal = DB::table('periode_pendaftaran')
-            ->where('status_aktif', 1)
-            ->where('peserta_daftar_mulai', '<=', $tanggal_hari_ini)
-            ->where('peserta_daftar_selesai', '>=', $tanggal_hari_ini)
-            ->first();
-
-        if (! $jadwal) {
-            return redirect()->route('pendaftaran.index')->with('error', 'Jadwal pendaftaran sudah ditutup');
         }
 
         // ambil data provinsi untuk ditaruh di create
@@ -124,7 +126,96 @@ class PendaftaranController extends Controller
 
     public function store(Request $request)
     {
-        return view('backend.pendaftaran.index');
+        $isSubmitted = $request->status == 'submitted';
+
+        $request->validate([
+            'status' => 'required|in:draft,submitted',
+            'jalur' => 'required',
+            'jenjang' => 'required',
+            'nik' => $isSubmitted ? 'required' : 'nullable',
+            'nisn' => $isSubmitted ? 'required' : 'nullable',
+            'nama_lengkap' => 'required', // Tetap wajib untuk identitas draf
+            'tempat_lahir' => $isSubmitted ? 'required' : 'nullable',
+            'tanggal_lahir' => $isSubmitted ? 'required' : 'nullable',
+            'jenis_kelamin' => $isSubmitted ? 'required' : 'nullable',
+            'agama' => $isSubmitted ? 'required' : 'nullable',
+            'provinsi' => $isSubmitted ? 'required' : 'nullable',
+            'kabupaten' => $isSubmitted ? 'required' : 'nullable',
+            'kecamatan' => $isSubmitted ? 'required' : 'nullable',
+            'desa' => $isSubmitted ? 'required' : 'nullable',
+            'alamat' => $isSubmitted ? 'required' : 'nullable',
+            'nomor_kk' => $isSubmitted ? 'required' : 'nullable',
+            'tanggal_terbit_kk' => $isSubmitted ? 'required' : 'nullable',
+            'latitude' => $isSubmitted ? 'required' : 'nullable',
+            'longitude' => $isSubmitted ? 'required' : 'nullable',
+            'nama_wali' => $isSubmitted ? 'required' : 'nullable',
+            'pekerjaan_wali' => $isSubmitted ? 'required' : 'nullable',
+            'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
+            'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
+            'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Create Peserta
+            $peserta = Peserta::create([
+                'user_id' => Auth::id(),
+                'nik' => $request->nik,
+                'nisn' => $request->nisn,
+                'nama_lengkap' => $request->nama_lengkap,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'agama' => $request->agama,
+                'provinsi_id' => $request->provinsi,
+                'kabupaten_id' => $request->kabupaten,
+                'kecamatan_id' => $request->kecamatan,
+                'desa_id' => $request->desa,
+                'alamat' => $request->alamat,
+                'nomor_kk' => $request->nomor_kk,
+                'tanggal_terbit_kk' => $request->tanggal_terbit_kk,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+
+            // 2. Create Orang Tua / Wali
+            OrangTua::create([
+                'peserta_id' => $peserta->id,
+                'nama_wali' => $request->nama_wali,
+                'pekerjaan_wali' => $request->pekerjaan_wali,
+                'no_hp' => $request->no_hp_wali,
+                'alamat_wali' => $request->alamat_wali,
+            ]);
+
+            // 3. Get Periode Aktif
+            $jadwal = DB::table('periode_pendaftaran')->where('status_aktif', 1)->first();
+
+            // 4. Create Pendaftaran
+            Pendaftaran::create([
+                'peserta_id' => $peserta->id,
+                'periode_id' => $jadwal->id,
+                'jalur_id' => $request->jalur,
+                'jenjang' => $request->jenjang,
+                'nomor_pendaftaran' => 'REG-'.date('Ymd').'-'.strtoupper(Str::random(4)),
+                'tanggal_daftar' => now(),
+                'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
+                'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
+                'status' => $request->status,
+            ]);
+
+            DB::commit();
+
+            $message = $request->status == 'submitted'
+                ? 'Pendaftaran berhasil dikirim! Data Anda telah dikunci untuk proses verifikasi.'
+                : 'Progres pendaftaran berhasil disimpan sebagai draf.';
+
+            return redirect()->route('pendaftaran.index')->with('success', $message);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data: '.$e->getMessage())->withInput();
+        }
     }
 
     public function edit($id)
@@ -137,10 +228,10 @@ class PendaftaranController extends Controller
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->where('pendaftaran.id', $id)
             ->select(
-                'pendaftaran.*', 
-                'sekolah1.nama_sekolah as sekolah1_nama', 
-                'sekolah2.nama_sekolah as sekolah2_nama', 
-                'jalur_pendaftaran.nama_jalur', 
+                'pendaftaran.*',
+                'sekolah1.nama_sekolah as sekolah1_nama',
+                'sekolah2.nama_sekolah as sekolah2_nama',
+                'jalur_pendaftaran.nama_jalur',
                 'periode_pendaftaran.tahun_ajaran'
             )
             ->first();
@@ -154,17 +245,6 @@ class PendaftaranController extends Controller
             ->where('peserta.id', $pendaftaran->peserta_id)
             ->select('peserta.*', 'provinsi.*', 'kabupaten.*', 'kecamatan.*', 'desa.*', 'orang_tua_wali.*')
             ->first();
-
-        // dd($peserta);
-
-        // ambil semua data jalur_id dari tabel sekolah_jalur sebagai data pilihan jalur lainnya (distinct)
-        // $jalur_pendaftaran = DB::table('sekolah_jalur')
-        //     ->join('jalur_pendaftaran', 'sekolah_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
-        //     ->join('jadwal_pendaftaran', 'sekolah_jalur.id', '=', 'jadwal_pendaftaran.sekolah_jalur_id')
-        //     ->where('jadwal_pendaftaran.status', 'open')
-        //     ->select('sekolah_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
-        //     ->distinct()
-        //     ->get();
 
         $jalur_pendaftaran = DB::table('periode_jalur')
             ->join('jalur_pendaftaran', 'periode_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
@@ -216,7 +296,91 @@ class PendaftaranController extends Controller
 
     public function update(Request $request, $id)
     {
-        return view('backend.pendaftaran.index');
+        $isSubmitted = $request->status == 'submitted';
+
+        $request->validate([
+            'status' => 'required|in:draft,submitted',
+            'jalur' => 'required',
+            'jenjang' => 'required',
+            'nik' => $isSubmitted ? 'required' : 'nullable',
+            'nisn' => $isSubmitted ? 'required' : 'nullable',
+            'nama_lengkap' => 'required',
+            'tempat_lahir' => $isSubmitted ? 'required' : 'nullable',
+            'tanggal_lahir' => $isSubmitted ? 'required' : 'nullable',
+            'jenis_kelamin' => $isSubmitted ? 'required' : 'nullable',
+            'agama' => $isSubmitted ? 'required' : 'nullable',
+            'provinsi' => $isSubmitted ? 'required' : 'nullable',
+            'kabupaten' => $isSubmitted ? 'required' : 'nullable',
+            'kecamatan' => $isSubmitted ? 'required' : 'nullable',
+            'desa' => $isSubmitted ? 'required' : 'nullable',
+            'alamat' => $isSubmitted ? 'required' : 'nullable',
+            'nomor_kk' => $isSubmitted ? 'required' : 'nullable',
+            'tanggal_terbit_kk' => $isSubmitted ? 'required' : 'nullable',
+            'latitude' => $isSubmitted ? 'required' : 'nullable',
+            'longitude' => $isSubmitted ? 'required' : 'nullable',
+            'nama_wali' => $isSubmitted ? 'required' : 'nullable',
+            'pekerjaan_wali' => $isSubmitted ? 'required' : 'nullable',
+            'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
+            'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
+            'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // ambil data pendaftaran dan peserta menggunakan query builder
+            $pendaftaran = DB::table('pendaftaran')->where('id', $id)->first();
+            $peserta = DB::table('peserta')->where('id', $pendaftaran->peserta_id)->first();
+
+            // 1. Update Peserta, gunakan query builder
+            DB::table('peserta')->where('id', $peserta->id)->update([
+                'nik' => $request->nik,
+                'nisn' => $request->nisn,
+                'nama_lengkap' => $request->nama_lengkap,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'agama' => $request->agama,
+                'provinsi_id' => $request->provinsi,
+                'kabupaten_id' => $request->kabupaten,
+                'kecamatan_id' => $request->kecamatan,
+                'desa_id' => $request->desa,
+                'alamat' => $request->alamat,
+                'nomor_kk' => $request->nomor_kk,
+                'tanggal_terbit_kk' => $request->tanggal_terbit_kk,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+
+            // 2. Update Orang Tua / Wali, gunakan query builder
+            DB::table('orang_tua_wali')->where('peserta_id', $peserta->id)->update([
+                'nama_wali' => $request->nama_wali,
+                'pekerjaan_wali' => $request->pekerjaan_wali,
+                'no_hp' => $request->no_hp_wali,
+                'alamat_wali' => $request->alamat_wali,
+            ]);
+
+            // 3. Update Pendaftaran, gunakan query builder
+            DB::table('pendaftaran')->where('id', $pendaftaran->id)->update([
+                'jalur_id' => $request->jalur,
+                'jenjang' => $request->jenjang,
+                'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
+                'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
+                'status' => $request->status,
+            ]);
+
+            DB::commit();
+
+            $message = $request->status == 'submitted'
+                ? 'Pendaftaran berhasil dikirim! Data Anda telah dikunci untuk proses verifikasi.'
+                : 'Progres pendaftaran berhasil diperbarui sebagai draf.';
+
+            return redirect()->route('pendaftaran.create')->with('success', $message);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui data: '.$e->getMessage())->withInput();
+        }
     }
 
     public function destroy($id)
