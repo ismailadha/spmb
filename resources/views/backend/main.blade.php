@@ -167,7 +167,7 @@
 									</a>
 								</div> --}}
 								<div class="menu-item">
-									<a class="menu-link @yield('pendaftaran-menu-active')" href="{{ route('pendaftaran.create') }}">
+									<a class="menu-link @yield('pendaftaran-menu-active')" href="{{ route('pendaftaran.index') }}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
                                                 <span class="svg-icon svg-icon-2">

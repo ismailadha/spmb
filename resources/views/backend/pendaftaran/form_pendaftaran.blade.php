@@ -350,7 +350,7 @@
                             <div class="col-md-6">
                                 <label for="no_hp_wali" class="form-label">No. HP Wali</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ $peserta->no_hp_wali ?? '' }}">
+                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ $peserta->no_hp ?? '' }}">
                                 @else
                                     <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali">
                                 @endif
