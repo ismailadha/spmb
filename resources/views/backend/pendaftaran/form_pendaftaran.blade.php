@@ -1136,6 +1136,54 @@
             const sekolahPilihan1 = document.getElementById('sekolah_pilihan_1');
             const sekolahPilihan2 = document.getElementById('sekolah_pilihan_2');
 
+            function updateSchoolOptions() {
+                const val1 = sekolahPilihan1.value;
+                const val2 = sekolahPilihan2.value;
+
+                // Reset all options (enable them)
+                Array.from(sekolahPilihan1.options).forEach(opt => {
+                    if (opt.value !== "") {
+                        opt.disabled = false;
+                    }
+                });
+                Array.from(sekolahPilihan2.options).forEach(opt => {
+                    if (opt.value !== "") {
+                        opt.disabled = false;
+                    }
+                });
+
+                // Disable selected school from Choice 1 in Choice 2
+                if (val1) {
+                    Array.from(sekolahPilihan2.options).forEach(opt => {
+                        if (opt.value === val1 && opt.value !== "") {
+                            opt.disabled = true;
+                        }
+                    });
+                }
+
+                // Disable selected school from Choice 2 in Choice 1
+                if (val2) {
+                    Array.from(sekolahPilihan1.options).forEach(opt => {
+                        if (opt.value === val2 && opt.value !== "") {
+                            opt.disabled = true;
+                        }
+                    });
+                }
+
+                // Refresh Select2 to reflect disabled state
+                if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
+                    $(sekolahPilihan1).trigger('change.select2');
+                    $(sekolahPilihan2).trigger('change.select2');
+                }
+            }
+
+            if (sekolahPilihan1) {
+                sekolahPilihan1.addEventListener('change', updateSchoolOptions);
+            }
+            if (sekolahPilihan2) {
+                sekolahPilihan2.addEventListener('change', updateSchoolOptions);
+            }
+
             function renderSekolah(jenjang) {
                 let optionsHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
                 if (jenjang && sekolahData[jenjang]) {
@@ -1155,6 +1203,8 @@
                     $(sekolahPilihan1).trigger('change');
                     $(sekolahPilihan2).trigger('change');
                 }
+
+                updateSchoolOptions();
             }
 
             if (jenjangSelect) {
@@ -1177,6 +1227,8 @@
                         if (selectedSekolah2) {
                             sekolahPilihan2.value = selectedSekolah2;
                         }
+
+                        updateSchoolOptions();
                     @endif
                 }
             }
