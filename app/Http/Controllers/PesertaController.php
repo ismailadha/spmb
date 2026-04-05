@@ -58,6 +58,7 @@ class PesertaController extends Controller
                                 Action
                             </button>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
                                 <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
                                 <li>
                                     <form action="'.route('peserta.destroy', $row->id).'" method="POST" style="margin: 0;">
@@ -188,5 +189,22 @@ class PesertaController extends Controller
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
+    }
+
+    public function detail_verifikasi($id)
+    {
+        $peserta = Peserta::with([
+            'pendaftaran.jalur',
+            'pendaftaran.sekolahPilihan1',
+            'pendaftaran.sekolahPilihan2',
+            'pendaftaran.berkas',
+            'provinsi',
+            'kabupaten',
+            'kecamatan',
+            'desa',
+            'orang_tua',
+        ])->findOrFail($id);
+
+        return view('backend.peserta.detail_verifikasi', compact('peserta'));
     }
 }
