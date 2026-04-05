@@ -62,6 +62,40 @@
                     </div>
                 </div>
 
+                <!-- Registrasi Wilayah -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_provinsi" class="form-label">Provinsi</label>
+                        <select class="form-control" id="id_provinsi" name="id_provinsi">
+                            <option value="" disabled selected>Pilih Provinsi</option>
+                            @foreach ($provinsi as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_provinsi }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_kabupaten" class="form-label">Kabupaten/Kota</label>
+                        <select class="form-control" id="id_kabupaten" name="id_kabupaten">
+                            <option value="" disabled selected>Pilih Kabupaten/Kota</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_kecamatan" class="form-label">Kecamatan</label>
+                        <select class="form-control" id="id_kecamatan" name="id_kecamatan">
+                            <option value="" disabled selected>Pilih Kecamatan</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_desa" class="form-label">Desa/Kelurahan</label>
+                        <select class="form-control" id="id_desa" name="id_desa">
+                            <option value="" disabled selected>Pilih Desa/Kelurahan</option>
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Alamat - Full Width -->
                 <div class="row mb-3">
                     <div class="col-12">
@@ -115,7 +149,7 @@
                     </div>
                 </div>
 
-                <!-- Status Perbatasan -->
+                <!-- Status Perbatasan & Status Unggulan -->
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="status_perbatasan" class="form-label">Status Perbatasan</label>
@@ -123,6 +157,14 @@
                             <option value="">-- Pilih Status --</option>
                             <option value="1">Sekolah Perbatasan</option>
                             <option value="0">Sekolah Non-Perbatasan</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="status_unggulan" class="form-label">Status Unggulan</label>
+                        <select class="form-control" id="status_unggulan" name="status_unggulan">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="1">Sekolah Unggulan</option>
+                            <option value="0">Sekolah Non-Unggulan</option>
                         </select>
                     </div>
                 </div>
@@ -202,6 +244,87 @@
                     marker.setLatLng([lat, lng]);
                     map.setView([lat, lng]);
                 }
+            }
+
+            // Dynamics Cascading Default for Wilayah
+            const provinsiSelect = document.getElementById('id_provinsi');
+            const kabupatenSelect = document.getElementById('id_kabupaten');
+            const kecamatanSelect = document.getElementById('id_kecamatan');
+            const desaSelect = document.getElementById('id_desa');
+
+            if (provinsiSelect) {
+                provinsiSelect.addEventListener('change', function() {
+                    const provinsiId = this.value;
+                    
+                    // Reset children
+                    kabupatenSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+                    desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+
+                    if (provinsiId) {
+                        fetch(`/wilayah/kabupaten/${provinsiId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                kabupatenSelect.innerHTML = '<option value="" disabled selected>Pilih Kabupaten/Kota</option>';
+                                data.forEach(item => {
+                                    kabupatenSelect.innerHTML += `<option value="${item.id}">${item.nama_kabupaten}</option>`;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching kabupaten:', error);
+                                kabupatenSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                            });
+                    }
+                });
+            }
+
+            if (kabupatenSelect) {
+                kabupatenSelect.addEventListener('change', function() {
+                    const kabupatenId = this.value;
+                    
+                    // Reset children
+                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                    desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+
+                    if (kabupatenId) {
+                        fetch(`/wilayah/kecamatan/${kabupatenId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+                                data.forEach(item => {
+                                    kecamatanSelect.innerHTML += `<option value="${item.id}">${item.nama_kecamatan}</option>`;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching kecamatan:', error);
+                                kecamatanSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                            });
+                    }
+                });
+            }
+
+            if (kecamatanSelect) {
+                kecamatanSelect.addEventListener('change', function() {
+                    const kecamatanId = this.value;
+                    
+                    // Reset children
+                    desaSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+
+                    if (kecamatanId) {
+                        fetch(`/wilayah/desa/${kecamatanId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+                                data.forEach(item => {
+                                    desaSelect.innerHTML += `<option value="${item.id}">${item.nama_desa}</option>`;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching desa:', error);
+                                desaSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                            });
+                    }
+                });
             }
         });
     </script>

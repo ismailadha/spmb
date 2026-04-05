@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SekolahRequest extends FormRequest
@@ -17,13 +18,14 @@ class SekolahRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'nama_sekolah' => 'required|string|max:255',
-            'npsn' => 'nullable|string|max:255|unique:sekolah,npsn,'.$this->route('sekolah')?->id,
+            'npsn' => 'nullable|string|max:255|unique:sekolah,npsn,'.$this->route('sekolah'),
+            'jenjang' => 'required|in:TK,SD,SMP,SMA',
             'id_provinsi' => 'nullable|exists:provinsi,id',
             'id_kabupaten' => 'nullable|exists:kabupaten,id',
             'id_kecamatan' => 'nullable|exists:kecamatan,id',
@@ -35,6 +37,8 @@ class SekolahRequest extends FormRequest
             'telepon' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
+            'status_perbatasan' => 'nullable|boolean',
+            'status_unggulan' => 'nullable|boolean',
         ];
     }
 

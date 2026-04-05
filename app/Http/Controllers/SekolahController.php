@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Requests\SekolahRequest;
+use App\Models\Desa;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Provinsi;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class SekolahController extends Controller
@@ -19,11 +24,11 @@ class SekolahController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('status_perbatasan', function ($row) {
-                    if ($row->status_perbatasan == 1) {
-                        return '<span class="badge badge-success"><i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>Perbatasan</span>';
-                    } elseif ($row->status_perbatasan == 0) {
-                        return '<span class="badge badge-secondary">Non-Perbatasan</span>';
+                ->addColumn('status_unggulan', function ($row) {
+                    if ($row->status_unggulan == 1) {
+                        return '<span class="badge badge-success"><i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>Unggulan</span>';
+                    } elseif ($row->status_unggulan == 0) {
+                        return '<span class="badge badge-secondary">Non-Unggulan</span>';
                     } else {
                         return '<span class="badge badge-light text-dark">-</span>';
                     }
@@ -48,7 +53,7 @@ class SekolahController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['status_perbatasan', 'action'])
+                ->rawColumns(['status_unggulan', 'action'])
                 ->make(true);
         }
 
@@ -60,7 +65,9 @@ class SekolahController extends Controller
      */
     public function create()
     {
-        return view('backend.sekolah.create');
+        $provinsi = Provinsi::all();
+
+        return view('backend.sekolah.create', compact('provinsi'));
     }
 
     /**
@@ -68,9 +75,13 @@ class SekolahController extends Controller
      */
     public function store(SekolahRequest $request)
     {
-        Sekolah::create($request->validated());
+        try {
+            DB::table('sekolah')->insert($request->validated());
 
-        return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil ditambahkan');
+            return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Gagal menambahkan sekolah: '.$e->getMessage());
+        }
     }
 
     /**
@@ -88,7 +99,12 @@ class SekolahController extends Controller
      */
     public function edit(Sekolah $sekolah)
     {
-        return view('backend.sekolah.edit', compact('sekolah'));
+        $provinsi = Provinsi::all();
+        $kabupaten = Kabupaten::where('id_provinsi', $sekolah->id_provinsi)->get();
+        $kecamatan = Kecamatan::where('id_kabupaten', $sekolah->id_kabupaten)->get();
+        $desa = Desa::where('id_kecamatan', $sekolah->id_kecamatan)->get();
+
+        return view('backend.sekolah.edit', compact('sekolah', 'provinsi', 'kabupaten', 'kecamatan', 'desa'));
     }
 
     /**
@@ -96,9 +112,15 @@ class SekolahController extends Controller
      */
     public function update(SekolahRequest $request, Sekolah $sekolah)
     {
-        $sekolah->update($request->validated());
+        try {
+            DB::table('sekolah')
+                ->where('id', $sekolah->id)
+                ->update($request->validated());
 
-        return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil diupdate');
+            return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil diupdate');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Gagal mengupdate sekolah: '.$e->getMessage());
+        }
     }
 
     /**

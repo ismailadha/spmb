@@ -89,6 +89,21 @@
                                 @endif
                             </td>
                         </tr>
+                        <tr>
+                            <th>Status Unggulan:</th>
+                            <td>
+                                @if ($sekolah->status_unggulan == 1)
+                                    <span class="badge badge-success">
+                                        <i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>
+                                        Sekolah Unggulan
+                                    </span>
+                                @elseif ($sekolah->status_unggulan == 0)
+                                    <span class="badge badge-secondary">Sekolah Non-Unggulan</span>
+                                @else
+                                    <span class="badge badge-light text-dark">Belum ditentukan</span>
+                                @endif
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="col-md-6">

@@ -48,7 +48,7 @@
                         <th class="w-10px pe-2">No</th>
                         <th class="min-w-125px">Sekolah</th>
                         <th class="min-w-125px">Alamat</th>
-                        <th class="min-w-125px">Status Perbatasan</th>
+                        <th class="min-w-125px">Status Unggulan</th>
                         <th class="text-end min-w-70px">Actions</th>
                     </tr>
                 </thead>
@@ -87,7 +87,7 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
             { data: 'nama_sekolah', name: 'nama_sekolah' },
             { data: 'alamat', name: 'alamat' },
-            { data: 'status_perbatasan', name: 'status_perbatasan', orderable: false, searchable: false },
+            { data: 'status_unggulan', name: 'status_unggulan', orderable: false, searchable: false },
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
         ]
     });
