@@ -182,7 +182,7 @@
 									</a>
 								</div>
 								<div class="menu-item">
-									<a class="menu-link @yield('peserta-menu-active')" href="#">
+									<a class="menu-link @yield('peserta-menu-active')" href="{{ route('peserta.index') }}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
                                                 <span class="svg-icon svg-icon-2">

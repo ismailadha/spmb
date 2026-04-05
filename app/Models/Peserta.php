@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Peserta extends Model
 {
+    protected $table = 'peserta';
+
     protected $fillable = [
         'user_id',
         'nik',
@@ -26,8 +28,6 @@ class Peserta extends Model
         'longitude',
         'no_hp',
     ];
-
-    public $timestamps = false;
 
     public function user()
     {

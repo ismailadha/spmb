@@ -1,10 +1,10 @@
 @extends('backend.main')
 
-@section('sekolah-menu-active')
+@section('peserta-menu-active')
     active
 @endsection
 
-@section('sekolah-menu-open')
+@section('peserta-menu-open')
     show
 @endsection
 
@@ -15,21 +15,21 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <h3 class="card-label">Data Sekolah</h3>
+                <h3 class="card-label">Data Peserta</h3>
             </div>
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    <a href="{{ route('sekolah.create') }}" class="btn btn-primary">
+                    <a href="{{ route('register-peserta') }}" class="btn btn-primary">
                         <span class="svg-icon svg-icon-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
                                 <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
                             </svg>
                         </span>
-                        Add Sekolah
+                        Tambah Peserta
                     </a>
                 </div>
                 <!--end::Toolbar-->
@@ -40,15 +40,16 @@
 		<div class="card-body py-4">
             <!--begin::Table-->
             <div class="table-responsive">
-            <table class="table align-middle table-row-dashed fs-6 gy-5 min-w-full" id="kt_table_users">
+            <table class="table align-middle table-row-dashed fs-6 gy-5 min-w-full" id="kt_table_peserta">
                 <!--begin::Table head-->
                 <thead>
-                    <!--begin::Table row-->
                     <tr class="text-start text-dark-400 fw-bolder fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">No</th>
-                        <th class="min-w-125px">Sekolah</th>
-                        <th class="min-w-125px">Alamat</th>
-                        <th class="min-w-125px">Status Unggulan</th>
+                        <th class="min-w-125px">No. Pendaftaran</th>
+                        <th class="min-w-125px">Nama Lengkap</th>
+                        <th class="min-w-125px">Jalur</th>
+                        <th class="min-w-125px">Jenjang</th>
+                        <th class="min-w-100px text-center">Status</th>
                         <th class="text-end min-w-70px">Actions</th>
                     </tr>
                 </thead>
@@ -78,18 +79,37 @@ $.ajaxSetup({
 });
 
 $(document).ready(function() {
-    $('#kt_table_users').DataTable({
+    $('#kt_table_peserta').DataTable({
         processing: true,
         serverSide: true,
         scrollX: true,
-        ajax: "{{ route('sekolah.index') }}",
+        ajax: "{{ route('peserta.index') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
-            { data: 'nama_sekolah', name: 'nama_sekolah' },
-            { data: 'alamat', name: 'alamat' },
-            { data: 'status_unggulan', name: 'status_unggulan', orderable: false, searchable: false },
+            { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
+            { data: 'nama_lengkap', name: 'nama_lengkap' },
+            { data: 'nama_jalur', name: 'nama_jalur' },
+            { data: 'jenjang', name: 'jenjang' },
+            { data: 'status', name: 'status', className: 'text-center' },
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
-        ]
+        ],
+        language: {
+            "emptyTable": "Tidak ada data yang tersedia",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+            "infoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "lengthMenu": "Tampilkan _MENU_ entri",
+            "loadingRecords": "Memuat...",
+            "processing": "Sedang memproses...",
+            "search": "Cari:",
+            "zeroRecords": "Tidak ditemukan data yang sesuai",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Berikutnya",
+                "previous": "Sebelumnya"
+            }
+        }
     });
 });
 </script>
