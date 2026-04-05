@@ -380,10 +380,28 @@
                             <div class="col-md-6">
                                 <label for="pasfoto" class="form-label">Pas Photo</label>
                                 <input type="file" class="form-control" id="pasfoto" name="pasfoto">
+                                @error('pasfoto') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'pasfoto')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'pasfoto')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="akta_lahir" class="form-label">Akta Lahir</label>
                                 <input type="file" class="form-control" id="akta_lahir" name="akta_lahir">
+                                @error('akta_lahir') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'akta_lahir')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'akta_lahir')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -391,10 +409,28 @@
                             <div class="col-md-6">
                                 <label for="kk" class="form-label">Kartu Keluarga</label>
                                 <input type="file" class="form-control" id="kk" name="kk">
+                                @error('kk') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'kk')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'kk')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-md-6">
-                                <label for="ktp_orang_tua" class="form-label">KTP Orang Tua</label>
+                                <label for="ktp_orang_tua" class="form-label">KTP Orang Tua / Wali</label>
                                 <input type="file" class="form-control" id="ktp_orang_tua" name="ktp_orang_tua">
+                                @error('ktp_orang_tua') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'ktp_orang_tua')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'ktp_orang_tua')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -402,14 +438,41 @@
                             <div class="col-md-4" id="kartu_pkh_container" style="display: none;">
                                 <label for="kartu_pkh" class="form-label">Kartu PKH (Jalur Afirmasi)</label>
                                 <input type="file" class="form-control" id="kartu_pkh" name="kartu_pkh">
+                                @error('kartu_pkh') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'kartu_pkh')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'kartu_pkh')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-md-4" id="surat_dokter_container" style="display: none;">
                                 <label for="surat_dokter" class="form-label">Surat Keterangan Dokter/Disabilitas (Afirmasi)</label>
                                 <input type="file" class="form-control" id="surat_dokter" name="surat_dokter">
+                                @error('surat_dokter') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'surat_dokter')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'surat_dokter')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-md-4" id="surat_pindah_container" style="display: none;">
                                 <label for="surat_pindah" class="form-label">Surat Keterangan Pindah (Jalur Mutasi)</label>
                                 <input type="file" class="form-control" id="surat_pindah" name="surat_pindah">
+                                @error('surat_pindah') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @if($berkas->where('jenis_berkas', 'surat_pindah')->first())
+                                    <div class="mt-2">
+                                        <small class="text-primary fw-bold">
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'surat_pindah')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -423,6 +486,15 @@
                                 <div>
                                     <label for="dokumen_tka" class="form-label">Dokumen Hasil Tes TKA</label>
                                     <input type="file" class="form-control" id="dokumen_tka" name="dokumen_tka">
+                                    @error('dokumen_tka') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    @if($berkas->where('jenis_berkas', 'dokumen_tka')->first())
+                                        <div class="mt-2">
+                                            <small class="text-primary fw-bold">
+                                                <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                                <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'dokumen_tka')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                            </small>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-md-6" id="prestasi_nonakademik_container" style="display: none;">
@@ -434,6 +506,15 @@
                                 <div>
                                     <label for="sertifikat_penghargaan" class="form-label">Sertifikat Penghargaan</label>
                                     <input type="file" class="form-control" id="sertifikat_penghargaan" name="sertifikat_penghargaan">
+                                    @error('sertifikat_penghargaan') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                    @if($berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first())
+                                        <div class="mt-2">
+                                            <small class="text-primary fw-bold">
+                                                <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                                <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
+                                            </small>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -548,6 +629,37 @@
                                             <span class="text-gray-800 fw-bold text-end" id="sum-sekolah2">-</span>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Dokumen Terunggah -->
+                            <div class="col-md-12">
+                                <div class="card border border-dashed p-6">
+                                    <div class="d-flex flex-stack mb-4">
+                                        <div class="flex-grow-1">
+                                            <h5 class="text-gray-800 fw-bold">Dokumen Terunggah</h5>
+                                        </div>
+                                    </div>
+                                    <div class="separator separator-dashed mb-4"></div>
+                                    @if($berkas->count() > 0)
+                                        <div class="row g-5">
+                                            @foreach($berkas as $item)
+                                                <div class="col-md-4">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <i class="fa fa-file-pdf text-primary fs-2 me-3"></i>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="text-gray-800 fw-bold fs-6">{{ ucwords(str_replace('_', ' ', $item->jenis_berkas)) }}</span>
+                                                            <a href="{{ route('pendaftaran.berkas.show', $item->id) }}" target="_blank" class="text-primary fw-semibold fs-7 qtext-hover-underline">Lihat Dokumen</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="text-center py-5">
+                                            <span class="text-gray-500">Belum ada dokumen yang diunggah.</span>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 

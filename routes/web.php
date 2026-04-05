@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
         Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
         Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
+        Route::get('/berkas/{id}', [PendaftaranController::class, 'showBerkas'])->name('pendaftaran.berkas.show');
     });
 
     Route::prefix('wilayah')->group(function () {

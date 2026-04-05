@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class PendaftaranController extends Controller
 {
@@ -109,8 +109,10 @@ class PendaftaranController extends Controller
                             'orang_tua_wali.alamat_wali',
                         )
                         ->first();
+                    
+                    $berkas = $pendaftaran ? DB::table('berkas_pendaftaran')->where('pendaftaran_id', $pendaftaran->id)->get() : collect([]);
 
-                    return view('backend.pendaftaran.index', compact('pendaftaran'));
+                    return view('backend.pendaftaran.index', compact('pendaftaran', 'berkas'));
                 }
             }
         } else {
@@ -203,11 +205,11 @@ class PendaftaranController extends Controller
             'jalur_pendaftaran' => $jalur_pendaftaran,
             'peserta' => $peserta,
             'sekolahGrouped' => $sekolahGrouped,
-            // Karena ini data baru (create), biarkan yang lain kosong
             // dan akan dimuat lewat ajax jika provinsi dipilih
             'kabupaten' => [],
             'kecamatan' => [],
             'desa' => [],
+            'berkas' => collect([]),
         ]);
     }
 
@@ -240,6 +242,17 @@ class PendaftaranController extends Controller
             'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
+
+            // Validasi Berkas (Upload)
+            'pasfoto' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'akta_lahir' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'kk' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ktp_orang_tua' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'kartu_pkh' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_dokter' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_pindah' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen_tka' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'sertifikat_penghargaan' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         try {
@@ -286,7 +299,8 @@ class PendaftaranController extends Controller
                 $nomor_pendaftaran = $this->generateNomorPendaftaran($request->jalur, $jadwal->id);
             }
 
-            DB::table('pendaftaran')->insert([
+            // Gunakan insertGetId untuk mendapatkan ID pendaftaran
+            $pendaftaran_id = DB::table('pendaftaran')->insertGetId([
                 'peserta_id' => $peserta_id,
                 'periode_id' => $jadwal->id,
                 'jalur_id' => $request->jalur,
@@ -297,6 +311,9 @@ class PendaftaranController extends Controller
                 'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
                 'status' => $request->status,
             ]);
+
+            // 5. Handle File Uploads (Upload Berkas)
+            $this->uploadBerkas($request, $pendaftaran_id);
 
             DB::commit();
 
@@ -326,7 +343,7 @@ class PendaftaranController extends Controller
                 'sekolah1.nama_sekolah as sekolah1_nama',
                 'sekolah2.nama_sekolah as sekolah2_nama',
                 'jalur_pendaftaran.nama_jalur',
-                'periode_pendaftaran.tahun_ajaran'
+                'periode_pendaftaran.tahun_ajaran',
             )
             ->first();
 
@@ -344,6 +361,10 @@ class PendaftaranController extends Controller
             ->join('jalur_pendaftaran', 'periode_jalur.jalur_id', '=', 'jalur_pendaftaran.id')
             ->where('periode_jalur.periode_id', $pendaftaran->periode_id)
             ->select('periode_jalur.jalur_id', 'jalur_pendaftaran.nama_jalur')
+            ->get();
+
+        $berkas = DB::table('berkas_pendaftaran')
+            ->where('pendaftaran_id', $pendaftaran->id)
             ->get();
 
         // ambil semua data provinsi
@@ -385,6 +406,7 @@ class PendaftaranController extends Controller
             'kabupaten' => $kabupaten,
             'kecamatan' => $kecamatan,
             'desa' => $desa,
+            'berkas' => $berkas, // Terkirim ke view
         ]);
     }
 
@@ -417,10 +439,24 @@ class PendaftaranController extends Controller
             'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
+
+            // Validasi Berkas (Update) - Selalu nullable karena berkas mungkin sudah ada
+            'pasfoto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'akta_lahir' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ktp_orang_tua' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'kartu_pkh' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_dokter' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_pindah' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen_tka' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'sertifikat_penghargaan' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         try {
             DB::beginTransaction();
+
+            // Handle File Uploads (Upload Berkas)
+            $this->uploadBerkas($request, $id);
 
             // ambil data pendaftaran dan peserta menggunakan query builder
             $pendaftaran = DB::table('pendaftaran')->where('id', $id)->first();
@@ -526,7 +562,6 @@ class PendaftaranController extends Controller
             abort(404);
         }
 
-
         if (empty($pendaftaran->nomor_pendaftaran)) {
             return back()->with('error', 'Nomor pendaftaran belum tersedia. Silakan hubungi admin.');
         }
@@ -579,5 +614,71 @@ class PendaftaranController extends Controller
         $sequence = str_pad($count + 1, 4, '0', STR_PAD_LEFT);
 
         return "SPMB-{$kode_jalur}-{$tahun}{$sequence}";
+
+        return "SPMB-{$kode_jalur}-{$tahun}{$sequence}";
+    }
+
+    private function uploadBerkas(Request $request, $pendaftaran_id): void
+    {
+        $inputFiles = [
+            'pasfoto',
+            'akta_lahir',
+            'kk',
+            'ktp_orang_tua',
+            'kartu_pkh',
+            'surat_dokter',
+            'surat_pindah',
+            'dokumen_tka',
+            'sertifikat_penghargaan',
+        ];
+
+        foreach ($inputFiles as $fileInput) {
+            if ($request->hasFile($fileInput)) {
+                $file = $request->file($fileInput);
+                $filename = time().'_'.$fileInput.'.'.$file->getClientOriginalExtension();
+                $destPath = 'berkas/'.$pendaftaran_id;
+
+                // 1. Cek apakah berkas lama sudah ada, jika ada maka hapus filenya
+                $existing = DB::table('berkas_pendaftaran')
+                    ->where('pendaftaran_id', $pendaftaran_id)
+                    ->where('jenis_berkas', $fileInput)
+                    ->first();
+
+                if ($existing && $existing->file_path && File::exists(storage_path('app/'.$existing->file_path))) {
+                    File::delete(storage_path('app/'.$existing->file_path));
+                }
+
+                // 2. Simpan file baru ke storage/app (privat)
+                $file->move(storage_path('app/'.$destPath), $filename);
+
+                $filePath = $destPath.'/'.$filename;
+
+                // 3. Update data di tabel berkas_pendaftaran
+                DB::table('berkas_pendaftaran')->updateOrInsert(
+                    [
+                        'pendaftaran_id' => $pendaftaran_id,
+                        'jenis_berkas' => $fileInput,
+                    ],
+                    [
+                        'file_path' => $filePath,
+                        'status_verifikasi' => 'pending',
+                    ]
+                );
+            }
+        }
+    }
+
+    public function showBerkas($id)
+    {
+        $berkas = DB::table('berkas_pendaftaran')->where('id', $id)->first();
+
+        if (! $berkas || ! file_exists(storage_path('app/'.$berkas->file_path))) {
+            abort(404);
+        }
+
+        // Opsional: Cek otorisasi di sini (misal: hanya pemilik pendaftaran atau admin)
+        // if (Auth::id() !== $pendaftaran->user_id && !Auth::user()->isAdmin()) abort(403);
+
+        return response()->file(storage_path('app/'.$berkas->file_path));
     }
 }

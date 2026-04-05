@@ -334,6 +334,42 @@
                 </div>
             </div>
             <!--end::Col-->
+
+            <!--begin::Col-->
+            <div class="col-xl-6">
+                <div class="card card-flush h-lg-100">
+                    <div class="card-header pt-7">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder text-dark">Dokumen Terunggah</span>
+                            <span class="text-gray-400 mt-1 fw-bold fs-7">Daftar berkas pendaftaran yang telah dikirim</span>
+                        </h3>
+                    </div>
+                    <div class="card-body pt-5">
+                        @if($berkas->count() > 0)
+                            <div class="row">
+                                @foreach($berkas as $item)
+                                    <div class="col-md-12 d-flex align-items-center mb-5">
+                                        <div class="symbol symbol-40px me-5">
+                                            <span class="symbol-label bg-light-danger text-danger">
+                                                <i class="bi bi-file-earmark-pdf fs-2"></i>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-dark fw-bolder text-hover-primary fs-6">{{ ucwords(str_replace('_', ' ', $item->jenis_berkas)) }}</span>
+                                            <a href="{{ route('pendaftaran.berkas.show', $item->id) }}" target="_blank" class="text-primary fw-semibold fs-7">Lihat Berkas</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-10">
+                                <span class="text-gray-400">Belum ada dokumen yang diunggah.</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <!--end::Col-->
         </div>
         <!--end::details View-->
     @else
