@@ -9,18 +9,6 @@
                 {{ session('info') }}
             </div>
         @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
     </div>
 
     @if ($pendaftaran)
@@ -386,4 +374,34 @@
         </div>
         <!--end::Card-->
     @endif
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (session('success'))
+            Swal.fire({
+                text: "{!! session('success') !!}",
+                icon: "success",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, Mengerti!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                text: "{!! session('error') !!}",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, Mengerti!",
+                customClass: {
+                    confirmButton: "btn btn-danger"
+                }
+            });
+        @endif
+    });
+</script>
 @endsection

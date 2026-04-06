@@ -14,23 +14,12 @@
             <div class="card-title">
                 <h3>Form Pendaftaran Peserta Didik Baru Periode Tahun Ajaran {{ $data->tahun_ajaran }}</h3>
             </div>
-            {{-- message --}}
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
             <!--begin::Card title-->
         </div>
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            <form action="{{ $mode == 'create' ? route('pendaftaran.store') : route('pendaftaran.update', $data->id) }}" method="POST" enctype="multipart/form-data" novalidate>
+            <form action="{{ $mode == 'create' ? route('pendaftaran.store') : route('pendaftaran.update', $data->id) }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 @csrf
                 @if ($mode == 'edit')
                     @method('PUT')
@@ -62,7 +51,7 @@
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <label for="jalur" class="form-label">Jalur Pendaftaran</label>
-                                <select class="form-control" id="jalur" name="jalur">
+                                <select class="form-control" id="jalur" name="jalur" required>
                                     {{-- data jalur yang telah diambil oleh peserta --}}
                                     @if ($mode == 'edit')
                                         <option value="" disabled selected>Pilih Jalur Pendaftaran</option>
@@ -79,7 +68,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="jenjang" class="form-label">Jenjang</label>
-                                <select class="form-control" id="jenjang" name="jenjang">
+                                <select class="form-control" id="jenjang" name="jenjang" required>
                                     {{-- data jenjang yang telah diambil oleh peserta --}}
                                     @if ($mode == 'edit')
                                         <option value="" disabled selected>Pilih Jenjang</option>
@@ -105,17 +94,18 @@
                             <div class="col-md-6">
                                 <label for="nik" class="form-label">NIK</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nik" name="nik" value="{{ $peserta->nik }}">
+                                    <input type="text" class="form-control" id="nik" name="nik" value="{{ $peserta->nik }}" disabled>
+                                    <input type="hidden" name="nik" value="{{ $peserta->nik }}">
                                 @else
-                                    <input type="text" class="form-control" id="nik" name="nik">
+                                    <input type="text" class="form-control" id="nik" name="nik" required>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="nisn" class="form-label">Nomor Induk Siswa Nasional (NISN)</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nisn" name="nisn" value="{{ $peserta->nisn }}">
+                                    <input type="text" class="form-control" id="nisn" name="nisn" value="{{ $peserta->nisn }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="nisn" name="nisn">
+                                    <input type="text" class="form-control" id="nisn" name="nisn" required>
                                 @endif
                             </div>
                         </div>
@@ -124,9 +114,9 @@
                             <div class="col-md-12">
                                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ $peserta->nama_lengkap }}">
+                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ $peserta->nama_lengkap }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap">
+                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
                                 @endif
                             </div>
                         </div>
@@ -135,13 +125,13 @@
                             <div class="col-md-6">
                                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                                 @if ($mode == 'edit')
-                                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
                                         <option value="" disabled>Pilih Jenis Kelamin</option>
                                         <option value="L" {{ $peserta->jenis_kelamin == 'L' ? 'selected' : '' }}>Laki-laki</option>
                                         <option value="P" {{ $peserta->jenis_kelamin == 'P' ? 'selected' : '' }}>Perempuan</option>
                                     </select>
                                 @else
-                                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
                                         <option value="" disabled selected>Pilih Jenis Kelamin</option>
                                         <option value="L">Laki-laki</option>
                                         <option value="P">Perempuan</option>
@@ -151,7 +141,7 @@
                             <div class="col-md-6">
                                 <label for="agama" class="form-label">Agama</label>
                                 @if ($mode == 'edit')
-                                    <select class="form-control" id="agama" name="agama">
+                                    <select class="form-control" id="agama" name="agama" required>
                                         <option value="" disabled>Pilih Agama</option>
                                         <option value="Islam" {{ $peserta->agama == 'Islam' ? 'selected' : '' }}>Islam</option>
                                         <option value="Kristen" {{ $peserta->agama == 'Kristen' ? 'selected' : '' }}>Kristen</option>
@@ -161,7 +151,7 @@
                                         <option value="Konghucu" {{ $peserta->agama == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
                                     </select>
                                 @else
-                                    <select class="form-control" id="agama" name="agama">
+                                    <select class="form-control" id="agama" name="agama" required>
                                         <option value="" disabled selected>Pilih Agama</option>
                                         <option value="Islam">Islam</option>
                                         <option value="Kristen">Kristen</option>
@@ -178,17 +168,17 @@
                             <div class="col-md-6">
                                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ $peserta->tempat_lahir }}">
+                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ $peserta->tempat_lahir }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir">
+                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" required>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
                                 @if ($mode == 'edit')
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ $peserta->tanggal_lahir }}">
+                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ $peserta->tanggal_lahir }}" required>
                                 @else
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
+                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
                                 @endif
                             </div>
                         </div>
@@ -197,17 +187,17 @@
                             <div class="col-md-6">
                                 <label for="nomor_kk" class="form-label">Nomor Kartu Keluarga (KK)</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ $peserta->nomor_kk }}">
+                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ $peserta->nomor_kk }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk">
+                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" required>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_kk" class="form-label">Tanggal Penerbitan KK</label>
                                 @if ($mode == 'edit')
-                                    <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" value="{{ $peserta->tanggal_terbit_kk }}">
+                                    <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" value="{{ $peserta->tanggal_terbit_kk }}" required>
                                 @else
-                                    <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk">
+                                    <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" required>
                                 @endif
                             </div>
                         </div>
@@ -216,7 +206,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="provinsi" class="form-label">Provinsi</label>
-                                <select class="form-control" id="provinsi" name="provinsi">
+                                <select class="form-control" id="provinsi" name="provinsi" required>
                                     @if ($mode == 'edit')
                                         <option value="" disabled>Pilih Provinsi</option>
                                         @foreach ($provinsi as $item)
@@ -232,7 +222,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="kabupaten" class="form-label">Kabupaten/Kota</label>
-                                <select class="form-control" id="kabupaten" name="kabupaten">
+                                <select class="form-control" id="kabupaten" name="kabupaten" required>
                                     @if ($mode == 'edit')
                                         <option value="" disabled>Pilih Kabupaten/Kota</option>
                                         @foreach ($kabupaten as $item)
@@ -251,7 +241,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="kecamatan" class="form-label">Kecamatan</label>
-                                <select class="form-control" id="kecamatan" name="kecamatan">
+                                <select class="form-control" id="kecamatan" name="kecamatan" required>
                                     @if ($mode == 'edit')
                                         <option value="" disabled>Pilih Kecamatan</option>
                                         @foreach ($kecamatan as $item)
@@ -267,7 +257,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="desa" class="form-label">Desa/Kelurahan</label>
-                                <select class="form-control" id="desa" name="desa">
+                                <select class="form-control" id="desa" name="desa" required>
                                     @if ($mode == 'edit')
                                         <option value="" disabled>Pilih Desa/Kelurahan</option>
                                         @foreach ($desa as $item)
@@ -287,9 +277,9 @@
                             <div class="col-md-12">
                                 <label for="alamat" class="form-label">Alamat</label>
                                 @if ($mode == 'edit')
-                                    <textarea class="form-control" id="alamat" name="alamat" rows="3">{{ $peserta->alamat }}</textarea>
+                                    <textarea class="form-control" id="alamat" name="alamat" rows="3" required>{{ $peserta->alamat }}</textarea>
                                 @else
-                                    <textarea class="form-control" id="alamat" name="alamat" rows="3"></textarea>
+                                    <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
                                 @endif
                             </div>
                         </div>
@@ -304,17 +294,17 @@
                             <div class="col-md-6">
                                 <label for="latitude" class="form-label">Latitude</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="latitude" name="latitude" value="{{ $peserta->latitude }}">
+                                    <input type="text" class="form-control" id="latitude" name="latitude" value="{{ $peserta->latitude }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="latitude" name="latitude">
+                                    <input type="text" class="form-control" id="latitude" name="latitude" required>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="longitude" class="form-label">Longitude</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="longitude" name="longitude" value="{{ $peserta->longitude }}">
+                                    <input type="text" class="form-control" id="longitude" name="longitude" value="{{ $peserta->longitude }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="longitude" name="longitude">
+                                    <input type="text" class="form-control" id="longitude" name="longitude" required>
                                 @endif
                             </div>
                         </div>
@@ -331,9 +321,9 @@
                             <div class="col-md-12">
                                 <label for="nama_wali" class="form-label">Nama Wali</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nama_wali" name="nama_wali" value="{{ $peserta->nama_wali ?? '' }}">
+                                    <input type="text" class="form-control" id="nama_wali" name="nama_wali" value="{{ $peserta->nama_wali ?? '' }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="nama_wali" name="nama_wali">
+                                    <input type="text" class="form-control" id="nama_wali" name="nama_wali" required>
                                 @endif
                             </div>
                         </div>
@@ -342,17 +332,17 @@
                             <div class="col-md-6">
                                 <label for="pekerjaan_wali" class="form-label">Pekerjaan Wali</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" value="{{ $peserta->pekerjaan_wali ?? '' }}">
+                                    <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" value="{{ $peserta->pekerjaan_wali ?? '' }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali">
+                                    <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" required>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="no_hp_wali" class="form-label">No. HP Wali</label>
                                 @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ $peserta->no_hp ?? '' }}">
+                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ $peserta->no_hp ?? '' }}" required>
                                 @else
-                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali">
+                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" required>
                                 @endif
                             </div>
                         </div>
@@ -361,9 +351,9 @@
                             <div class="col-md-12">
                                 <label for="alamat_wali" class="form-label">Alamat Wali</label>
                                 @if ($mode == 'edit')
-                                    <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3">{{ $peserta->alamat_wali ?? '' }}</textarea>
+                                    <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3" required>{{ $peserta->alamat_wali ?? '' }}</textarea>
                                 @else
-                                    <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3"></textarea>
+                                    <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3" required></textarea>
                                 @endif
                             </div>
                         </div>
@@ -531,7 +521,7 @@
                             <div class="col-md-6">
                                 <label for="sekolah_pilihan_1" class="form-label">Pilihan 1</label>
                                 @if ($mode == 'edit')
-                                    <select class="form-control select2" id="sekolah_pilihan_1" name="sekolah_pilihan_1">
+                                    <select class="form-control select2" id="sekolah_pilihan_1" name="sekolah_pilihan_1" required>
                                         <option value="" disabled>-- Pilih Sekolah --</option>
                                         @foreach($sekolahGrouped[$data->jenjang] ?? [] as $kecamatan => $listSekolah)
                                             <optgroup label="Kecamatan {{ $kecamatan }}">
@@ -764,12 +754,6 @@
                             </div>
                         </div>
 
-                        <div class="form-check form-check-custom form-check-solid mb-8">
-                            <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required/>
-                            <label class="form-check-label fw-bold text-gray-700" for="terms">
-                                Saya menyatakan bahwa seluruh data yang diisikan adalah benar dan dapat dipertanggungjawabkan sesuai ketentuan yang berlaku.
-                            </label>
-                        </div>
 
                         <div class="row g-5 mb-8">
                             <div class="col-lg-6">
@@ -1345,6 +1329,90 @@
                 }
             }
 
+            // Bootstrap form validation
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    
+                    // Bypass JS validity check for Draft button
+                    if (event.submitter && event.submitter.value === 'draft') {
+                        return; // Proceed directly without validation
+                    }
+
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                        
+                        // Show error alert
+                        Swal.fire({
+                            text: "Mohon lengkapi seluruh field yang wajib diisi. Silakan periksa kembali pada setiap tab sebelumnya.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, Mengerti!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+                        form.classList.add('was-validated');
+                        return;
+                    }
+
+                    // If valid and submit button clicked, show confirmation
+                    if (event.submitter && event.submitter.value === 'submit') {
+                        event.preventDefault(); // Stop normal submission to show Swal
+                        
+                        Swal.fire({
+                            title: "Konfirmasi Pendaftaran",
+                            html: "Saya menyatakan bahwa seluruh data yang diisikan adalah benar dan dapat dipertanggungjawabkan sesuai ketentuan yang berlaku.<br><br><b>Perhatian:</b> Data yang sudah di-submit tidak dapat diubah kembali.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Ya, Mendaftar",
+                            cancelButtonText: "Batal",
+                            customClass: {
+                                confirmButton: "btn btn-success",
+                                cancelButton: "btn btn-secondary"
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Inject hidden input for status to simulate submitter value
+                                let hiddenInput = document.createElement('input');
+                                hiddenInput.type = 'hidden';
+                                hiddenInput.name = 'status';
+                                hiddenInput.value = 'submit';
+                                form.appendChild(hiddenInput);
+                                
+                                form.submit(); // Bypass listener and native submit
+                            }
+                        });
+                    }
+
+                }, false)
+            })
+
+            // Show session messages if available
+            @if (session('success'))
+                Swal.fire({
+                    text: "{!! session('success') !!}",
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, Mengerti!",
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    }
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    text: "{!! session('error') !!}",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, Mengerti!",
+                    customClass: {
+                        confirmButton: "btn btn-danger"
+                    }
+                });
+            @endif
         });
     </script>
 @endsection

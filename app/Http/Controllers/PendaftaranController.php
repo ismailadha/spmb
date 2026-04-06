@@ -37,6 +37,13 @@ class PendaftaranController extends Controller
             if ($pendaftaran) {
                 // jika status = draft, lanjut edit
                 if ($pendaftaran->status == 'draft') {
+                    if (session('success')) {
+                        return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('success', session('success'));
+                    }
+                    if (session('error')) {
+                        return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('error', session('error'));
+                    }
+
                     return redirect()->route('pendaftaran.edit', $pendaftaran->id);
                 } else {
                     // ambil data pendaftaran berdasarkan user_id pada periode aktif yang statusnya sudah submit dengan query builder
@@ -109,7 +116,7 @@ class PendaftaranController extends Controller
                             'orang_tua_wali.alamat_wali',
                         )
                         ->first();
-                    
+
                     $berkas = $pendaftaran ? DB::table('berkas_pendaftaran')->where('pendaftaran_id', $pendaftaran->id)->get() : collect([]);
 
                     return view('backend.pendaftaran.index', compact('pendaftaran', 'berkas'));
@@ -321,7 +328,11 @@ class PendaftaranController extends Controller
                 ? 'Pendaftaran berhasil dikirim! Data Anda telah dikunci untuk proses verifikasi.'
                 : 'Progres pendaftaran berhasil disimpan sebagai draf.';
 
-            return redirect()->route('pendaftaran.index')->with('success', $message);
+            if ($request->status == 'submit') {
+                return redirect()->route('pendaftaran.index')->with('success', $message);
+            } else {
+                return redirect()->route('pendaftaran.edit', $pendaftaran_id)->with('success', $message);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -353,8 +364,9 @@ class PendaftaranController extends Controller
             ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
             ->join('desa', 'peserta.desa_id', '=', 'desa.id')
             ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
+            ->join('users', 'peserta.user_id', '=', 'users.id')
             ->where('peserta.id', $pendaftaran->peserta_id)
-            ->select('peserta.*', 'provinsi.*', 'kabupaten.*', 'kecamatan.*', 'desa.*', 'orang_tua_wali.*')
+            ->select('peserta.*', 'provinsi.*', 'kabupaten.*', 'kecamatan.*', 'desa.*', 'orang_tua_wali.*', 'users.nik')
             ->first();
 
         $jalur_pendaftaran = DB::table('periode_jalur')
@@ -512,7 +524,11 @@ class PendaftaranController extends Controller
                 ? 'Pendaftaran berhasil dikirim! Data Anda telah dikunci untuk proses verifikasi.'
                 : 'Progres pendaftaran berhasil diperbarui sebagai draf.';
 
-            return redirect()->route('pendaftaran.index')->with('success', $message);
+            if ($request->status == 'submit') {
+                return redirect()->route('pendaftaran.index')->with('success', $message);
+            } else {
+                return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('success', $message);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
 
