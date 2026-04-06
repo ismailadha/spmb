@@ -297,6 +297,7 @@
                             <div class="d-flex flex-column">
                                 <span class="text-dark fw-bolder text-hover-primary fs-6">Pilihan 1</span>
                                 <span class="text-muted fw-bold">{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</span>
+                                <span class="text-gray-500 fs-7 mt-1"><i class="bi bi-geo fs-6 text-primary"></i> Jarak: {{ $pendaftaran->jarak_sekolah_1 ? $pendaftaran->jarak_sekolah_1 . ' km' : '-' }}</span>
                             </div>
                             <!--end::Text-->
                         </div>
@@ -314,6 +315,7 @@
                             <div class="d-flex flex-column">
                                 <span class="text-dark fw-bolder text-hover-primary fs-6">Pilihan 2</span>
                                 <span class="text-muted fw-bold">{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</span>
+                                <span class="text-gray-500 fs-7 mt-1"><i class="bi bi-geo fs-6 text-info"></i> Jarak: {{ $pendaftaran->jarak_sekolah_2 ? $pendaftaran->jarak_sekolah_2 . ' km' : '-' }}</span>
                             </div>
                             <!--end::Text-->
                         </div>

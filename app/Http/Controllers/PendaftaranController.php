@@ -70,6 +70,8 @@ class PendaftaranController extends Controller
                             'pendaftaran.jenjang',
                             'pendaftaran.sekolah_pilihan_1',
                             'pendaftaran.sekolah_pilihan_2',
+                            'pendaftaran.jarak_sekolah_1',
+                            'pendaftaran.jarak_sekolah_2',
                             'peserta.id as peserta_id',
                             'peserta.user_id',
                             'peserta.nik',
@@ -196,7 +198,7 @@ class PendaftaranController extends Controller
         // load semua sekolah dan group by jenjang dan kecamatan
         $semuaSekolah = DB::table('sekolah')
             ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
-            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'kecamatan.nama_kecamatan')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan')
             ->get();
 
         $sekolahGrouped = [];
@@ -250,6 +252,8 @@ class PendaftaranController extends Controller
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_2' => $isSubmitted ? 'required' : 'nullable',
+            'jarak_sekolah_1' => 'nullable|numeric',
+            'jarak_sekolah_2' => 'nullable|numeric',
 
             // Validasi Berkas (Upload)
             'pasfoto' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -317,6 +321,8 @@ class PendaftaranController extends Controller
                 'tanggal_daftar' => now(),
                 'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
                 'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
+                'jarak_sekolah_1' => $request->jarak_sekolah_1,
+                'jarak_sekolah_2' => $request->jarak_sekolah_2,
                 'status' => $request->status,
             ]);
 
@@ -401,7 +407,7 @@ class PendaftaranController extends Controller
         // load semua sekolah dan group by jenjang dan kecamatan
         $semuaSekolah = DB::table('sekolah')
             ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
-            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'kecamatan.nama_kecamatan')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan')
             ->get();
 
         $sekolahGrouped = [];
@@ -453,6 +459,8 @@ class PendaftaranController extends Controller
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_2' => $isSubmitted ? 'required' : 'nullable',
+            'jarak_sekolah_1' => 'nullable|numeric',
+            'jarak_sekolah_2' => 'nullable|numeric',
 
             // Validasi Berkas (Update) - Selalu nullable karena berkas mungkin sudah ada
             'pasfoto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -510,6 +518,8 @@ class PendaftaranController extends Controller
                 'jenjang' => $request->jenjang,
                 'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
                 'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
+                'jarak_sekolah_1' => $request->jarak_sekolah_1,
+                'jarak_sekolah_2' => $request->jarak_sekolah_2,
                 'status' => $request->status,
             ];
 

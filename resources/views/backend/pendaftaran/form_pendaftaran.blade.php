@@ -526,7 +526,7 @@
                                         @foreach($sekolahGrouped[$data->jenjang] ?? [] as $kecamatan => $listSekolah)
                                             <optgroup label="Kecamatan {{ $kecamatan }}">
                                                 @foreach($listSekolah as $sekolah)
-                                                    <option value="{{ $sekolah->id }}" {{ ($data->sekolah_pilihan_1 ?? '') == $sekolah->id ? 'selected' : '' }}>
+                                                    <option value="{{ $sekolah->id }}" data-lat="{{ $sekolah->latitude }}" data-lng="{{ $sekolah->longitude }}" {{ ($data->sekolah_pilihan_1 ?? '') == $sekolah->id ? 'selected' : '' }}>
                                                         {{ $sekolah->nama_sekolah }}
                                                     </option>
                                                 @endforeach
@@ -547,7 +547,7 @@
                                         @foreach($sekolahGrouped[$data->jenjang] ?? [] as $kecamatan => $listSekolah)
                                             <optgroup label="Kecamatan {{ $kecamatan }}">
                                                 @foreach($listSekolah as $sekolah)
-                                                    <option value="{{ $sekolah->id }}" {{ ($data->sekolah_pilihan_2 ?? '') == $sekolah->id ? 'selected' : '' }}>
+                                                    <option value="{{ $sekolah->id }}" data-lat="{{ $sekolah->latitude }}" data-lng="{{ $sekolah->longitude }}" {{ ($data->sekolah_pilihan_2 ?? '') == $sekolah->id ? 'selected' : '' }}>
                                                         {{ $sekolah->nama_sekolah }}
                                                     </option>
                                                 @endforeach
@@ -559,6 +559,23 @@
                                         <option value="" disabled selected>-- Pilih Sekolah --</option>
                                     </select>
                                 @endif
+                            </div>
+                        </div>
+                        {{-- Jarak Sekolah --}}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="jarak_sekolah_1" class="form-label">Jarak Sekolah 1</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light" id="jarak_sekolah_1" name="jarak_sekolah_1" value="{{ $data->jarak_sekolah_1 ?? '' }}" readonly>
+                                    <span class="input-group-text">km</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="jarak_sekolah_2" class="form-label">Jarak Sekolah 2</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light" id="jarak_sekolah_2" name="jarak_sekolah_2" value="{{ $data->jarak_sekolah_2 ?? '' }}" readonly>
+                                    <span class="input-group-text">km</span>
+                                </div>
                             </div>
                         </div>
                         <div class="d-flex justify-content-between mt-4">
@@ -610,13 +627,22 @@
                                     </div>
                                     <div class="separator separator-dashed mb-4"></div>
                                     <div class="d-flex flex-column gap-2">
-                                        <div class="d-flex flex-stack">
+                                        <div class="d-flex flex-stack mt-2">
                                             <span class="text-gray-500 fw-semibold">Pilihan 1:</span>
                                             <span class="text-gray-800 fw-bold text-end" id="sum-sekolah1">-</span>
                                         </div>
                                         <div class="d-flex flex-stack">
+                                            <span class="text-gray-500 fw-semibold ms-4">Jarak:</span>
+                                            <span class="text-gray-800 text-end" id="sum-jarak1">-</span>
+                                        </div>
+                                        <div class="separator separator-dashed my-2"></div>
+                                        <div class="d-flex flex-stack">
                                             <span class="text-gray-500 fw-semibold">Pilihan 2:</span>
                                             <span class="text-gray-800 fw-bold text-end" id="sum-sekolah2">-</span>
+                                        </div>
+                                        <div class="d-flex flex-stack">
+                                            <span class="text-gray-500 fw-semibold ms-4">Jarak:</span>
+                                            <span class="text-gray-800 text-end" id="sum-jarak2">-</span>
                                         </div>
                                     </div>
                                 </div>
@@ -842,11 +868,11 @@
                                     </tr>
                                     <tr>
                                         <td>Sekolah Pilihan 1</td>
-                                        <td class="fw-bold">: <span id="pre-sekolah1"></span></td>
+                                        <td class="fw-bold">: <span id="pre-sekolah1"></span> <small class="text-muted fw-normal">(<span id="pre-jarak1"></span>)</small></td>
                                     </tr>
                                     <tr>
                                         <td>Sekolah Pilihan 2</td>
-                                        <td class="fw-bold">: <span id="pre-sekolah2"></span></td>
+                                        <td class="fw-bold">: <span id="pre-sekolah2"></span> <small class="text-muted fw-normal">(<span id="pre-jarak2"></span>)</small></td>
                                     </tr>
                                 </table>
                             </div>
@@ -912,11 +938,11 @@
                 draggable: true
             }).addTo(map);
 
-            // Update inputs when marker is dragged
             marker.on('dragend', function (e) {
                 const position = marker.getLatLng();
                 latInput.value = position.lat.toFixed(6);
                 lngInput.value = position.lng.toFixed(6);
+                if (typeof calculateDistances === 'function') calculateDistances();
             });
 
             // Update marker and inputs when map is clicked
@@ -924,6 +950,7 @@
                 marker.setLatLng(e.latlng);
                 latInput.value = e.latlng.lat.toFixed(6);
                 lngInput.value = e.latlng.lng.toFixed(6);
+                if (typeof calculateDistances === 'function') calculateDistances();
             });
 
             // Update marker when input changed manually
@@ -935,6 +962,7 @@
                     marker.setLatLng(newLatLng);
                     map.panTo(newLatLng);
                 }
+                if (typeof calculateDistances === 'function') calculateDistances();
             }
 
             if(latInput && lngInput) {
@@ -1209,7 +1237,9 @@
                 document.getElementById('sum-jalur').innerText = jalurText;
                 document.getElementById('sum-jenjang').innerText = jenjangVal;
                 document.getElementById('sum-sekolah1').innerText = sekolah1Text;
+                document.getElementById('sum-jarak1').innerText = (document.getElementById('jarak_sekolah_1').value ? document.getElementById('jarak_sekolah_1').value + ' km' : '-');
                 document.getElementById('sum-sekolah2').innerText = sekolah2Text;
+                document.getElementById('sum-jarak2').innerText = (document.getElementById('jarak_sekolah_2').value ? document.getElementById('jarak_sekolah_2').value + ' km' : '-');
 
                 document.getElementById('sum-nama').innerText = document.getElementById('nama_lengkap').value || '-';
                 document.getElementById('sum-nik').innerText = document.getElementById('nik').value || '-';
@@ -1252,7 +1282,9 @@
                     document.getElementById('pre-ttl').innerText = document.getElementById('sum-ttl').innerText;
                     document.getElementById('pre-jk').innerText = document.getElementById('sum-jk-agama').innerText.split(' / ')[0];
                     document.getElementById('pre-sekolah1').innerText = document.getElementById('sum-sekolah1').innerText;
+                    document.getElementById('pre-jarak1').innerText = document.getElementById('sum-jarak1').innerText;
                     document.getElementById('pre-sekolah2').innerText = document.getElementById('sum-sekolah2').innerText;
+                    document.getElementById('pre-jarak2').innerText = document.getElementById('sum-jarak2').innerText;
 
                     const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
                     previewModal.show();
@@ -1304,13 +1336,68 @@
                     $(sekolahPilihan1).trigger('change.select2');
                     $(sekolahPilihan2).trigger('change.select2');
                 }
+
+                calculateDistances();
             }
 
             if (sekolahPilihan1) {
                 sekolahPilihan1.addEventListener('change', updateSchoolOptions);
+                $(sekolahPilihan1).on('select2:select', updateSchoolOptions);
             }
             if (sekolahPilihan2) {
                 sekolahPilihan2.addEventListener('change', updateSchoolOptions);
+                $(sekolahPilihan2).on('select2:select', updateSchoolOptions);
+            }
+
+            function calculateDistanceHav(lat1, lon1, lat2, lon2) {
+                if(!lat1 || !lon1 || !lat2 || !lon2) return 0;
+                const R = 6371; // km
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+
+            function calculateDistances() {
+                const pendaftarLat = parseFloat(document.getElementById('latitude').value);
+                const pendaftarLng = parseFloat(document.getElementById('longitude').value);
+
+                // hitung sekolah 1
+                const sek1 = document.getElementById('sekolah_pilihan_1');
+                const inputJarak1 = document.getElementById('jarak_sekolah_1');
+                if (sek1 && sek1.selectedIndex > 0 && !isNaN(pendaftarLat) && !isNaN(pendaftarLng)) {
+                    const selectedOption = sek1.options[sek1.selectedIndex];
+                    const lat = parseFloat(selectedOption.getAttribute('data-lat'));
+                    const lng = parseFloat(selectedOption.getAttribute('data-lng'));
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        const distance = calculateDistanceHav(pendaftarLat, pendaftarLng, lat, lng);
+                        inputJarak1.value = distance.toFixed(2);
+                    } else {
+                        inputJarak1.value = 'Koordinat tidak valid';
+                    }
+                } else {
+                    if(inputJarak1) inputJarak1.value = '';
+                }
+
+                // hitung sekolah 2
+                const sek2 = document.getElementById('sekolah_pilihan_2');
+                const inputJarak2 = document.getElementById('jarak_sekolah_2');
+                if (sek2 && sek2.selectedIndex > 0 && !isNaN(pendaftarLat) && !isNaN(pendaftarLng)) {
+                    const selectedOption = sek2.options[sek2.selectedIndex];
+                    const lat = parseFloat(selectedOption.getAttribute('data-lat'));
+                    const lng = parseFloat(selectedOption.getAttribute('data-lng'));
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        const distance = calculateDistanceHav(pendaftarLat, pendaftarLng, lat, lng);
+                        inputJarak2.value = distance.toFixed(2);
+                    } else {
+                        inputJarak2.value = 'Koordinat tidak valid';
+                    }
+                } else {
+                    if(inputJarak2) inputJarak2.value = '';
+                }
             }
 
             function renderSekolah(jenjang) {
@@ -1319,7 +1406,7 @@
                     for (const kecamatan in sekolahData[jenjang]) {
                         optionsHTML += `<optgroup label="Kecamatan ${kecamatan}">`;
                         sekolahData[jenjang][kecamatan].forEach(sekolah => {
-                            optionsHTML += `<option value="${sekolah.id}">${sekolah.nama_sekolah}</option>`;
+                            optionsHTML += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
                         });
                         optionsHTML += `</optgroup>`;
                     }

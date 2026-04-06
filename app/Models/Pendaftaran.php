@@ -17,18 +17,9 @@ class Pendaftaran extends Model
         'tanggal_daftar',
         'sekolah_pilihan_1',
         'sekolah_pilihan_2',
+        'jarak_sekolah_1',
+        'jarak_sekolah_2',
         'status',
-        // 'file_pasFoto',
-        // 'file_akta_lahir',
-        // 'file_kk',
-        // 'file_ktp_orang_tua',
-        // 'file_kartu_pkh',
-        // 'file_surat_dokter',
-        // 'file_surat_pindah',
-        // 'nilai_tka',
-        // 'file_dokumen_tka',
-        // 'nama_perlombaan',
-        // 'file_sertifikat_penghargaan',
     ];
 
     public function peserta()
