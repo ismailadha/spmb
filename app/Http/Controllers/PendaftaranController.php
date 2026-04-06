@@ -249,6 +249,7 @@ class PendaftaranController extends Controller
             'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
+            'sekolah_pilihan_2' => $isSubmitted ? 'required' : 'nullable',
 
             // Validasi Berkas (Upload)
             'pasfoto' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -451,6 +452,7 @@ class PendaftaranController extends Controller
             'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
             'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
+            'sekolah_pilihan_2' => $isSubmitted ? 'required' : 'nullable',
 
             // Validasi Berkas (Update) - Selalu nullable karena berkas mungkin sudah ada
             'pasfoto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',

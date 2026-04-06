@@ -369,7 +369,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="pasfoto" class="form-label">Pas Photo</label>
-                                <input type="file" class="form-control" id="pasfoto" name="pasfoto">
+                                <input type="file" class="form-control" id="pasfoto" name="pasfoto" {{ $berkas->where('jenis_berkas', 'pasfoto')->first() ? '' : 'required' }}>
                                 @error('pasfoto') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'pasfoto')->first())
                                     <div class="mt-2">
@@ -382,7 +382,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="akta_lahir" class="form-label">Akta Lahir</label>
-                                <input type="file" class="form-control" id="akta_lahir" name="akta_lahir">
+                                <input type="file" class="form-control" id="akta_lahir" name="akta_lahir" {{ $berkas->where('jenis_berkas', 'akta_lahir')->first() ? '' : 'required' }}>
                                 @error('akta_lahir') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'akta_lahir')->first())
                                     <div class="mt-2">
@@ -398,7 +398,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="kk" class="form-label">Kartu Keluarga</label>
-                                <input type="file" class="form-control" id="kk" name="kk">
+                                <input type="file" class="form-control" id="kk" name="kk" {{ $berkas->where('jenis_berkas', 'kk')->first() ? '' : 'required' }}>
                                 @error('kk') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'kk')->first())
                                     <div class="mt-2">
@@ -411,7 +411,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="ktp_orang_tua" class="form-label">KTP Orang Tua / Wali</label>
-                                <input type="file" class="form-control" id="ktp_orang_tua" name="ktp_orang_tua">
+                                <input type="file" class="form-control" id="ktp_orang_tua" name="ktp_orang_tua" {{ $berkas->where('jenis_berkas', 'ktp_orang_tua')->first() ? '' : 'required' }}>
                                 @error('ktp_orang_tua') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'ktp_orang_tua')->first())
                                     <div class="mt-2">
@@ -542,7 +542,7 @@
                             <div class="col-md-6">
                                 <label for="sekolah_pilihan_2" class="form-label">Pilihan 2</label>
                                 @if ($mode == 'edit')
-                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2">
+                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2" required>
                                         <option value="" disabled>-- Pilih Sekolah --</option>
                                         @foreach($sekolahGrouped[$data->jenjang] ?? [] as $kecamatan => $listSekolah)
                                             <optgroup label="Kecamatan {{ $kecamatan }}">
@@ -555,7 +555,7 @@
                                         @endforeach
                                     </select>
                                 @else
-                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2">
+                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2" required>
                                         <option value="" disabled selected>-- Pilih Sekolah --</option>
                                     </select>
                                 @endif
@@ -959,6 +959,12 @@
             const jalur = document.getElementById('jalur');
             const nextBtn = document.getElementById('nextToProfil');
 
+            const hasKartuPkh = {{ $berkas->where('jenis_berkas', 'kartu_pkh')->first() ? 'true' : 'false' }};
+            const hasSuratDokter = {{ $berkas->where('jenis_berkas', 'surat_dokter')->first() ? 'true' : 'false' }};
+            const hasSuratPindah = {{ $berkas->where('jenis_berkas', 'surat_pindah')->first() ? 'true' : 'false' }};
+            const hasPrestasiAkd = {{ $berkas->where('jenis_berkas', 'dokumen_tka')->first() ? 'true' : 'false' }};
+            const hasPrestasiNon = {{ $berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first() ? 'true' : 'false' }};
+            
             function toggleDokumen() {
                 const kartuPkhContainer = document.getElementById('kartu_pkh_container');
                 const suratDokterContainer = document.getElementById('surat_dokter_container');
@@ -966,6 +972,15 @@
                 const prestasiAkademikContainer = document.getElementById('prestasi_akademik_container');
                 const prestasiNonakademikContainer = document.getElementById('prestasi_nonakademik_container');
                 const jenjangSelect = document.getElementById('jenjang');
+
+                // Reset required ke false untuk semua input dinamis setiap kali toggle berjalan
+                document.getElementById('kartu_pkh').required = false;
+                document.getElementById('surat_dokter').required = false;
+                document.getElementById('surat_pindah').required = false;
+                if(document.getElementById('dokumen_tka')) document.getElementById('dokumen_tka').required = false;
+                if(document.getElementById('sertifikat_penghargaan')) document.getElementById('sertifikat_penghargaan').required = false;
+                if(document.getElementById('nilai_tka')) document.getElementById('nilai_tka').required = false;
+                if(document.getElementById('nama_perlombaan')) document.getElementById('nama_perlombaan').required = false;
 
                 let selectedText = '';
                 if (jalur.selectedIndex !== -1) {
@@ -976,11 +991,16 @@
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'block';
+                    if (!hasSuratPindah) document.getElementById('surat_pindah').required = true;
+
                     if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
                     if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
                 } else if (selectedText.includes('afirmasi')) {
                     kartuPkhContainer.style.display = 'block';
                     suratDokterContainer.style.display = 'block';
+                    if (!hasKartuPkh) document.getElementById('kartu_pkh').required = true;
+                    if (!hasSuratDokter) document.getElementById('surat_dokter').required = true;
+
                     suratPindahContainer.style.display = 'none';
                     if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
                     if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
@@ -988,8 +1008,21 @@
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'none';
-                    if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'block';
-                    if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'block';
+                    
+                    if(prestasiAkademikContainer) {
+                        prestasiAkademikContainer.style.display = 'block';
+                        if (!hasPrestasiAkd) {
+                            document.getElementById('dokumen_tka').required = true;
+                            document.getElementById('nilai_tka').required = true;
+                        }
+                    }
+                    if(prestasiNonakademikContainer) {
+                        prestasiNonakademikContainer.style.display = 'block';
+                        if (!hasPrestasiNon) {
+                            document.getElementById('sertifikat_penghargaan').required = true;
+                            document.getElementById('nama_perlombaan').required = true;
+                        }
+                    }
                 } else {
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
@@ -1306,6 +1339,14 @@
             if (jenjangSelect) {
                 jenjangSelect.addEventListener('change', function() {
                     renderSekolah(this.value);
+                    
+                    // Sesuaikan penegasan validasi di JS
+                    if (sekolahPilihan1) sekolahPilihan1.required = true;
+                    if (sekolahPilihan2) sekolahPilihan2.required = true;
+
+                    // Mengulang status HTML native `was-validated` karena pilihan baru saja di reset
+                    const form = document.querySelector('.needs-validation');
+                    if (form) form.classList.remove('was-validated');
                 });
 
                 // Initial load
