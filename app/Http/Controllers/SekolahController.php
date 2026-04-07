@@ -33,6 +33,15 @@ class SekolahController extends Controller
                         return '<span class="badge badge-light text-dark">-</span>';
                     }
                 })
+                ->addColumn('status_pilihan_1', function ($row) {
+                    if ($row->status_pilihan_1 == 1) {
+                        return '<span class="badge badge-primary">Pilihan 1</span>';
+                    } elseif ($row->status_pilihan_1 == 0 && $row->status_pilihan_1 !== null) {
+                        return '<span class="badge badge-secondary">Pilihan 2</span>';
+                    } else {
+                        return '<span class="badge badge-light text-dark">-</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return '
                         <div class="dropdown">
@@ -53,7 +62,7 @@ class SekolahController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['status_unggulan', 'action'])
+                ->rawColumns(['status_unggulan', 'status_pilihan_1', 'action'])
                 ->make(true);
         }
 

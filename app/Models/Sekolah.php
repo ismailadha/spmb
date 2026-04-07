@@ -25,7 +25,7 @@ class Sekolah extends Model
         'latitude',
         'longitude',
         'status_perbatasan',
-        'status_unggulan',
+        'status_pilihan_1',
     ];
 
     public function provinsi()

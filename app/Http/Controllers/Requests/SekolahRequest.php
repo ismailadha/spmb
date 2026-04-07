@@ -39,6 +39,7 @@ class SekolahRequest extends FormRequest
             'longitude' => 'nullable|numeric|between:-180,180',
             'status_perbatasan' => 'nullable|boolean',
             'status_unggulan' => 'nullable|boolean',
+            'status_pilihan_1' => 'nullable|boolean',
         ];
     }
 

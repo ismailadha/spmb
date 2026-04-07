@@ -20,7 +20,14 @@
                     <!--begin: Pic-->
                     <div class="me-7 mb-4">
                         <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            <img src="{{ asset('back/media/avatars/blank.png') }}" alt="image" />
+                            @php
+                                $pasfoto = isset($berkas) ? $berkas->where('jenis_berkas', 'pasfoto')->first() : null;
+                            @endphp
+                            @if($pasfoto)
+                                <img src="{{ route('pendaftaran.berkas.show', $pasfoto->id) }}" alt="Foto Diri" style="object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal_preview_{{ $pasfoto->id }}" />
+                            @else
+                                <img src="{{ asset('back/media/avatars/blank.png') }}" alt="image" />
+                            @endif
                             <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
                         </div>
                     </div>
@@ -346,7 +353,38 @@
                                         </div>
                                         <div class="d-flex flex-column">
                                             <span class="text-dark fw-bolder text-hover-primary fs-6">{{ ucwords(str_replace('_', ' ', $item->jenis_berkas)) }}</span>
-                                            <a href="{{ route('pendaftaran.berkas.show', $item->id) }}" target="_blank" class="text-primary fw-semibold fs-7">Lihat Berkas</a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal_preview_{{ $item->id }}" class="text-primary fw-semibold fs-7">Lihat Berkas</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal Preview -->
+                                    <div class="modal fade" id="modal_preview_{{ $item->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2 class="fw-bolder">{{ ucwords(str_replace('_', ' ', $item->jenis_berkas)) }}</h2>
+                                                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                                                        <span class="svg-icon svg-icon-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-body scroll-y mx-5 my-7 text-center">
+                                                    @php
+                                                        $extension = pathinfo($item->file_path, PATHINFO_EXTENSION);
+                                                    @endphp
+                                                    @if(in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
+                                                        <img src="{{ route('pendaftaran.berkas.show', $item->id) }}" class="img-fluid rounded shadow" alt="Preview">
+                                                    @elseif(strtolower($extension) == 'pdf')
+                                                        <iframe src="{{ route('pendaftaran.berkas.show', $item->id) }}" width="100%" height="600px" style="border: none;"></iframe>
+                                                    @else
+                                                        <div class="alert alert-warning">Preview tidak tersedia untuk format file ini.</div>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach

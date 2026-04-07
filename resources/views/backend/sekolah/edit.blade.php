@@ -170,12 +170,13 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label for="status_unggulan" class="form-label">Status Unggulan</label>
-                        <select class="form-control" id="status_unggulan" name="status_unggulan">
-                            <option value="">-- Pilih Status --</option>
-                            <option value="1" {{ $sekolah->status_unggulan == 1 ? 'selected' : '' }}>Sekolah Unggulan</option>
-                            <option value="0" {{ $sekolah->status_unggulan == 0 || is_null($sekolah->status_unggulan) ? 'selected' : '' }}>Sekolah Non-Unggulan</option>
-                        </select>
+                        <label class="form-label d-block">Status Pilihan 1</label>
+                        <div class="form-check form-switch mt-2">
+                            <input type="hidden" name="status_pilihan_1" value="0">
+                            <input class="form-check-input" type="checkbox" role="switch" name="status_pilihan_1" id="status_pilihan_1" value="1" {{ $sekolah->status_pilihan_1 == 1 ? 'checked' : '' }}>
+                            <label class="form-check-label" for="status_pilihan_1">Sekolah Pilihan 1</label>
+                        </div>
+                        <small class="text-muted">Aktifkan untuk menjadikan sebagai Sekolah Pilihan 1. (Jika dimatikan, akan menjadi Pilihan 2)</small>
                     </div>
                 </div>
 

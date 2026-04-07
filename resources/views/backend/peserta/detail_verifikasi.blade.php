@@ -51,7 +51,14 @@
                         <div class="card-body pt-15">
                             <div class="d-flex flex-center flex-column mb-5">
                                 <div class="symbol symbol-100px symbol-circle mb-7">
-                                    <img src="{{ asset('back/media/avatars/300-1.jpg') }}" alt="image" />
+                                    @php
+                                        $pasfoto = $peserta->pendaftaran && $peserta->pendaftaran->berkas ? $peserta->pendaftaran->berkas->where('jenis_berkas', 'pasfoto')->first() : null;
+                                    @endphp
+                                    @if($pasfoto)
+                                        <img src="{{ route('pendaftaran.berkas.show', $pasfoto->id) }}" alt="Foto Diri" style="object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal_preview_{{ $pasfoto->id }}" />
+                                    @else
+                                        <img src="{{ asset('back/media/avatars/300-1.jpg') }}" alt="image" />
+                                    @endif
                                 </div>
                                 <a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bolder mb-1">{{ $peserta->nama_lengkap }}</a>
                                 <div class="fs-5 fw-bold text-muted mb-6">{{ $peserta->pendaftaran->nomor_pendaftaran ?? 'Belum Ada No. Pendaftaran' }}</div>
@@ -124,12 +131,18 @@
                                     <label class="col-lg-4 fw-bold text-muted">Sekolah Pilihan 1</label>
                                     <div class="col-lg-8">
                                         <span class="fw-bolder fs-6 text-gray-800">{{ $peserta->pendaftaran->sekolahPilihan1->nama_sekolah ?? '-' }}</span>
+                                        @if(isset($peserta->pendaftaran->jarak_sekolah_1))
+                                            <div class="text-muted fs-7 mt-1"><i class="bi bi-geo fs-7 text-primary"></i> Jarak: {{ $peserta->pendaftaran->jarak_sekolah_1 }} km</div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="row mb-7">
                                     <label class="col-lg-4 fw-bold text-muted">Sekolah Pilihan 2</label>
                                     <div class="col-lg-8">
                                         <span class="fw-bolder fs-6 text-gray-800">{{ $peserta->pendaftaran->sekolahPilihan2->nama_sekolah ?? '-' }}</span>
+                                        @if(isset($peserta->pendaftaran->jarak_sekolah_2))
+                                            <div class="text-muted fs-7 mt-1"><i class="bi bi-geo fs-7 text-info"></i> Jarak: {{ $peserta->pendaftaran->jarak_sekolah_2 }} km</div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

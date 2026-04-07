@@ -90,15 +90,15 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Status Unggulan:</th>
+                            <th>Status Pilihan 1:</th>
                             <td>
-                                @if ($sekolah->status_unggulan == 1)
+                                @if ($sekolah->status_pilihan_1 == 1)
                                     <span class="badge badge-success">
                                         <i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>
-                                        Sekolah Unggulan
+                                        Sekolah Pilihan 1
                                     </span>
-                                @elseif ($sekolah->status_unggulan == 0)
-                                    <span class="badge badge-secondary">Sekolah Non-Unggulan</span>
+                                @elseif ($sekolah->status_pilihan_1 == 0)
+                                    <span class="badge badge-secondary">Sekolah Pilihan 2</span>
                                 @else
                                     <span class="badge badge-light text-dark">Belum ditentukan</span>
                                 @endif
