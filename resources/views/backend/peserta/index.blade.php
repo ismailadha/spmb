@@ -20,20 +20,18 @@
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
-                <!--begin::Toolbar-->
-                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    <a href="{{ route('register-peserta') }}" class="btn btn-primary">
-                        <span class="svg-icon svg-icon-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
-                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
-                            </svg>
-                        </span>
-                        Tambah Peserta
-                    </a>
+                <div class="d-flex align-items-center">
+                    <label for="filter_periode" class="me-2 fw-bold text-muted">Periode:</label>
+                    <select id="filter_periode" class="form-select form-select-sm form-select-solid w-150px">
+                        @foreach($semuaPeriode as $p)
+                            <option value="{{ $p->id }}" {{ ($periode && $periode->id == $p->id) ? 'selected' : '' }}>
+                                {{ $p->tahun_ajaran }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-                <!--end::Toolbar-->
             </div>
+            <!--end::Card toolbar-->
         </div>
         <!--end::Card header-->
         <!--begin::Card body-->
@@ -83,7 +81,12 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         scrollX: true,
-        ajax: "{{ route('peserta.index') }}",
+        ajax: {
+            url: "{{ route('peserta.index') }}",
+            data: function (d) {
+                d.periode_id = $('#filter_periode').val();
+            }
+        },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
             { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
@@ -110,6 +113,10 @@ $(document).ready(function() {
                 "previous": "Sebelumnya"
             }
         }
+    });
+    
+    $('#filter_periode').change(function() {
+        $('#kt_table_peserta').DataTable().ajax.reload();
     });
 });
 </script>

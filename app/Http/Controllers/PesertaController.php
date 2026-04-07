@@ -25,11 +25,20 @@ class PesertaController extends Controller
             ->where('status_aktif', 1)
             ->first();
 
+        $semuaPeriode = DB::table('periode_pendaftaran')
+            ->orderBy('id', 'desc')
+            ->get();
+
         if ($request->ajax()) {
+            $periodeId = $request->get('periode_id');
+            if (!$periodeId && $periode) {
+                $periodeId = $periode->id;
+            }
+
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
-                ->where('pendaftaran.periode_id', $periode->id)
+                ->where('pendaftaran.periode_id', $periodeId)
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
@@ -75,7 +84,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.index');
+        return view('backend.peserta.index', compact('periode', 'semuaPeriode'));
     }
 
     /**

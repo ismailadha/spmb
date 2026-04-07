@@ -88,51 +88,6 @@
 								</div>
 								<div class="menu-item">
 									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Beranda Website</span>
-									</div>
-								</div>
-								<div data-kt-menu-trigger="click" class="menu-item here @yield('utilitas-menu-open') menu-accordion">
-									<span class="menu-link">
-										<span class="menu-icon">
-											<span class="svg-icon svg-icon-2">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path opacity="0.3" d="M21 22H14C13.4 22 13 21.6 13 21V3C13 2.4 13.4 2 14 2H21C21.6 2 22 2.4 22 3V21C22 21.6 21.6 22 21 22Z" fill="currentColor" />
-													<path d="M10 22H3C2.4 22 2 21.6 2 21V3C2 2.4 2.4 2 3 2H10C10.6 2 11 2.4 11 3V21C11 21.6 10.6 22 10 22Z" fill="currentColor" />
-												</svg>
-											</span>
-										</span>
-										<span class="menu-title">Informasi</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<div class="menu-sub menu-sub-accordion menu-active-bg">
-										<div class="menu-item">
-											<a class="menu-link @yield('slider-menu-active')" href="{{ route('slider.index') }}">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Slider</span>
-											</a>
-										</div>
-										<div class="menu-item">
-											<a class="menu-link @yield('sambutan-menu-active')" href="{{ route('sambutan.index') }}">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Kata Sambutan</span>
-											</a>
-										</div>
-										<div class="menu-item">
-											<a class="menu-link @yield('post-menu-active')" href="{{ route('posts.index') }}">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Berita</span>
-											</a>
-										</div>
-									</div>
-								</div>
-								<div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Pendaftaran</span>
 									</div>
 								</div>
@@ -182,6 +137,11 @@
 									</a>
 								</div>
 								<div class="menu-item">
+									<div class="menu-content pt-8 pb-0">
+										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Verifikasi</span>
+									</div>
+								</div>
+								<div class="menu-item">
 									<a class="menu-link @yield('peserta-menu-active')" href="{{ route('peserta.index') }}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
@@ -215,6 +175,52 @@
 										</span>
 										<span class="menu-title">Data Sekolah</span>
 									</a>
+								</div>
+								
+								<div class="menu-item">
+									<div class="menu-content pt-8 pb-0">
+										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Beranda Website</span>
+									</div>
+								</div>
+								<div data-kt-menu-trigger="click" class="menu-item here @yield('utilitas-menu-open') menu-accordion">
+									<span class="menu-link">
+										<span class="menu-icon">
+											<span class="svg-icon svg-icon-2">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<path opacity="0.3" d="M21 22H14C13.4 22 13 21.6 13 21V3C13 2.4 13.4 2 14 2H21C21.6 2 22 2.4 22 3V21C22 21.6 21.6 22 21 22Z" fill="currentColor" />
+													<path d="M10 22H3C2.4 22 2 21.6 2 21V3C2 2.4 2.4 2 3 2H10C10.6 2 11 2.4 11 3V21C11 21.6 10.6 22 10 22Z" fill="currentColor" />
+												</svg>
+											</span>
+										</span>
+										<span class="menu-title">Informasi</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<div class="menu-sub menu-sub-accordion menu-active-bg">
+										<div class="menu-item">
+											<a class="menu-link @yield('slider-menu-active')" href="{{ route('slider.index') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Slider</span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<a class="menu-link @yield('sambutan-menu-active')" href="{{ route('sambutan.index') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Kata Sambutan</span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<a class="menu-link @yield('post-menu-active')" href="{{ route('posts.index') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Berita</span>
+											</a>
+										</div>
+									</div>
 								</div>
 								<div class="menu-item">
 									<div class="menu-content pt-8 pb-0">

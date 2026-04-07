@@ -24,109 +24,120 @@ class PendaftaranController extends Controller
             ->where('peserta_daftar_selesai', '>=', $tanggal_hari_ini)
             ->first();
 
-        if ($jadwal) {
-            // cek apakah user sudah pernah membuat pendaftaran sebelumnya
-            $user_id = Auth::user()->id;
+        $periode_aktif = $jadwal ? true : false;
 
+        // cek apakah user sudah pernah membuat pendaftaran sebelumnya
+        $user_id = Auth::user()->id;
+
+        if ($jadwal) {
+            $pendaftaran = DB::table('pendaftaran')
+                ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+                ->where('peserta.user_id', $user_id)
+                ->where('pendaftaran.periode_id', $jadwal->id)
+                ->select('pendaftaran.id', 'pendaftaran.status')
+                ->orderBy('pendaftaran.id', 'desc')
+                ->first();
+        } else {
             $pendaftaran = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->where('peserta.user_id', $user_id)
                 ->select('pendaftaran.id', 'pendaftaran.status')
+                ->orderBy('pendaftaran.id', 'desc')
                 ->first();
-
-            if ($pendaftaran) {
-                // jika status = draft, lanjut edit
-                if ($pendaftaran->status == 'draft') {
-                    if (session('success')) {
-                        return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('success', session('success'));
-                    }
-                    if (session('error')) {
-                        return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('error', session('error'));
-                    }
-
-                    return redirect()->route('pendaftaran.edit', $pendaftaran->id);
-                } else {
-                    // ambil data pendaftaran berdasarkan user_id pada periode aktif yang statusnya sudah submit dengan query builder
-                    $pendaftaran = DB::table('pendaftaran')
-                        ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
-                        ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
-                        ->join('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
-                        ->join('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
-                        ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
-                        ->join('desa', 'peserta.desa_id', '=', 'desa.id')
-                        ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
-                        ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
-                        ->join('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
-                        ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
-                        ->where('peserta.user_id', Auth::id())
-                        ->where('periode_pendaftaran.status_aktif', 1)
-                        ->where('pendaftaran.status', 'submit')
-                        ->select(
-                            'pendaftaran.id',
-                            'pendaftaran.status',
-                            'pendaftaran.nomor_pendaftaran',
-                            'pendaftaran.tanggal_daftar',
-                            'pendaftaran.jalur_id',
-                            'pendaftaran.jenjang',
-                            'pendaftaran.sekolah_pilihan_1',
-                            'pendaftaran.sekolah_pilihan_2',
-                            'pendaftaran.jarak_sekolah_1',
-                            'pendaftaran.jarak_sekolah_2',
-                            'peserta.id as peserta_id',
-                            'peserta.user_id',
-                            'peserta.nik',
-                            'peserta.nisn',
-                            'peserta.nama_lengkap',
-                            'peserta.jenis_kelamin',
-                            'peserta.agama',
-                            'peserta.tempat_lahir',
-                            'peserta.tanggal_lahir',
-                            'peserta.nomor_kk',
-                            'peserta.tanggal_terbit_kk',
-                            'peserta.provinsi_id',
-                            'peserta.kabupaten_id',
-                            'peserta.kecamatan_id',
-                            'peserta.desa_id',
-                            'peserta.alamat',
-                            'peserta.latitude',
-                            'peserta.longitude',
-                            'periode_pendaftaran.id as periode_id',
-                            'periode_pendaftaran.tahun_ajaran',
-                            'periode_pendaftaran.status_aktif',
-                            'periode_pendaftaran.peserta_daftar_mulai',
-                            'periode_pendaftaran.peserta_daftar_selesai',
-                            'provinsi.id as provinsi_id',
-                            'provinsi.nama_provinsi',
-                            'kabupaten.id as kabupaten_id',
-                            'kabupaten.nama_kabupaten',
-                            'kecamatan.id as kecamatan_id',
-                            'kecamatan.nama_kecamatan',
-                            'desa.id as desa_id',
-                            'desa.nama_desa',
-                            'jalur_pendaftaran.id as jalur_id',
-                            'jalur_pendaftaran.nama_jalur',
-                            'sekolah1.id as sekolah_pilihan_1_id',
-                            'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
-                            'sekolah1.jenjang as sekolah_pilihan_1_jenjang',
-                            'sekolah2.id as sekolah_pilihan_2_id',
-                            'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
-                            'sekolah2.jenjang as sekolah_pilihan_2_jenjang',
-                            'orang_tua_wali.id as orang_tua_wali_id',
-                            'orang_tua_wali.nama_wali',
-                            'orang_tua_wali.pekerjaan_wali',
-                            'orang_tua_wali.no_hp',
-                            'orang_tua_wali.alamat_wali',
-                        )
-                        ->first();
-
-                    $berkas = $pendaftaran ? DB::table('berkas_pendaftaran')->where('pendaftaran_id', $pendaftaran->id)->get() : collect([]);
-
-                    return view('backend.pendaftaran.index', compact('pendaftaran', 'berkas'));
-                }
-            }
-        } else {
-            return redirect()->route('pendaftaran.index')->with('error', 'Jadwal pendaftaran sudah ditutup');
         }
+
+        if ($pendaftaran) {
+            // jika status = draft, lanjut edit
+            if ($pendaftaran->status == 'draft') {
+                if (session('success')) {
+                    return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('success', session('success'));
+                }
+                if (session('error')) {
+                    return redirect()->route('pendaftaran.edit', $pendaftaran->id)->with('error', session('error'));
+                }
+
+                return redirect()->route('pendaftaran.edit', $pendaftaran->id);
+            } else {
+                // ambil data pendaftaran berdasarkan user_id pada periode aktif yang statusnya sudah submit dengan query builder
+                $pendaftaran_data = DB::table('pendaftaran')
+                    ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+                    ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
+                    ->join('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
+                    ->join('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
+                    ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
+                    ->join('desa', 'peserta.desa_id', '=', 'desa.id')
+                    ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+                    ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+                    ->join('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+                    ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
+                    ->where('peserta.user_id', Auth::id())
+                    ->where('pendaftaran.status', 'submit')
+                    ->select(
+                        'pendaftaran.id',
+                        'pendaftaran.status',
+                        'pendaftaran.nomor_pendaftaran',
+                        'pendaftaran.tanggal_daftar',
+                        'pendaftaran.jalur_id',
+                        'pendaftaran.jenjang',
+                        'pendaftaran.sekolah_pilihan_1',
+                        'pendaftaran.sekolah_pilihan_2',
+                        'pendaftaran.jarak_sekolah_1',
+                        'pendaftaran.jarak_sekolah_2',
+                        'peserta.id as peserta_id',
+                        'peserta.user_id',
+                        'peserta.nik',
+                        'peserta.nisn',
+                        'peserta.nama_lengkap',
+                        'peserta.jenis_kelamin',
+                        'peserta.agama',
+                        'peserta.tempat_lahir',
+                        'peserta.tanggal_lahir',
+                        'peserta.nomor_kk',
+                        'peserta.tanggal_terbit_kk',
+                        'peserta.provinsi_id',
+                        'peserta.kabupaten_id',
+                        'peserta.kecamatan_id',
+                        'peserta.desa_id',
+                        'peserta.alamat',
+                        'peserta.latitude',
+                        'peserta.longitude',
+                        'periode_pendaftaran.id as periode_id',
+                        'periode_pendaftaran.tahun_ajaran',
+                        'periode_pendaftaran.status_aktif',
+                        'periode_pendaftaran.peserta_daftar_mulai',
+                        'periode_pendaftaran.peserta_daftar_selesai',
+                        'provinsi.id as provinsi_id',
+                        'provinsi.nama_provinsi',
+                        'kabupaten.id as kabupaten_id',
+                        'kabupaten.nama_kabupaten',
+                        'kecamatan.id as kecamatan_id',
+                        'kecamatan.nama_kecamatan',
+                        'desa.id as desa_id',
+                        'desa.nama_desa',
+                        'jalur_pendaftaran.id as jalur_id',
+                        'jalur_pendaftaran.nama_jalur',
+                        'sekolah1.id as sekolah_pilihan_1_id',
+                        'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
+                        'sekolah1.jenjang as sekolah_pilihan_1_jenjang',
+                        'sekolah2.id as sekolah_pilihan_2_id',
+                        'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
+                        'sekolah2.jenjang as sekolah_pilihan_2_jenjang',
+                        'orang_tua_wali.id as orang_tua_wali_id',
+                        'orang_tua_wali.nama_wali',
+                        'orang_tua_wali.pekerjaan_wali',
+                        'orang_tua_wali.no_hp',
+                        'orang_tua_wali.alamat_wali',
+                    )
+                    ->orderBy('pendaftaran.id', 'desc')
+                    ->first();
+
+                $berkas = $pendaftaran_data ? DB::table('berkas_pendaftaran')->where('pendaftaran_id', $pendaftaran_data->id)->get() : collect([]);
+
+                return view('backend.pendaftaran.index', ['pendaftaran' => $pendaftaran_data, 'berkas' => $berkas, 'periode_aktif' => $periode_aktif]);
+            }
+        }
+
+        return view('backend.pendaftaran.index', ['pendaftaran' => null, 'berkas' => collect([]), 'periode_aktif' => $periode_aktif]);
     }
 
     public function create()
@@ -140,6 +151,10 @@ class PendaftaranController extends Controller
             ->where('peserta_daftar_mulai', '<=', $tanggal_hari_ini)
             ->where('peserta_daftar_selesai', '>=', $tanggal_hari_ini)
             ->first();
+
+        if (! $jadwal) {
+            return redirect()->route('pendaftaran.index')->with('error', 'Pendaftaran sedang ditutup atau belum ada periode pendaftaran yang aktif.');
+        }
 
         // cek apakah user sudah pernah membuat pendaftaran sebelumnya
         $user_id = Auth::user()->id;
@@ -271,7 +286,7 @@ class PendaftaranController extends Controller
             DB::beginTransaction();
 
             // 1. Create Peserta (menggunakan query builder)
-            $peserta = DB::table('peserta')->insert([
+            $peserta_id = DB::table('peserta')->insertGetId([
                 'user_id' => Auth::id(),
                 'nik' => $request->nik,
                 'nisn' => $request->nisn,
@@ -290,8 +305,6 @@ class PendaftaranController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
             ]);
-
-            $peserta_id = DB::table('peserta')->where('user_id', Auth::id())->first()->id;
 
             // 2. Create Orang Tua / Wali (menggunakan query builder)
             DB::table('orang_tua_wali')->insert([

@@ -366,12 +366,21 @@
         <!--begin::Card-->
         <div class="card">
             <div class="card-body p-10 text-center">
-                <div class="mb-10">
-                    <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-150px" alt="">
-                </div>
-                <h1 class="fw-bolder text-dark mb-4">Belum Ada Pendaftaran Terkirim</h1>
-                <p class="fs-6 text-gray-400 mb-8">Anda belum memiliki pendaftaran yang sudah dikirim (submit). <br> Silakan selesaikan proses pendaftaran Anda terlebih dahulu.</p>
-                <a href="{{ route('pendaftaran.create') }}" class="btn btn-primary px-10">Daftar Sekarang</a>
+                @if(isset($periode_aktif) && $periode_aktif)
+                    <div class="mb-10">
+                        <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-150px" alt="">
+                    </div>
+                    <h1 class="fw-bolder text-dark mb-4">Belum Ada Pendaftaran Terkirim</h1>
+                    <p class="fs-6 text-gray-400 mb-8">Anda belum memiliki pendaftaran yang sudah dikirim (submit). <br> Silakan selesaikan proses pendaftaran Anda terlebih dahulu.</p>
+                    <a href="{{ route('pendaftaran.create') }}" class="btn btn-primary px-10">Daftar Sekarang</a>
+                @else
+                    <div class="mb-10">
+                        <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-150px" style="filter: grayscale(100%); opacity: 0.6;" alt="">
+                    </div>
+                    <h1 class="fw-bolder text-dark mb-4">Pendaftaran Saat Ini Sedang Ditutup</h1>
+                    <p class="fs-6 text-gray-400 mb-8">Mohon maaf, saat ini tidak ada jadwal penerimaan peserta didik baru yang sedang aktif. <br> Silakan pantau terus informasi pengumuman lebih lanjut.</p>
+                    <button type="button" class="btn btn-secondary px-10" disabled>Pendaftaran Ditutup</button>
+                @endif
             </div>
         </div>
         <!--end::Card-->
