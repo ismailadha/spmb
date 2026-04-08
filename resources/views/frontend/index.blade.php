@@ -15,7 +15,7 @@
                 <img src="{{ asset($slider->gambar) }}" class="d-block w-100" alt="Slider {{ $key + 1 }}" style="height:520px;object-fit:cover;">
                 <div class="carousel-caption d-none d-md-block" style="background:rgba(0,0,0,.45);border-radius:10px;padding:20px 30px;">
                     <h2 style="font-size:2rem;font-weight:700;text-shadow:1px 1px 4px #000;">{{ $slider->caption ?? 'Selamat Datang di SPMB' }}</h2>
-                    <p style="font-size:1.1rem;">Sistem Penerimaan Murid Baru Tahun Ajaran 2025/2026</p>
+                    <p style="font-size:1.1rem;">Sistem Penerimaan Murid Baru Tahun Ajaran {{ date('Y') }}/{{ date('Y') + 1 }}</p>
                     <a href="{{ route('register-peserta') }}" class="btn btn-primary btn-lg mt-2">Daftar Sekarang</a>
                 </div>
             </div>
@@ -169,7 +169,7 @@
         <div class="row text-center mb-5">
             <div class="col">
                 <span style="color:#f39c12;font-weight:600;text-transform:uppercase;letter-spacing:2px;font-size:.9rem;">Timeline</span>
-                <h2 style="font-weight:700;margin-top:8px;color:#fff;">Jadwal Penting SPMB 2025/2026</h2>
+                <h2 style="font-weight:700;margin-top:8px;color:#fff;">Jadwal Penting SPMB {{ date('Y') }}/{{ date('Y') + 1 }}</h2>
                 <div style="width:60px;height:4px;background:#f39c12;margin:12px auto 0;border-radius:2px;"></div>
             </div>
         </div>
@@ -218,7 +218,7 @@
     <div class="container text-center">
         <h2 style="color:#fff;font-weight:700;font-size:2.2rem;margin-bottom:14px;">Segera Daftarkan Putra-Putri Anda!</h2>
         <p style="color:rgba(255,255,255,.85);font-size:1.1rem;max-width:560px;margin:0 auto 32px;">
-            Jangan lewatkan kesempatan mendaftar ke sekolah favorit. Pendaftaran dibuka hingga <strong style="color:#fff;">30 Juni 2025</strong>.
+            Jangan lewatkan kesempatan mendaftar ke sekolah favorit. Pendaftaran dibuka hingga <strong style="color:#fff;">30 Juni {{ date('Y') }}</strong>.
         </p>
         <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
             <a href="{{ route('register-peserta') }}"

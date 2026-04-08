@@ -1,11 +1,15 @@
 <!doctype html>
+@php
+    $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
+    $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
+@endphp
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Registrasi Akun Peserta</title>
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ 'front/img/favicon.png' }}">
+        <title>Registrasi - {{ $appConfig['nama_sistem'] ?? 'SPMB' }}</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('front/img/favicon.png') }}">
         @include('frontend.css')
     </head>
     <body>
@@ -170,6 +174,9 @@
                                         </div>
                                     @endif
                                     <div class="card-header">
+                                        <div class="text-center mb-3">
+                                            <img src="{{ $logoUrl }}" alt="Logo" style="max-height: 60px; filter: brightness(0) invert(1);">
+                                        </div>
                                         <h4 class="text-center">Registrasi Akun Baru</h4>
                                     </div>
                                     <div class="card-body">

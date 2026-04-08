@@ -1,11 +1,15 @@
 <!doctype html>
+@php
+    $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
+    $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
+@endphp
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sistem Penerimaan Siswa Baru</title>
+    <title>{{ $appConfig['nama_sistem'] ?? 'Sistem Penerimaan Siswa Baru' }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('front/img/favicon.png') }}">
     @include('frontend.css')
 </head>
@@ -19,8 +23,8 @@
                 <div class="row align-items-center">
                     <div class="col-md-7 d-none d-md-block">
                         <div class="d-flex align-items-center" style="font-size: 0.85rem; opacity: 0.9; margin: 0; padding: 0; line-height: 1;">
-                            <div class="d-flex align-items-center mr-4"><i class="la la-envelope mr-1" style="color: #3498db; font-size: 1.1rem;"></i> support@spmb.com</div>
-                            <div class="d-flex align-items-center mr-4"><i class="la la-phone mr-1" style="color: #3498db; font-size: 1.1rem;"></i> 0800 123 456</div>
+                            <div class="d-flex align-items-center mr-4"><i class="la la-envelope mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ $appConfig['email_resmi'] ?? 'support@spmb.com' }}</div>
+                            <div class="d-flex align-items-center mr-4"><i class="la la-phone mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ $appConfig['telepon'] ?? '0800 123 456' }}</div>
                             <div class="d-flex align-items-center"><i class="la la-clock-o mr-1" style="color: #3498db; font-size: 1.1rem;"></i> Senin - Sabtu 08.00 - 15.00</div>
                         </div>
                     </div>
@@ -40,13 +44,13 @@
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light px-0 py-3">
                     <a class="navbar-brand order-sm-1 order-1" href="{{ route('home') }}">
-                        <img height="48" src="{{ asset('images/spmb-logo.png') }}" alt="Logo SPMB" style="object-fit: contain;" />
+                        <img height="48" src="{{ $logoUrl }}" alt="Logo {{ $appConfig['logo_path'] ?? 'SPMB' }}" style="object-fit: contain; max-width: 180px;" />
                     </a>
-                    
+
                     <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="outline: none;">
                         <span class="la la-bars" style="font-size: 1.6rem; color: #1e2a4a;"></span>
                     </button>
-                    
+
                     <div class="collapse navbar-collapse order-md-1" id="navbarSupportedContent">
                         <ul class="navbar-nav mx-auto">
                             <li class="nav-item active">
@@ -74,7 +78,7 @@
                                 <a class="nav-link font-weight-bold mx-2" href="{{ route('kontak') }}" style="color: #1e2a4a; font-size: 0.95rem;">Kontak</a>
                             </li>
                         </ul>
-                        
+
                         <div class="nav_right_content d-flex align-items-center order-2 order-sm-2 ml-lg-3 mt-3 mt-lg-0">
                             @auth
                                 <a class="btn btn-outline-danger px-4 py-2" style="border-radius: 50px; font-weight: 600; font-size: 0.9rem;" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -101,10 +105,9 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="widget text_widget">
-                            <img class="footer_logo" src="img/logo-white.png" alt="logo">
-                            <p>Nunc placerat mi id nisi interdum they mtolis. Praesient is pharetra justo ught scel
-                                erisque the mattis lhreo quam nterdum mollisy.</p>
-                            <a href="#">Read More About <span class="la la-chevron-right"></span></a>
+                            <img class="footer_logo" src="{{ $logoUrl }}" alt="logo" style="max-height: 50px; width: auto; margin-bottom: 20px;">
+                            <p>{{ $appConfig['nama_sistem'] ?? 'Sistem Penerimaan Siswa Baru' }} - {{ $appConfig['nama_instansi'] ?? 'Dinas Pendidikan' }}</p>
+                            <p style="font-size: 0.9rem; margin-top: 10px;">{{ $appConfig['alamat'] ?? '' }}</p>
                         </div><!-- ends: .widget -->
                     </div><!-- ends: .col-lg-3 -->
                     <div class="col-lg-3 col-md-6 col-sm-6 d-flex justify-content-lg-center">
@@ -161,7 +164,7 @@
             </div>
         </div><!-- ends: .footer__big -->
         <div class="footer__small text-center">
-            <p>©2019 Tizara. All rights reserved. Created by <a href="#">AazzTech</a></p>
+            <p>{{ $appConfig['footer_teks'] ?? (date('Y') . ' © ' . ($appConfig['nama_instansi'] ?? 'SPMB')) }}</p>
         </div><!-- ends: .footer__small -->
     </footer>
     <div class="go_top">

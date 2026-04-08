@@ -1,11 +1,15 @@
 <!doctype html>
+@php
+    $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
+    $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
+@endphp
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Login Akun Peserta</title>
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ 'front/img/favicon.png' }}">
+        <title>Login Peserta - {{ $appConfig['nama_sistem'] ?? 'SPMB' }}</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('front/img/favicon.png') }}">
         @include('frontend.css')
         <style>
             .interactive-card {
@@ -16,7 +20,7 @@
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
                 background: #fff;
             }
-            
+
             .interactive-card:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -118,7 +122,7 @@
                 cursor: pointer;
                 padding-top: 2px;
             }
-            
+
             .back-home-btn {
                 display: inline-block;
                 padding: 10px 20px;
@@ -130,12 +134,32 @@
                 text-decoration: none;
                 margin-top: 15px;
             }
-            
+
             .back-home-btn:hover {
                 background: #f8f9fa;
                 color: #333;
                 border-color: #ddd;
                 text-decoration: none;
+            }
+
+            .login-logo {
+                display: inline-block;
+                max-height: 80px;
+                max-width: 180px;
+                width: auto;
+                object-fit: contain;
+                border-radius: 5px;
+                margin: 0 auto 10px;
+            }
+
+            .logo-container {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 16px;
+                background: rgba(255, 255, 255, 0.14);
+                border-radius: 22px;
+                border: 1px solid rgba(255,255,255,0.22);
             }
 
             .register-section {
@@ -189,6 +213,9 @@
                                 <div class="form-wrapper">
                                     <div class="card interactive-card">
                                         <div class="card-header">
+                                            <div class="text-center mb-3">
+                                                <img src="{{ $logoUrl }}" alt="Logo" class="login-logo">
+                                            </div>
                                             <h4 class="text-center">Login Peserta</h4>
                                         </div>
                                         <div class="card-body">
@@ -208,7 +235,7 @@
                                                         <span class="text-danger" style="font-size: 13px;">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-                                                
+
                                                 <div class="form-floating-custom">
                                                     <input type="password" class="form-control" id="password" name="password" placeholder=" " required autocomplete="current-password">
                                                     <label for="password">Password</label>
@@ -216,14 +243,14 @@
                                                         <span class="text-danger" style="font-size: 13px;">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-                                                
+
                                                 <div class="custom-control custom-checkbox checkbox-secondary mb-4">
                                                     <input type="checkbox" class="custom-control-input" id="remember_me" name="remember">
                                                     <label class="custom-control-label text-muted" for="remember_me" style="font-size: 14px;">
                                                         Ingat Saya
                                                     </label>
                                                 </div>
-                                                
+
                                                 <div class="form-group mb-4">
                                                     <button class="btn btn-interactive" type="submit">Log in</button>
                                                 </div>
@@ -234,7 +261,7 @@
                                                         Daftar Akun Peserta Baru <span aria-hidden="true">&rarr;</span>
                                                     </a>
                                                 </div>
-                                                
+
                                                 <div class="text-center mt-4">
                                                     <a href="{{ route('home') }}" class="back-home-btn">
                                                         &larr; Kembali ke Beranda

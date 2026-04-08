@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Konfigurasi;
+use Illuminate\Http\Request;
+
+class KonfigurasiController extends Controller
+{
+    public function index()
+    {
+        // Extract as [ 'kunci' => 'nilai' ]
+        $konfigurasi = Konfigurasi::pluck('nilai', 'kunci')->toArray();
+
+        return view('backend.konfigurasi.index', compact('konfigurasi'));
+    }
+
+    public function update(Request $request)
+    {
+        // Validasi data input
+        $validated = $request->validate([
+            'logo_path' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'nama_sistem' => 'required|string|min:3|max:255',
+            'nama_instansi' => 'required|string|min:3|max:255',
+            'email_resmi' => 'required|email',
+            'telepon' => 'nullable|string|max:20',
+            'alamat' => 'required|string|min:10',
+            'footer_teks' => 'required|string|min:3|max:255',
+        ]);
+
+        $data = $request->except(['_token', '_method']);
+
+        // Handle logo file upload
+        if ($request->hasFile('logo_path')) {
+            // Hapus logo yang lama jika ada
+            $oldLogo = Konfigurasi::where('kunci', 'logo_path')->value('nilai');
+            if ($oldLogo && file_exists(public_path($oldLogo))) {
+                unlink(public_path($oldLogo));
+            }
+
+            // Buat directory jika belum ada
+            $logoDir = public_path('images/logo');
+            if (! file_exists($logoDir)) {
+                mkdir($logoDir, 0755, true);
+            }
+
+            // Upload file baru
+            $file = $request->file('logo_path');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move($logoDir, $filename);
+            $data['logo_path'] = 'images/logo/'.$filename;
+        } else {
+            unset($data['logo_path']);
+        }
+
+        // Update konfigurasi menggunakan query builder
+        foreach ($data as $kunci => $nilai) {
+            // Skip jika bukan string
+            if (! is_string($nilai)) {
+                continue;
+            }
+
+            Konfigurasi::query()
+                ->where('kunci', $kunci)
+                ->update(['nilai' => $nilai]);
+        }
+
+        return redirect()->route('konfigurasi.index')->with('success', 'Konfigurasi sistem berhasil diperbarui.');
+    }
+}
