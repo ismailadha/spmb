@@ -213,7 +213,7 @@ class PendaftaranController extends Controller
         // load semua sekolah dan group by jenjang dan kecamatan
         $semuaSekolah = DB::table('sekolah')
             ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
-            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan', 'sekolah.status_pilihan_1')
             ->get();
 
         $sekolahGrouped = [];
@@ -420,7 +420,7 @@ class PendaftaranController extends Controller
         // load semua sekolah dan group by jenjang dan kecamatan
         $semuaSekolah = DB::table('sekolah')
             ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
-            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan', 'sekolah.status_pilihan_1')
             ->get();
 
         $sekolahGrouped = [];

@@ -1401,18 +1401,26 @@
             }
 
             function renderSekolah(jenjang) {
-                let optionsHTML = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
+                let optionsHTML1 = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
+                let optionsHTML2 = '<option value="" disabled selected>-- Pilih Sekolah --</option>';
                 if (jenjang && sekolahData[jenjang]) {
                     for (const kecamatan in sekolahData[jenjang]) {
-                        optionsHTML += `<optgroup label="Kecamatan ${kecamatan}">`;
+                        optionsHTML1 += `<optgroup label="Kecamatan ${kecamatan}">`;
+                        optionsHTML2 += `<optgroup label="Kecamatan ${kecamatan}">`;
                         sekolahData[jenjang][kecamatan].forEach(sekolah => {
-                            optionsHTML += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
+                            optionsHTML1 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
+                            
+                            // Jika sekolah tidak di-set hanya untuk pilihan 1
+                            if (sekolah.status_pilihan_1 != 1) {
+                                optionsHTML2 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
+                            }
                         });
-                        optionsHTML += `</optgroup>`;
+                        optionsHTML1 += `</optgroup>`;
+                        optionsHTML2 += `</optgroup>`;
                     }
                 }
-                sekolahPilihan1.innerHTML = optionsHTML;
-                sekolahPilihan2.innerHTML = optionsHTML;
+                sekolahPilihan1.innerHTML = optionsHTML1;
+                sekolahPilihan2.innerHTML = optionsHTML2;
                 
                 // Refresh Select2 if applicable
                 if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
