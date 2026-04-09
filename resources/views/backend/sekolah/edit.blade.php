@@ -51,15 +51,22 @@
                         <label for="jenjang" class="form-label">Jenjang</label>
                         <select class="form-control" id="jenjang" name="jenjang" required>
                             <option value="">-- Pilih Jenjang --</option>
-                            <option value="TK" {{ $sekolah->jenjang === 'TK' ? 'selected' : '' }}>TK</option>
                             <option value="SD" {{ $sekolah->jenjang === 'SD' ? 'selected' : '' }}>SD</option>
                             <option value="SMP" {{ $sekolah->jenjang === 'SMP' ? 'selected' : '' }}>SMP</option>
-                            <option value="SMA" {{ $sekolah->jenjang === 'SMA' ? 'selected' : '' }}>SMA</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label for="npsn" class="form-label">NPSN</label>
                         <input type="text" class="form-control" id="npsn" name="npsn" value="{{ $sekolah->npsn }}">
+                    </div>
+                </div>
+
+                <!-- Daya Tampung -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="daya_tampung" class="form-label">Daya Tampung</label>
+                        <input type="number" class="form-control" id="daya_tampung" name="daya_tampung" value="{{ $sekolah->daya_tampung }}" required min="0">
+                        <small class="text-muted">Jumlah maksimal peserta didik yang dapat ditampung.</small>
                     </div>
                 </div>
 

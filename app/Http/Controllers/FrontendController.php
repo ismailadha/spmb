@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PeriodeDaftar;
 use App\Models\Post;
 use App\Models\Sambutan;
 use App\Models\Slider;
@@ -14,8 +15,9 @@ class FrontendController extends Controller
         $sliders = Slider::all();
         $sambutans = Sambutan::where('is_active', 1)->orderBy('sort_order', 'asc')->take(2)->get();
         $posts = Post::whereIn('status', ['Publish', 'Published'])->orderBy('tanggal', 'desc')->take(3)->get();
+        $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
 
-        return view('frontend.index', compact('sliders', 'sambutans', 'posts'));
+        return view('frontend.index', compact('sliders', 'sambutans', 'posts', 'activePeriode'));
     }
 
     public function showPost($slug)

@@ -40,6 +40,7 @@ class SekolahRequest extends FormRequest
             'status_perbatasan' => 'nullable|boolean',
             'status_unggulan' => 'nullable|boolean',
             'status_pilihan_1' => 'nullable|boolean',
+            'daya_tampung' => 'required|integer|min:0',
         ];
     }
 
@@ -50,6 +51,8 @@ class SekolahRequest extends FormRequest
     {
         return [
             'nama_sekolah.required' => 'Nama sekolah wajib diisi.',
+            'daya_tampung.required' => 'Daya tampung wajib diisi.',
+            'daya_tampung.integer' => 'Daya tampung harus berupa angka.',
             'npsn.unique' => 'NPSN sudah digunakan.',
             'email.email' => 'Format email tidak valid.',
             'website.url' => 'Format website tidak valid.',

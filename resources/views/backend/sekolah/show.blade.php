@@ -55,6 +55,10 @@
                             <td>{{ $sekolah->npsn }}</td>
                         </tr>
                         <tr>
+                            <th>Daya Tampung:</th>
+                            <td>{{ $sekolah->daya_tampung }}</td>
+                        </tr>
+                        <tr>
                             <th>Alamat:</th>
                             <td>{{ $sekolah->alamat }}</td>
                         </tr>

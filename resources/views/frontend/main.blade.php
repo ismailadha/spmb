@@ -105,7 +105,7 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="widget text_widget">
-                            <img class="footer_logo" src="{{ $logoUrl }}" alt="logo" style="max-height: 50px; width: auto; margin-bottom: 20px;">
+                            <img class="footer_logo" src="{{ $logoUrl }}" alt="logo" style="max-height: 50px; width: auto; margin-bottom: 20px; background-color: white; border-radius: 5px;">
                             <p>{{ $appConfig['nama_sistem'] ?? 'Sistem Penerimaan Siswa Baru' }} - {{ $appConfig['nama_instansi'] ?? 'Dinas Pendidikan' }}</p>
                             <p style="font-size: 0.9rem; margin-top: 10px;">{{ $appConfig['alamat'] ?? '' }}</p>
                         </div><!-- ends: .widget -->
