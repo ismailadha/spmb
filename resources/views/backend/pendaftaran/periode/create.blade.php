@@ -77,6 +77,20 @@
                     </div>
                 </div>
 
+                <!-- Batas Usia -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="batas_usia_sd" class="form-label">Batas Usia SD (Cut-off)</label>
+                        <input type="date" class="form-control" id="batas_usia_sd" name="batas_usia_sd">
+                        <div class="form-text">Tanggal batas usia untuk pendaftaran SD.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="batas_usia_smp" class="form-label">Batas Usia SMP (Cut-off)</label>
+                        <input type="date" class="form-control" id="batas_usia_smp" name="batas_usia_smp">
+                        <div class="form-text">Tanggal batas usia untuk pendaftaran SMP.</div>
+                    </div>
+                </div>
+
                 <!-- Jalur Seleksi -->
                 <div class="row mb-3">
                     <div class="col-12">

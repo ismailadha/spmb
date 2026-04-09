@@ -78,6 +78,20 @@
                     </div>
                 </div>
 
+                <!-- Batas Usia -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="batas_usia_sd" class="form-label">Batas Usia SD (Cut-off)</label>
+                        <input type="date" class="form-control" id="batas_usia_sd" name="batas_usia_sd" value="{{ old('batas_usia_sd', $periode->batas_usia_sd ? \Carbon\Carbon::parse($periode->batas_usia_sd)->format('Y-m-d') : '') }}">
+                        <div class="form-text">Tanggal batas usia untuk pendaftaran SD.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="batas_usia_smp" class="form-label">Batas Usia SMP (Cut-off)</label>
+                        <input type="date" class="form-control" id="batas_usia_smp" name="batas_usia_smp" value="{{ old('batas_usia_smp', $periode->batas_usia_smp ? \Carbon\Carbon::parse($periode->batas_usia_smp)->format('Y-m-d') : '') }}">
+                        <div class="form-text">Tanggal batas usia untuk pendaftaran SMP.</div>
+                    </div>
+                </div>
+
                 <!-- Jalur Seleksi -->
                 <div class="row mb-3">
                     <div class="col-12">

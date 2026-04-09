@@ -175,7 +175,7 @@
                                     @endif
                                     <div class="card-header">
                                         <div class="text-center mb-3">
-                                            <img src="{{ $logoUrl }}" alt="Logo" style="max-height: 60px; filter: brightness(0) invert(1);">
+                                            <img src="{{ $logoUrl }}" alt="Logo" style="max-height: 60px;">
                                         </div>
                                         <h4 class="text-center">Registrasi Akun Baru</h4>
                                     </div>

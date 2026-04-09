@@ -18,6 +18,8 @@ class PeriodeDaftar extends Model
         'daftar_ulang_mulai',
         'daftar_ulang_selesai',
         'tanggal_masuk_sekolah',
+        'batas_usia_sd',
+        'batas_usia_smp',
         'status_aktif',
     ];
 

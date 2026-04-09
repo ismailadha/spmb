@@ -32,6 +32,10 @@
                         @auth
                             <div class="d-flex align-items-center" style="font-size: 0.85rem; font-weight: 500; line-height: 1;">
                                 <i class="la la-user-circle mr-1" style="font-size: 1.1rem;"></i> Selamat datang, <strong style="color: #1abc9c; margin-left: 4px;">{{ Auth::user()->name }}</strong>
+                                <a href="{{ route('logout') }}" style="color: #ffffffff; margin-left: 4px;" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">| Logout</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </div>
                         @endauth
                     </div>
@@ -77,22 +81,22 @@
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bold mx-2" href="{{ route('kontak') }}" style="color: #1e2a4a; font-size: 0.95rem;">Kontak</a>
                             </li>
-                        </ul>
-
-                        <div class="nav_right_content d-flex align-items-center order-2 order-sm-2 ml-lg-3 mt-3 mt-lg-0">
                             @auth
-                                <a class="btn btn-outline-danger px-4 py-2" style="border-radius: 50px; font-weight: 600; font-size: 0.9rem;" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="la la-sign-out mr-1"></i> Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none" style="display: none;">
-                                    @csrf
-                                </form>
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bold mx-2" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #1e2a4a; font-size: 0.95rem;">Logout</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
                             @else
-                                <a class="btn btn-primary px-4 py-2" style="border-radius: 50px; font-weight: 600; font-size: 0.9rem; background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%); border: none; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);" href="{{ route('login-peserta') }}" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(52, 152, 219, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(52, 152, 219, 0.3)';">
-                                    <i class="la la-user-plus mr-1"></i> Login SPMB
-                                </a>
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bold mx-2" href="{{ route('register-peserta') }}" style="color: #1e2a4a; font-size: 0.95rem;">Registrasi SPMB</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bold mx-2" href="{{ route('login-peserta') }}" style="color: #1e2a4a; font-size: 0.95rem;">Login SPMB</a>
+                                </li>
                             @endauth
-                        </div>
+                        </ul>
                     </div>
                 </nav>
             </div>
