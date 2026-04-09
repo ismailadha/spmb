@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Verifikasi -->
-                {{-- <div class="row mb-3">
+                <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="verifikasi_mulai" class="form-label">Verifikasi Mulai</label>
                         <input type="date" class="form-control" id="verifikasi_mulai" name="verifikasi_mulai">
@@ -51,10 +51,10 @@
                         <label for="verifikasi_selesai" class="form-label">Verifikasi Selesai</label>
                         <input type="date" class="form-control" id="verifikasi_selesai" name="verifikasi_selesai">
                     </div>
-                </div> --}}
+                </div>
 
                 <!-- Daftar Ulang -->
-                {{-- <div class="row mb-3">
+                <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="daftar_ulang_mulai" class="form-label">Daftar Ulang Mulai</label>
                         <input type="date" class="form-control" id="daftar_ulang_mulai" name="daftar_ulang_mulai">
@@ -63,10 +63,10 @@
                         <label for="daftar_ulang_selesai" class="form-label">Daftar Ulang Selesai</label>
                         <input type="date" class="form-control" id="daftar_ulang_selesai" name="daftar_ulang_selesai">
                     </div>
-                </div> --}}
+                </div>
 
                 <!-- Pengumuman & Masuk Sekolah -->
-                {{-- <div class="row mb-3">
+                <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="tanggal_pengumuman_seleksi" class="form-label">Tanggal Pengumuman Seleksi</label>
                         <input type="date" class="form-control" id="tanggal_pengumuman_seleksi" name="tanggal_pengumuman_seleksi">
@@ -75,7 +75,7 @@
                         <label for="tanggal_masuk_sekolah" class="form-label">Tanggal Masuk Sekolah</label>
                         <input type="date" class="form-control" id="tanggal_masuk_sekolah" name="tanggal_masuk_sekolah">
                     </div>
-                </div> --}}
+                </div>
 
                 <!-- Jalur Seleksi -->
                 <div class="row mb-3">

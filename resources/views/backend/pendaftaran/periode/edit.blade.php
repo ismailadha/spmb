@@ -41,6 +41,42 @@
                         <input type="date" class="form-control" id="peserta_daftar_selesai" name="peserta_daftar_selesai" value="{{ old('peserta_daftar_selesai', \Carbon\Carbon::parse($periode->peserta_daftar_selesai)->format('Y-m-d')) }}" required>
                     </div>
                 </div>
+                
+                <!-- Verifikasi -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="verifikasi_mulai" class="form-label">Verifikasi Mulai</label>
+                        <input type="date" class="form-control" id="verifikasi_mulai" name="verifikasi_mulai" value="{{ old('verifikasi_mulai', $periode->verifikasi_mulai ? \Carbon\Carbon::parse($periode->verifikasi_mulai)->format('Y-m-d') : '') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="verifikasi_selesai" class="form-label">Verifikasi Selesai</label>
+                        <input type="date" class="form-control" id="verifikasi_selesai" name="verifikasi_selesai" value="{{ old('verifikasi_selesai', $periode->verifikasi_selesai ? \Carbon\Carbon::parse($periode->verifikasi_selesai)->format('Y-m-d') : '') }}">
+                    </div>
+                </div>
+
+                <!-- Daftar Ulang -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="daftar_ulang_mulai" class="form-label">Daftar Ulang Mulai</label>
+                        <input type="date" class="form-control" id="daftar_ulang_mulai" name="daftar_ulang_mulai" value="{{ old('daftar_ulang_mulai', $periode->daftar_ulang_mulai ? \Carbon\Carbon::parse($periode->daftar_ulang_mulai)->format('Y-m-d') : '') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="daftar_ulang_selesai" class="form-label">Daftar Ulang Selesai</label>
+                        <input type="date" class="form-control" id="daftar_ulang_selesai" name="daftar_ulang_selesai" value="{{ old('daftar_ulang_selesai', $periode->daftar_ulang_selesai ? \Carbon\Carbon::parse($periode->daftar_ulang_selesai)->format('Y-m-d') : '') }}">
+                    </div>
+                </div>
+
+                <!-- Pengumuman & Masuk Sekolah -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="tanggal_pengumuman_seleksi" class="form-label">Tanggal Pengumuman Seleksi</label>
+                        <input type="date" class="form-control" id="tanggal_pengumuman_seleksi" name="tanggal_pengumuman_seleksi" value="{{ old('tanggal_pengumuman_seleksi', $periode->tanggal_pengumuman_seleksi ? \Carbon\Carbon::parse($periode->tanggal_pengumuman_seleksi)->format('Y-m-d') : '') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tanggal_masuk_sekolah" class="form-label">Tanggal Masuk Sekolah</label>
+                        <input type="date" class="form-control" id="tanggal_masuk_sekolah" name="tanggal_masuk_sekolah" value="{{ old('tanggal_masuk_sekolah', $periode->tanggal_masuk_sekolah ? \Carbon\Carbon::parse($periode->tanggal_masuk_sekolah)->format('Y-m-d') : '') }}">
+                    </div>
+                </div>
 
                 <!-- Jalur Seleksi -->
                 <div class="row mb-3">
