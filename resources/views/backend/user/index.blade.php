@@ -102,9 +102,16 @@ $(document).ready(function() {
         e.preventDefault();
         var form = $(this).closest('form');
         var nama = $(this).data('nama');
+        var role = $(this).data('role');
+
+        var text = "Apakah Anda yakin ingin menghapus pengguna " + nama + "?";
+        
+        if (role === 'peserta') {
+            text = "Apakah Anda yakin ingin menghapus pengguna " + nama + "? Data pendaftaran yang sudah terdaftar juga akan ikut terhapus.";
+        }
 
         Swal.fire({
-            text: "Apakah Anda yakin ingin menghapus pengguna " + nama + "?",
+            text: text,
             icon: "warning",
             showCancelButton: true,
             buttonsStyling: false,

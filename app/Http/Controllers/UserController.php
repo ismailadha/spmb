@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 
@@ -37,7 +38,7 @@ class UserController extends Controller
                                     <form action="'.route('pengguna.destroy', $row->id).'" method="POST" style="margin: 0;" class="form-delete">
                                         '.csrf_field().'
                                         '.method_field('DELETE').'
-                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->name.'">Delete</button>
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->name.'" data-role="'.$row->role.'">Delete</button>
                                     </form>
                                 </li>
                             </ul>
@@ -160,6 +161,17 @@ class UserController extends Controller
      */
     public function destroy(User $pengguna)
     {
+        // Hapus direktori berkas jika user adalah peserta
+        if ($pengguna->role === 'peserta' && $pengguna->peserta) {
+            $pendaftaran = $pengguna->peserta->pendaftaran;
+            if ($pendaftaran) {
+                $path = storage_path('app/berkas/'.$pendaftaran->id);
+                if (File::isDirectory($path)) {
+                    File::deleteDirectory($path);
+                }
+            }
+        }
+
         $pengguna->delete();
 
         return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil dihapus.');
