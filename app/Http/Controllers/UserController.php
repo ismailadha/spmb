@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -81,7 +82,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('backend.user.create');
+        $sekolah = Sekolah::orderBy('nama_sekolah')->get();
+
+        return view('backend.user.create', compact('sekolah'));
     }
 
     /**
@@ -99,6 +102,7 @@ class UserController extends Controller
             'username' => $username,
             'password' => Hash::make($request->password),
             'role' => $role,
+            'sekolah_id' => $role === 'admin_sekolah' ? $request->sekolah_id : null,
         ]);
 
         return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil ditambahkan.');
@@ -117,7 +121,12 @@ class UserController extends Controller
      */
     public function edit(User $pengguna)
     {
-        return view('backend.user.edit', ['user' => $pengguna]);
+        $sekolah = Sekolah::orderBy('nama_sekolah')->get();
+
+        return view('backend.user.edit', [
+            'user' => $pengguna,
+            'sekolah' => $sekolah,
+        ]);
     }
 
     /**
@@ -134,6 +143,7 @@ class UserController extends Controller
             'nik' => $nik,
             'username' => $username,
             'role' => $role,
+            'sekolah_id' => $role === 'admin_sekolah' ? $request->sekolah_id : null,
         ];
 
         if ($request->filled('password')) {

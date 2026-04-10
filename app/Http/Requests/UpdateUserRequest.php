@@ -43,6 +43,7 @@ class UpdateUserRequest extends FormRequest
             ],
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|string|in:admin_dinas,admin_sekolah,peserta',
+            'sekolah_id' => 'required_if:role,admin_sekolah|nullable|exists:sekolah,id',
         ];
     }
 
@@ -59,6 +60,7 @@ class UpdateUserRequest extends FormRequest
             'username' => 'Username',
             'password' => 'Password',
             'role' => 'Role',
+            'sekolah_id' => 'Sekolah',
         ];
     }
 }

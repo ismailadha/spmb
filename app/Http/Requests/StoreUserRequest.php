@@ -28,6 +28,7 @@ class StoreUserRequest extends FormRequest
             'username' => 'required_unless:role,peserta|nullable|string|max:255|unique:users,username',
             'password' => 'required|string|min:8',
             'role' => 'required|string|in:admin_dinas,admin_sekolah,peserta',
+            'sekolah_id' => 'required_if:role,admin_sekolah|nullable|exists:sekolah,id',
         ];
     }
 
@@ -44,6 +45,7 @@ class StoreUserRequest extends FormRequest
             'username' => 'Username',
             'password' => 'Password',
             'role' => 'Role',
+            'sekolah_id' => 'Sekolah',
         ];
     }
 }

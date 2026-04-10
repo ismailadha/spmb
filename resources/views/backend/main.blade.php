@@ -110,21 +110,6 @@
 										<span class="menu-title">Periode Pendaftaran</span>
 									</a>
 								</div>
-								{{-- <div class="menu-item">
-									<a class="menu-link @yield('jadwal-menu-active')" href="{{ route('jadwal.index') }}">
-										<span class="menu-icon">
-											<span class="svg-icon svg-icon-2">
-                                                <span class="svg-icon svg-icon-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
-														<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
-													</svg>
-                                                </span>
-											</span>
-										</span>
-										<span class="menu-title">Jadwal</span>
-									</a>
-								</div> --}}
 								<div class="menu-item">
 									<a class="menu-link @yield('pendaftaran-menu-active')" href="{{ route('pendaftaran.index') }}">
 										<span class="menu-icon">
@@ -244,21 +229,6 @@
 											</span>
 										</span>
 										<span class="menu-title">Konfigurasi</span>
-									</a>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link @yield('hak-akses-menu-active')" href="#">
-										<span class="menu-icon">
-											<span class="svg-icon svg-icon-2">
-                                                <span class="svg-icon svg-icon-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor"/>
-														<path d="M9.2 3H3C2.4 3 2 3.4 2 4V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V7C22 6.4 21.6 6 21 6H12L10.4 3.60001C10.2 3.20001 9.7 3 9.2 3Z" fill="currentColor"/>
-													</svg>
-                                                </span>
-											</span>
-										</span>
-										<span class="menu-title">Hak Akses</span>
 									</a>
 								</div>
 								<div class="menu-item">
@@ -391,7 +361,7 @@
 									<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 										<!--begin::Menu wrapper-->
 										<div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-											<img src="{{ asset('back/media/avatars/300-1.jpg') }}" alt="user" />
+											<img src="{{ asset('back/media/avatars/blank.png') }}" alt="user" />
 										</div>
 										<!--begin::User account menu-->
 										<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -400,7 +370,7 @@
 												<div class="menu-content d-flex align-items-center px-3">
 													<!--begin::Avatar-->
 													<div class="symbol symbol-50px me-5">
-														<img alt="Logo" src="{{ asset('back/media/avatars/300-1.jpg') }}" />
+														<img alt="Logo" src="{{ asset('back/media/avatars/blank.png') }}" />
 													</div>
 													<!--end::Avatar-->
 													<!--begin::Username-->
@@ -412,14 +382,6 @@
 													</div>
 													<!--end::Username-->
 												</div>
-											</div>
-											<!--end::Menu item-->
-											<!--begin::Menu separator-->
-											<div class="separator my-2"></div>
-											<!--end::Menu separator-->
-											<!--begin::Menu item-->
-											<div class="menu-item px-5">
-												<a href="../../demo1/dist/account/overview.html" class="menu-link px-5">My Profile</a>
 											</div>
 											<!--end::Menu item-->
 											<!--begin::Menu separator-->

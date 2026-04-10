@@ -55,6 +55,19 @@
                 <div class="text-muted fs-7 mt-1">NIK ini akan otomatis digunakan sebagai username untuk login Peserta.</div>
             </div>
 
+            <div class="fv-row mb-7 d-none" id="sekolah_container">
+                <label class="required fs-6 fw-bold mb-2">Sekolah</label>
+                <select class="form-select form-select-solid @error('sekolah_id') is-invalid @enderror" name="sekolah_id" id="sekolah_input">
+                    <option value="" disabled selected>Pilih Sekolah</option>
+                    @foreach ($sekolah as $s)
+                        <option value="{{ $s->id }}" {{ old('sekolah_id') == $s->id ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
+                    @endforeach
+                </select>
+                @error('sekolah_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
             <div class="fv-row mb-10">
                 <label class="required fs-6 fw-bold mb-2">Password</label>
                 <input type="password" class="form-control form-control-solid @error('password') is-invalid @enderror" placeholder="Masukkan password" name="password" required />
@@ -91,21 +104,34 @@
         const roleSelect = $('select[name="role"]');
         const nikContainer = $('#nik_container');
         const usernameContainer = $('#username_container');
+        const sekolahContainer = $('#sekolah_container');
         const nikInput = $('#nik_input');
         const usernameInput = $('#username_input');
+        const sekolahInput = $('#sekolah_input');
 
         function toggleFields() {
             const role = roleSelect.val();
             if (role === 'peserta') {
                 nikContainer.removeClass('d-none');
                 usernameContainer.addClass('d-none');
+                sekolahContainer.addClass('d-none');
                 usernameInput.prop('required', false);
                 nikInput.prop('required', true);
+                sekolahInput.prop('required', false);
+            } else if (role === 'admin_sekolah') {
+                nikContainer.addClass('d-none');
+                usernameContainer.removeClass('d-none');
+                sekolahContainer.removeClass('d-none');
+                usernameInput.prop('required', true);
+                nikInput.prop('required', false);
+                sekolahInput.prop('required', true);
             } else {
                 nikContainer.addClass('d-none');
                 usernameContainer.removeClass('d-none');
+                sekolahContainer.addClass('d-none');
                 usernameInput.prop('required', true);
                 nikInput.prop('required', false);
+                sekolahInput.prop('required', false);
             }
         }
 
