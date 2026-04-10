@@ -114,6 +114,56 @@ $(document).ready(function() {
             }
         }
     });
+
+    // Handle delete button click
+    $(document).on('click', '.btn-delete', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data peserta dan berkas pendaftaran terkait akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f1416c',
+            cancelButtonColor: '#d3d3d3',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: "btn fw-bold btn-danger",
+                cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#delete-form-' + id).submit();
+            }
+        });
+    });
+
+    // Handle session success/error messages
+    @if(session('success'))
+        Swal.fire({
+            text: "{{ session('success') }}",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, mengerti!",
+            customClass: {
+                confirmButton: "btn fw-bold btn-primary"
+            }
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            text: "{{ session('error') }}",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, mengerti!",
+            customClass: {
+                confirmButton: "btn fw-bold btn-primary"
+            }
+        });
+    @endif
     
     $('#filter_periode').change(function() {
         $('#kt_table_peserta').DataTable().ajax.reload();

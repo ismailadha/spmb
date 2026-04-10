@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
@@ -31,7 +32,7 @@ class PesertaController extends Controller
 
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id');
-            if (!$periodeId && $periode) {
+            if (! $periodeId && $periode) {
                 $periodeId = $periode->id;
             }
 
@@ -70,10 +71,10 @@ class PesertaController extends Controller
                                 <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
                                 <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
                                 <li>
-                                    <form action="'.route('peserta.destroy', $row->id).'" method="POST" style="margin: 0;">
+                                    <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" style="margin: 0;">
                                         '.csrf_field().'
                                         '.method_field('DELETE').'
-                                        <button type="submit" class="dropdown-item text-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-id="'.$row->id.'">Delete</button>
                                     </form>
                                 </li>
                             </ul>
@@ -130,9 +131,44 @@ class PesertaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peserta $peserta)
+    public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            // 1. Ambil data pendaftaran untuk mendapatkan ID pendaftaran
+            $pendaftaran = DB::table('pendaftaran')->where('peserta_id', $id)->first();
+
+            if ($pendaftaran) {
+                // 2. Hapus direktori berkas secara keseluruhan
+                $path = storage_path('app/berkas/'.$pendaftaran->id);
+                if (File::isDirectory($path)) {
+                    File::deleteDirectory($path);
+                }
+
+                // 3. Hapus data berkas, nilai, dan hasil seleksi
+                DB::table('berkas_pendaftaran')->where('pendaftaran_id', $pendaftaran->id)->delete();
+                DB::table('nilai_seleksi')->where('pendaftaran_id', $pendaftaran->id)->delete();
+                DB::table('hasil_seleksi')->where('pendaftaran_id', $pendaftaran->id)->delete();
+
+                // 4. Hapus data pendaftaran
+                DB::table('pendaftaran')->where('id', $pendaftaran->id)->delete();
+            }
+
+            // 6. Hapus data orang tua / wali
+            DB::table('orang_tua_wali')->where('peserta_id', $id)->delete();
+
+            // 7. Hapus data peserta
+            DB::table('peserta')->where('id', $id)->delete();
+
+            DB::commit();
+
+            return redirect()->route('peserta.index')->with('success', 'Data peserta berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->route('peserta.index')->with('error', 'Terjadi kesalahan saat menghapus data: '.$e->getMessage());
+        }
     }
 
     public function register_create()
