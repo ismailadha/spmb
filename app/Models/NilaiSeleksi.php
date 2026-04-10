@@ -10,9 +10,8 @@ class NilaiSeleksi extends Model
 
     protected $fillable = [
         'pendaftaran_id',
-        'jenis_nilai',
-        'nilai',
-        'bobot',
+        'nilai_1',
+        'nilai_2',
     ];
 
     public $timestamps = false;

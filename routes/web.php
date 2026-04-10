@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('peserta', PesertaController::class);
     Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
+
     Route::resource('pengguna', UserController::class);
 
     Route::prefix('pendaftaran')->group(function () {

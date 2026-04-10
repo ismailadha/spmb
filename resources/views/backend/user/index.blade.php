@@ -25,61 +25,19 @@
         </div>
     </div>
     <div class="card-body py-4">
-        @if(session('success'))
-            <div class="alert alert-success d-flex align-items-center p-5 mb-10">
-                <div class="d-flex flex-column">
-                    <h4 class="mb-1 text-success">Berhasil</h4>
-                    <span>{{ session('success') }}</span>
-                </div>
-            </div>
-        @endif
-
         <div class="table-responsive">
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_pengguna">
+            <table class="table align-middle table-row-dashed fs-6 gy-5 min-w-full" id="kt_table_pengguna">
                 <thead>
                     <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">No</th>
                         <th class="min-w-125px">Nama</th>
-                        <th class="min-w-125px">NIK</th>
                         <th class="min-w-125px">Username</th>
                         <th class="min-w-100px text-center">Role</th>
                         <th class="min-w-100px text-end">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-bold">
-                    @foreach($pengguna as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                <div class="fw-bolder text-dark">{{ $item->name }}</div>
-                            </td>
-                            <td>{{ $item->nik ?? '-' }}</td>
-                            <td>
-                                <div class="badge badge-light-dark">{{ $item->username }}</div>
-                            </td>
-                            <td class="text-center">
-                                @if(strtolower($item->role ?? '') === 'admin')
-                                    <span class="badge badge-light-primary fw-bolder px-4 py-2">Admin</span>
-                                @else
-                                    <span class="badge badge-light-secondary fw-bolder px-4 py-2">{{ $item->role ?? 'User' }}</span>
-                                @endif
-                            </td>
-                            <td class="text-end">
-                                <div class="btn-group" role="group" aria-label="Aksi Pengguna">
-                                    <a href="#" class="btn btn-icon btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                        <i class="fas fa-edit fs-4 text-white"></i>
-                                    </a>
-                                    <form action="#" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-icon btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" onclick="if(confirm('Yakin ingin menghapus?')) this.form.submit()">
-                                            <i class="fas fa-trash fs-4 text-white"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
+                    {{-- Populated by DataTables AJAX --}}
                 </tbody>
             </table>
         </div>
@@ -89,13 +47,31 @@
 @endsection
 
 @section('scripts')
+{{-- Include CDN scripts as used in Sekolah index --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
 $(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     var table = $('#kt_table_pengguna').DataTable({
+        processing: true,
+        serverSide: true,
         scrollX: true,
+        ajax: "{{ route('pengguna.index') }}",
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'username', name: 'username' },
+            { data: 'role', name: 'role', className: 'text-center' },
+            { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
+        ],
         language: {
             emptyTable: "Belum ada data pengguna.",
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
@@ -104,6 +80,8 @@ $(document).ready(function() {
             lengthMenu: "Tampilkan _MENU_ data",
             search: "Cari:",
             zeroRecords: "Data tidak ditemukan",
+            loadingRecords: "Memuat data...",
+            processing: "Sedang memproses...",
             paginate: {
                 first: "Pertama",
                 last: "Terakhir",
@@ -118,6 +96,42 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Delete confirmation
+    $(document).on('click', '.btn-delete', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var nama = $(this).data('nama');
+
+        Swal.fire({
+            text: "Apakah Anda yakin ingin menghapus pengguna " + nama + "?",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Tidak, Batal",
+            customClass: {
+                confirmButton: "btn fw-bold btn-danger",
+                cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+        }).then(function(result) {
+            if (result.value) {
+                form.submit();
+            }
+        });
+    });
+
+    @if (session('success'))
+        Swal.fire({
+            text: "{{ session('success') }}",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, Mengerti!",
+            customClass: {
+                confirmButton: "btn btn-primary"
+            }
+        });
+    @endif
 });
 </script>
 @endsection
