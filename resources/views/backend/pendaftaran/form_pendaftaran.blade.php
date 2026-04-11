@@ -540,10 +540,10 @@
                                     </select>
                                 @endif
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="sekolah_pilihan_2_container">
                                 <label for="sekolah_pilihan_2" class="form-label">Pilihan 2</label>
                                 @if ($mode == 'edit')
-                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2" required>
+                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2">
                                         <option value="" disabled>-- Pilih Sekolah --</option>
                                         @foreach($sekolahGrouped[$data->jenjang] ?? [] as $kecamatan => $listSekolah)
                                             <optgroup label="Kecamatan {{ $kecamatan }}">
@@ -556,7 +556,7 @@
                                         @endforeach
                                     </select>
                                 @else
-                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2" required>
+                                    <select class="form-control select2" id="sekolah_pilihan_2" name="sekolah_pilihan_2">
                                         <option value="" disabled selected>-- Pilih Sekolah --</option>
                                     </select>
                                 @endif
@@ -571,7 +571,7 @@
                                     <span class="input-group-text">km</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="jarak_sekolah_2_container">
                                 <label for="jarak_sekolah_2" class="form-label">Jarak Sekolah 2</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control bg-light" id="jarak_sekolah_2" name="jarak_sekolah_2" value="{{ $data->jarak_sekolah_2 ?? '' }}" readonly>
@@ -636,12 +636,12 @@
                                             <span class="text-gray-500 fw-semibold ms-4">Jarak:</span>
                                             <span class="text-gray-800 text-end" id="sum-jarak1">-</span>
                                         </div>
-                                        <div class="separator separator-dashed my-2"></div>
-                                        <div class="d-flex flex-stack">
+                                        <div class="separator separator-dashed my-2" id="sum-sep2"></div>
+                                        <div class="d-flex flex-stack" id="sum-sekolah2-row">
                                             <span class="text-gray-500 fw-semibold">Pilihan 2:</span>
                                             <span class="text-gray-800 fw-bold text-end" id="sum-sekolah2">-</span>
                                         </div>
-                                        <div class="d-flex flex-stack">
+                                        <div class="d-flex flex-stack" id="sum-jarak2-row">
                                             <span class="text-gray-500 fw-semibold ms-4">Jarak:</span>
                                             <span class="text-gray-800 text-end" id="sum-jarak2">-</span>
                                         </div>
@@ -871,7 +871,7 @@
                                         <td>Sekolah Pilihan 1</td>
                                         <td class="fw-bold">: <span id="pre-sekolah1"></span> <small class="text-muted fw-normal">(<span id="pre-jarak1"></span>)</small></td>
                                     </tr>
-                                    <tr>
+                                    <tr id="pre-sekolah2-row">
                                         <td>Sekolah Pilihan 2</td>
                                         <td class="fw-bold">: <span id="pre-sekolah2"></span> <small class="text-muted fw-normal">(<span id="pre-jarak2"></span>)</small></td>
                                     </tr>
@@ -1060,6 +1060,30 @@
                     if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
                 }
 
+                // Toggle Sekolah Pilihan 2
+                const sekolahPilihan2Container = document.getElementById('sekolah_pilihan_2_container');
+                const jarakSekolah2Container = document.getElementById('jarak_sekolah_2_container');
+                const sekolahPilihan2 = document.getElementById('sekolah_pilihan_2');
+
+                if (selectedText.includes('domisili')) {
+                    sekolahPilihan2Container.style.display = 'block';
+                    jarakSekolah2Container.style.display = 'block';
+                    if (sekolahPilihan2) sekolahPilihan2.required = true;
+                } else {
+                    sekolahPilihan2Container.style.display = 'none';
+                    jarakSekolah2Container.style.display = 'none';
+                    if (sekolahPilihan2) {
+                        sekolahPilihan2.required = false;
+                        sekolahPilihan2.value = '';
+                        if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
+                            $(sekolahPilihan2).val('').trigger('change');
+                        }
+                    }
+                    if (document.getElementById('jarak_sekolah_2')) {
+                        document.getElementById('jarak_sekolah_2').value = '';
+                    }
+                }
+
                 if (jenjangSelect) {
                     const sdOption = jenjangSelect.querySelector('option[value="SD"]');
                     if (sdOption) {
@@ -1239,8 +1263,23 @@
                 document.getElementById('sum-jenjang').innerText = jenjangVal;
                 document.getElementById('sum-sekolah1').innerText = sekolah1Text;
                 document.getElementById('sum-jarak1').innerText = (document.getElementById('jarak_sekolah_1').value ? document.getElementById('jarak_sekolah_1').value + ' km' : '-');
-                document.getElementById('sum-sekolah2').innerText = sekolah2Text;
-                document.getElementById('sum-jarak2').innerText = (document.getElementById('jarak_sekolah_2').value ? document.getElementById('jarak_sekolah_2').value + ' km' : '-');
+                
+                // Summary Pilihan 2 (Only if Domisili)
+                const sumSekolah2Row = document.getElementById('sum-sekolah2-row');
+                const sumJarak2Row = document.getElementById('sum-jarak2-row');
+                const sumSep2 = document.getElementById('sum-sep2');
+                
+                if (jalurText.toLowerCase().includes('domisili')) {
+                    if(sumSekolah2Row) sumSekolah2Row.style.display = 'flex';
+                    if(sumJarak2Row) sumJarak2Row.style.display = 'flex';
+                    if(sumSep2) sumSep2.style.display = 'block';
+                    document.getElementById('sum-sekolah2').innerText = sekolah2Text;
+                    document.getElementById('sum-jarak2').innerText = (document.getElementById('jarak_sekolah_2').value ? document.getElementById('jarak_sekolah_2').value + ' km' : '-');
+                } else {
+                    if(sumSekolah2Row) sumSekolah2Row.style.display = 'none';
+                    if(sumJarak2Row) sumJarak2Row.style.display = 'none';
+                    if(sumSep2) sumSep2.style.display = 'none';
+                }
 
                 document.getElementById('sum-nama').innerText = document.getElementById('nama_lengkap').value || '-';
                 document.getElementById('sum-nik').innerText = document.getElementById('nik').value || '-';
@@ -1284,8 +1323,15 @@
                     document.getElementById('pre-jk').innerText = document.getElementById('sum-jk-agama').innerText.split(' / ')[0];
                     document.getElementById('pre-sekolah1').innerText = document.getElementById('sum-sekolah1').innerText;
                     document.getElementById('pre-jarak1').innerText = document.getElementById('sum-jarak1').innerText;
-                    document.getElementById('pre-sekolah2').innerText = document.getElementById('sum-sekolah2').innerText;
-                    document.getElementById('pre-jarak2').innerText = document.getElementById('sum-jarak2').innerText;
+                    
+                    const preSekolah2Row = document.getElementById('pre-sekolah2-row');
+                    if (document.getElementById('sum-jalur').innerText.toLowerCase().includes('domisili')) {
+                        if(preSekolah2Row) preSekolah2Row.style.display = 'table-row';
+                        document.getElementById('pre-sekolah2').innerText = document.getElementById('sum-sekolah2').innerText;
+                        document.getElementById('pre-jarak2').innerText = document.getElementById('sum-jarak2').innerText;
+                    } else {
+                        if(preSekolah2Row) preSekolah2Row.style.display = 'none';
+                    }
 
                     const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
                     previewModal.show();
@@ -1438,7 +1484,12 @@
                     
                     // Sesuaikan penegasan validasi di JS
                     if (sekolahPilihan1) sekolahPilihan1.required = true;
-                    if (sekolahPilihan2) sekolahPilihan2.required = true;
+                    
+                    // Pilihan 2 hanya required jika jalur Domisili
+                    const selectedText = jalur.options[jalur.selectedIndex] ? jalur.options[jalur.selectedIndex].text.toLowerCase() : '';
+                    if (sekolahPilihan2) {
+                        sekolahPilihan2.required = selectedText.includes('domisili');
+                    }
 
                     // Mengulang status HTML native `was-validated` karena pilihan baru saja di reset
                     const form = document.querySelector('.needs-validation');
@@ -1449,8 +1500,16 @@
                 if (jenjangSelect.value) {
                     renderSekolah(jenjangSelect.value);
                     
+                    // Sesuaikan penegasan validasi di JS
+                    if (sekolahPilihan1) sekolahPilihan1.required = true;
+                    
+                    // Pilihan 2 hanya required jika jalur Domisili
+                    const selectedText = jalur.options[jalur.selectedIndex] ? jalur.options[jalur.selectedIndex].text.toLowerCase() : '';
+                    if (sekolahPilihan2) {
+                        sekolahPilihan2.required = selectedText.includes('domisili');
+                    }
+
                     @if ($mode == 'edit')
-                        // Set selected values for edit mode
                         const selectedSekolah1 = "{{ $data->sekolah_pilihan_1 ?? '' }}";
                         const selectedSekolah2 = "{{ $data->sekolah_pilihan_2 ?? '' }}";
                         
@@ -1479,7 +1538,7 @@
                     let isValid = true;
                     if (isDraft) {
                         // Minimal validation for Draft: Jalur, Jenjang, Nama, NIK, NISN, Wilayah
-                        const minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'nisn', 'provinsi', 'kabupaten', 'kecamatan', 'desa'];
+                        const minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'nisn', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'sekolah_pilihan_1'];
                         minimalFields.forEach(id => {
                             const field = document.getElementById(id);
                             if (field && !field.checkValidity()) {
@@ -1496,10 +1555,29 @@
                         event.preventDefault()
                         event.stopPropagation()
                         
+                        // Temukan tab pertama yang memiliki error dan pindah ke sana
+                        const firstInvalid = form.querySelector(':invalid, .is-invalid');
+                        if (firstInvalid) {
+                            const tabPane = firstInvalid.closest('.tab-pane');
+                            if (tabPane) {
+                                const tabTrigger = document.getElementById(tabPane.id + '-tab');
+                                if (tabTrigger) {
+                                    const tab = new bootstrap.Tab(tabTrigger);
+                                    tab.show();
+                                    
+                                    // Beri sedikit delay agar transisi tab selesai sebelum scroll
+                                    setTimeout(() => {
+                                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        if (firstInvalid.focus) firstInvalid.focus();
+                                    }, 150);
+                                }
+                            }
+                        }
+
                         // Show error alert
                         Swal.fire({
                             text: isDraft 
-                                ? "Mohon lengkapi data minimal (Jalur, Jenjang, Identitas & Wilayah) sebelum simpan sebagai draft."
+                                ? "Mohon lengkapi data minimal (Pilihan Sekolah 1, Jalur, Jenjang, Identitas & Wilayah) sebelum simpan sebagai draft."
                                 : "Mohon lengkapi seluruh field yang wajib diisi. Silakan periksa kembali pada setiap tab sebelumnya.",
                             icon: "error",
                             buttonsStyling: false,

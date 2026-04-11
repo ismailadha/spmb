@@ -265,8 +265,8 @@ class PendaftaranController extends Controller
             'pekerjaan_wali' => $isSubmitted ? 'required' : 'nullable',
             'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
-            'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
-            'sekolah_pilihan_2' => $isSubmitted ? 'required' : 'nullable',
+            'sekolah_pilihan_1' => 'required',
+            'sekolah_pilihan_2' => ($isSubmitted && $request->jalur == 1) ? 'required' : 'nullable',
             'jarak_sekolah_1' => 'nullable|numeric',
             'jarak_sekolah_2' => 'nullable|numeric',
 
@@ -333,9 +333,9 @@ class PendaftaranController extends Controller
                 'nomor_pendaftaran' => $nomor_pendaftaran,
                 'tanggal_daftar' => now(),
                 'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
-                'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
+                'sekolah_pilihan_2' => ($request->jalur == 1) ? $request->sekolah_pilihan_2 : null,
                 'jarak_sekolah_1' => $request->jarak_sekolah_1,
-                'jarak_sekolah_2' => $request->jarak_sekolah_2,
+                'jarak_sekolah_2' => ($request->jalur == 1) ? $request->jarak_sekolah_2 : null,
                 'status' => $request->status,
             ]);
 
@@ -470,8 +470,8 @@ class PendaftaranController extends Controller
             'pekerjaan_wali' => $isSubmitted ? 'required' : 'nullable',
             'no_hp_wali' => $isSubmitted ? 'required' : 'nullable',
             'alamat_wali' => $isSubmitted ? 'required' : 'nullable',
-            'sekolah_pilihan_1' => $isSubmitted ? 'required' : 'nullable',
-            'sekolah_pilihan_2' => $isSubmitted ? 'required' : 'nullable',
+            'sekolah_pilihan_1' => 'required',
+            'sekolah_pilihan_2' => ($isSubmitted && $request->jalur == 1) ? 'required' : 'nullable',
             'jarak_sekolah_1' => 'nullable|numeric',
             'jarak_sekolah_2' => 'nullable|numeric',
 
@@ -530,9 +530,9 @@ class PendaftaranController extends Controller
                 'jalur_id' => $request->jalur,
                 'jenjang' => $request->jenjang,
                 'sekolah_pilihan_1' => $request->sekolah_pilihan_1,
-                'sekolah_pilihan_2' => $request->sekolah_pilihan_2,
+                'sekolah_pilihan_2' => ($request->jalur == 1) ? $request->sekolah_pilihan_2 : null,
                 'jarak_sekolah_1' => $request->jarak_sekolah_1,
-                'jarak_sekolah_2' => $request->jarak_sekolah_2,
+                'jarak_sekolah_2' => ($request->jalur == 1) ? $request->jarak_sekolah_2 : null,
                 'status' => $request->status,
             ];
 
