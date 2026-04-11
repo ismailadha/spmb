@@ -116,6 +116,8 @@
             menubar: true,
             image_title: true,
             automatic_uploads: true,
+            relative_urls: false,
+            remove_script_host: true,
             file_picker_types: 'image',
             file_picker_callback: function (cb, value, meta) {
                 window.top.SetUrl = function (items) {
