@@ -97,7 +97,8 @@
                                     <input type="text" class="form-control" id="nik" name="nik" value="{{ $peserta->nik }}" disabled>
                                     <input type="hidden" name="nik" value="{{ $peserta->nik }}">
                                 @else
-                                    <input type="text" class="form-control" id="nik" name="nik" required>
+                                    <input type="text" class="form-control" id="nik" name="nik" value="{{ Auth::user()->nik }}" disabled>
+                                    <input type="hidden" name="nik" value="{{ Auth::user()->nik }}">
                                 @endif
                             </div>
                             <div class="col-md-6">
@@ -809,7 +810,7 @@
                             <div class="d-flex gap-3">
                                 <button type="button" class="btn btn-info shadow-sm" id="btnPreview">Preview</button>
                                 <div class="separator separator-vertical h-40px mx-2"></div>
-                                <button type="submit" name="status" value="draft" class="btn btn-primary shadow-sm" formnovalidate>Simpan Sebagai Draft</button>
+                                <button type="submit" name="status" value="draft" class="btn btn-primary shadow-sm">Simpan Sebagai Draft</button>
                                 <button type="submit" name="status" value="submit" class="btn btn-success shadow-sm">Submit</button>
                             </div>
                         </div>
@@ -1469,19 +1470,37 @@
             var forms = document.querySelectorAll('.needs-validation')
             Array.prototype.slice.call(forms).forEach(function (form) {
                 form.addEventListener('submit', function (event) {
+                    const isDraft = event.submitter && event.submitter.value === 'draft';
                     
-                    // Bypass JS validity check for Draft button
-                    if (event.submitter && event.submitter.value === 'draft') {
-                        return; // Proceed directly without validation
+                    // Reset visual validation state
+                    form.classList.remove('was-validated');
+                    form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                    
+                    let isValid = true;
+                    if (isDraft) {
+                        // Minimal validation for Draft: Jalur, Jenjang, Nama, NIK, NISN, Wilayah
+                        const minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'nisn', 'provinsi', 'kabupaten', 'kecamatan', 'desa'];
+                        minimalFields.forEach(id => {
+                            const field = document.getElementById(id);
+                            if (field && !field.checkValidity()) {
+                                field.classList.add('is-invalid'); // Manual highlight only for failing minimal fields
+                                isValid = false;
+                            }
+                        });
+                    } else {
+                        // Full validation for Submit
+                        isValid = form.checkValidity();
                     }
 
-                    if (!form.checkValidity()) {
+                    if (!isValid) {
                         event.preventDefault()
                         event.stopPropagation()
                         
                         // Show error alert
                         Swal.fire({
-                            text: "Mohon lengkapi seluruh field yang wajib diisi. Silakan periksa kembali pada setiap tab sebelumnya.",
+                            text: isDraft 
+                                ? "Mohon lengkapi data minimal (Jalur, Jenjang, Identitas & Wilayah) sebelum simpan sebagai draft."
+                                : "Mohon lengkapi seluruh field yang wajib diisi. Silakan periksa kembali pada setiap tab sebelumnya.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, Mengerti!",
@@ -1489,7 +1508,12 @@
                                 confirmButton: "btn btn-primary"
                             }
                         });
-                        form.classList.add('was-validated');
+
+                        // Only show global validation state if it's NOT a draft
+                        if (!isDraft) {
+                            form.classList.add('was-validated');
+                        }
+                        
                         return;
                     }
 
