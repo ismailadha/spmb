@@ -396,6 +396,18 @@
                                                             {{ Auth::user()->name }}
 														</div>
 														<a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ Auth::user()->username }}</a>
+														{{-- role info --}}
+														<div class="fw-bold text-primary text-hover-primary fs-7">
+															@if(Auth::user()->role == 'admin_dinas')
+																Admin Dinas
+															@elseif(Auth::user()->role == 'admin_sekolah')
+																Admin Sekolah
+															@elseif(Auth::user()->role == 'peserta')
+																Peserta
+															@else
+																User
+															@endif
+														</div>
 													</div>
 													<!--end::Username-->
 												</div>

@@ -226,7 +226,7 @@
                                                 </div>
                                             @endif
 
-                                            <form method="POST" action="{{ route('login') }}">
+                                            <form method="POST" action="{{ route('login-peserta.store') }}">
                                                 @csrf
                                                 <div class="form-floating-custom">
                                                     <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" placeholder=" " required autofocus autocomplete="username">

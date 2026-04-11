@@ -405,12 +405,17 @@
         <div class="card">
             <div class="card-body p-10 text-center">
                 @if(isset($periode_aktif) && $periode_aktif)
-                    <div class="mb-10">
-                        <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-150px" alt="">
+                    <div class="mb-5">
+                        <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-175px" alt="">
                     </div>
-                    <h1 class="fw-bolder text-dark mb-4">Belum Ada Pendaftaran Terkirim</h1>
-                    <p class="fs-6 text-gray-400 mb-8">Anda belum memiliki pendaftaran yang sudah dikirim (submit). <br> Silakan selesaikan proses pendaftaran Anda terlebih dahulu.</p>
-                    <a href="{{ route('pendaftaran.create') }}" class="btn btn-primary px-10">Daftar Sekarang</a>
+                    <h1 class="fw-bolder text-dark mb-2">Halo, {{ Auth::user()->name }}! 👋</h1>
+                    <h2 class="fw-bold text-gray-800 mb-4">Selamat Datang di Portal Pendaftaran</h2>
+                    <p class="fs-6 text-gray-500 mb-8 mx-auto" style="max-width: 500px;">
+                        Saat ini Anda belum memiliki pendaftaran yang terkirim. Yuk, mulai proses pendaftaranmu sekarang juga!
+                    </p>
+                    <a href="{{ route('pendaftaran.create') }}" class="btn btn-primary btn-lg px-10">
+                        <i class="bi bi-pencil-square fs-4 me-2"></i> Mulai Pendaftaran Sekarang
+                    </a>
                 @else
                     <div class="mb-10">
                         <img src="{{ asset('back/media/illustrations/sigma-1/17.png') }}" class="h-150px" style="filter: grayscale(100%); opacity: 0.6;" alt="">

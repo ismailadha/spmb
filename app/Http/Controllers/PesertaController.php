@@ -201,7 +201,7 @@ class PesertaController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('pendaftaran.index'));
     }
 
     public function login_create()
@@ -211,29 +211,20 @@ class PesertaController extends Controller
 
     public function login_store(Request $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'nik' => ['required', 'min:16', 'unique:users,username', 'numeric'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'terms' => ['accepted'],
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+
+            return redirect()->route('pendaftaran.index');
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'username' => $request->nik,
-            'nik' => $request->nik,
-            'role' => 'peserta',
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return back()->withErrors([
+            'username' => 'NIK atau password yang Anda masukkan salah.',
+        ])->onlyInput('username');
     }
 
     public function detail_verifikasi($id)
