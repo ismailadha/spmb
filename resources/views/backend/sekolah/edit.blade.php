@@ -33,9 +33,35 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            <form action="{{ route('sekolah.update', $sekolah->id) }}" method="POST">
+            <form action="{{ route('sekolah.update', $sekolah->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+
+                <!-- Thumbnail Upload -->
+                <div class="row mb-6">
+                    <label class="col-12 form-label fw-bold fs-6">Logo/Thumbnail Sekolah</label>
+                    <div class="col-12">
+                        <div id="thumbnail-upload-container">
+                            <div id="thumbnail-preview-container" class="mb-4 {{ empty($sekolah->thumbnail) ? 'd-none' : '' }} text-center bg-light p-5 rounded border border-dashed border-gray-400">
+                                <img id="thumbnail-preview" src="{{ !empty($sekolah->thumbnail) ? asset($sekolah->thumbnail) : '' }}" alt="Preview Thumbnail" style="max-height: 200px; max-width: 100%; object-fit: contain;">
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-sm btn-danger" id="remove-thumbnail-btn">
+                                        <i class="ki-duotone ki-trash fs-4">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        Hapus Foto
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="thumbnail-upload-prompt" class="{{ !empty($sekolah->thumbnail) ? 'd-none' : '' }}">
+                                <input type="file" name="thumbnail" id="thumbnail-input" class="form-control" accept=".png, .jpg, .jpeg" />
+                                <div class="form-text mt-2">Format: PNG, JPG, JPEG • Maksimal 2MB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Nama Sekolah - Full Width -->
                 <div class="row mb-3">
@@ -63,10 +89,29 @@
 
                 <!-- Daya Tampung -->
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="daya_tampung" class="form-label">Daya Tampung</label>
-                        <input type="number" class="form-control" id="daya_tampung" name="daya_tampung" value="{{ $sekolah->daya_tampung }}" required min="0">
-                        <small class="text-muted">Jumlah maksimal peserta didik yang dapat ditampung.</small>
+                    <div class="col-md-12">
+                        <label for="total_daya_tampung" class="form-label fw-bold">Total Daya Tampung</label>
+                        <input type="number" class="form-control bg-light" id="total_daya_tampung" value="{{ $sekolah->total_daya_tampung }}" readonly min="0" placeholder="Total dari semua jalur">
+                        <small class="text-muted">Jumlah maksimal peserta didik yang dapat ditampung secara keseluruhan.</small>
+                    </div>
+                </div>
+
+                <div class="row mb-6">
+                    <div class="col-md-3">
+                        <label for="daya_tampung_prestasi" class="form-label">Quota Prestasi</label>
+                        <input type="number" class="form-control" id="daya_tampung_prestasi" name="daya_tampung_prestasi" value="{{ $sekolah->daya_tampung_prestasi ?? 0 }}" required min="0">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="daya_tampung_domisili" class="form-label">Quota Domisili</label>
+                        <input type="number" class="form-control" id="daya_tampung_domisili" name="daya_tampung_domisili" value="{{ $sekolah->daya_tampung_domisili ?? 0 }}" required min="0">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="daya_tampung_afirmasi" class="form-label">Quota Afirmasi</label>
+                        <input type="number" class="form-control" id="daya_tampung_afirmasi" name="daya_tampung_afirmasi" value="{{ $sekolah->daya_tampung_afirmasi ?? 0 }}" required min="0">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="daya_tampung_mutasi" class="form-label">Quota Mutasi</label>
+                        <input type="number" class="form-control" id="daya_tampung_mutasi" name="daya_tampung_mutasi" value="{{ $sekolah->daya_tampung_mutasi ?? 0 }}" required min="0">
                     </div>
                 </div>
 
@@ -205,6 +250,62 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Thumbnail Preview Logic
+            const fileInput = document.getElementById('thumbnail-input');
+            const previewContainer = document.getElementById('thumbnail-preview-container');
+            const uploadPrompt = document.getElementById('thumbnail-upload-prompt');
+            const thumbnailPreview = document.getElementById('thumbnail-preview');
+            const removeThumbnailBtn = document.getElementById('remove-thumbnail-btn');
+
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                    
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('Format file tidak valid. Gunakan PNG atau JPG.');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('Ukuran file tidak boleh lebih dari 2MB.');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        thumbnailPreview.src = e.target.result;
+                        previewContainer.classList.remove('d-none');
+                        uploadPrompt.classList.add('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            removeThumbnailBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileInput.value = '';
+                previewContainer.classList.add('d-none');
+                uploadPrompt.classList.remove('d-none');
+                thumbnailPreview.src = '';
+            });
+
+            // Auto-calculate Total Daya Tampung
+            const inputs = ['daya_tampung_prestasi', 'daya_tampung_domisili', 'daya_tampung_afirmasi', 'daya_tampung_mutasi'];
+            const totalInput = document.getElementById('total_daya_tampung');
+
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', function() {
+                    let total = 0;
+                    inputs.forEach(inputId => {
+                        total += parseInt(document.getElementById(inputId).value) || 0;
+                    });
+                    totalInput.value = total;
+                });
+            });
+
             var latInput = document.getElementById('latitude');
             var lngInput = document.getElementById('longitude');
             
@@ -335,5 +436,30 @@
                 });
             }
         });
+
+        // Notifications
+        @if (session('success'))
+            Swal.fire({
+                text: "{{ session('success') }}",
+                icon: "success",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, Mengerti!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                text: "{{ session('error') }}",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, Mengerti!",
+                customClass: {
+                    confirmButton: "btn btn-danger"
+                }
+            });
+        @endif
     </script>
 @endsection

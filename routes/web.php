@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('peserta', PesertaController::class);
     Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
+    Route::get('peserta/sd', [PesertaController::class, 'sd'])->name('peserta.sd');
+    Route::get('peserta/smp', [PesertaController::class, 'smp'])->name('peserta.smp');
 
     Route::resource('pengguna', UserController::class);
 

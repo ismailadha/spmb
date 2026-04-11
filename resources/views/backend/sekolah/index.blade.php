@@ -46,10 +46,10 @@
                     <!--begin::Table row-->
                     <tr class="text-start text-dark-400 fw-bolder fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">No</th>
-                        <th class="min-w-125px">Sekolah</th>
-                        <th class="min-w-125px">Alamat</th>
-                        <th class="min-w-100px">Daya Tampung</th>
-                        <th class="min-w-125px">Status Pilihan</th>
+                        <th class="min-w-200px">Sekolah</th>
+                        <th class="min-w-150px">Alamat</th>
+                        <th class="min-w-100px text-center">Total Kuota</th>
+                        <th class="min-w-100px">Status</th>
                         <th class="text-end min-w-70px">Actions</th>
                     </tr>
                 </thead>
@@ -86,13 +86,61 @@ $(document).ready(function() {
         ajax: "{{ route('sekolah.index') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
-            { data: 'nama_sekolah', name: 'nama_sekolah' },
+            { data: 'sekolah_info', name: 'sekolah_info' },
             { data: 'alamat', name: 'alamat' },
-            { data: 'daya_tampung', name: 'daya_tampung', className: 'text-center' },
+            { data: 'total_daya_tampung', name: 'total_daya_tampung', className: 'text-center' },
             { data: 'status_pilihan_1', name: 'status_pilihan_1', orderable: false, searchable: false },
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
         ]
     });
+
+    // Delete confirmation
+    $(document).on('click', '.btn-delete', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var nama = $(this).data('nama');
+
+        Swal.fire({
+            text: "Apakah Anda yakin ingin menghapus " + nama + "?",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Tidak, Batal",
+            customClass: {
+                confirmButton: "btn fw-bold btn-danger",
+                cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+        }).then(function(result) {
+            if (result.value) {
+                form.submit();
+            }
+        });
+    });
+
+    @if (session('success'))
+        Swal.fire({
+            text: "{{ session('success') }}",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, Mengerti!",
+            customClass: {
+                confirmButton: "btn btn-primary"
+            }
+        });
+    @endif
+
+    @if (session('error'))
+        Swal.fire({
+            text: "{{ session('error') }}",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, Mengerti!",
+            customClass: {
+                confirmButton: "btn btn-danger"
+            }
+        });
+    @endif
 });
 </script>
 @endsection

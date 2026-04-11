@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Sekolah extends Model
@@ -9,8 +10,8 @@ class Sekolah extends Model
     protected $table = 'sekolah';
 
     protected $fillable = [
-        'id',
         'nama_sekolah',
+        'thumbnail',
         'npsn',
         'jenjang',
         'id_provinsi',
@@ -26,7 +27,10 @@ class Sekolah extends Model
         'longitude',
         'status_perbatasan',
         'status_pilihan_1',
-        'daya_tampung',
+        'daya_tampung_prestasi',
+        'daya_tampung_domisili',
+        'daya_tampung_afirmasi',
+        'daya_tampung_mutasi',
     ];
 
     public function provinsi()
@@ -57,6 +61,19 @@ class Sekolah extends Model
     public function sekolahPilihan2()
     {
         return $this->hasMany(Pendaftaran::class, 'sekolah_pilihan_2');
+    }
+
+    /**
+     * Get the total daya tampung calculated from all paths.
+     */
+    protected function totalDayaTampung(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ($this->daya_tampung_prestasi ?? 0) +
+                         ($this->daya_tampung_domisili ?? 0) +
+                         ($this->daya_tampung_afirmasi ?? 0) +
+                         ($this->daya_tampung_mutasi ?? 0),
+        );
     }
 
     // disable timestamps

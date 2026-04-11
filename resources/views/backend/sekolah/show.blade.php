@@ -39,7 +39,52 @@
         <!--begin::Card body-->
         <div class="card-body py-4">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-5">
+                        <div class="card-body p-0">
+                            @if ($sekolah->thumbnail)
+                                <img src="{{ asset($sekolah->thumbnail) }}" class="img-fluid rounded" alt="{{ $sekolah->nama_sekolah }}" style="width: 100%; height: 250px; object-fit: cover;">
+                            @else
+                                <div class="bg-light d-flex flex-column align-items-center justify-content-center rounded" style="width: 100%; height: 250px;">
+                                    <i class="ki-duotone ki-picture fs-3x text-gray-400">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                    <span class="text-gray-500 mt-2">No thumbnail</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <h5>Quota Jalur Pendaftaran</h5>
+                    <div class="row g-3 mt-1">
+                        <div class="col-6">
+                            <div class="bg-light-primary rounded p-4 text-center">
+                                <span class="fs-2 fw-bold text-primary">{{ $sekolah->daya_tampung_prestasi ?? 0 }}</span>
+                                <div class="fs-7 text-gray-600 mt-1">Prestasi</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light-success rounded p-4 text-center">
+                                <span class="fs-2 fw-bold text-success">{{ $sekolah->daya_tampung_domisili ?? 0 }}</span>
+                                <div class="fs-7 text-gray-600 mt-1">Domisili</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light-warning rounded p-4 text-center">
+                                <span class="fs-2 fw-bold text-warning">{{ $sekolah->daya_tampung_afirmasi ?? 0 }}</span>
+                                <div class="fs-7 text-gray-600 mt-1">Afirmasi</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light-danger rounded p-4 text-center">
+                                <span class="fs-2 fw-bold text-danger">{{ $sekolah->daya_tampung_mutasi ?? 0 }}</span>
+                                <div class="fs-7 text-gray-600 mt-1">Mutasi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <h5>Informasi Dasar</h5>
                     <table class="table table-borderless">
                         <tr>
@@ -55,8 +100,8 @@
                             <td>{{ $sekolah->npsn }}</td>
                         </tr>
                         <tr>
-                            <th>Daya Tampung:</th>
-                            <td>{{ $sekolah->daya_tampung }}</td>
+                            <th class="text-primary">Total Daya Tampung:</th>
+                            <td class="fw-bold text-primary">{{ $sekolah->total_daya_tampung }}</td>
                         </tr>
                         <tr>
                             <th>Alamat:</th>
@@ -110,7 +155,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h5>Kontak & Lokasi</h5>
                     <table class="table table-borderless">
                         <tr>

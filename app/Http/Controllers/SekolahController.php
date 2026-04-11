@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Requests\SekolahRequest;
 use App\Models\Desa;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
@@ -24,20 +23,33 @@ class SekolahController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('status_unggulan', function ($row) {
-                    if ($row->status_unggulan == 1) {
-                        return '<span class="badge badge-success"><i class="ki-duotone ki-check-circle" style="display: inline; margin-right: 4px;"></i>Unggulan</span>';
-                    } elseif ($row->status_unggulan == 0) {
-                        return '<span class="badge badge-secondary">Non-Unggulan</span>';
-                    } else {
-                        return '<span class="badge badge-light text-dark">-</span>';
-                    }
+                ->addColumn('sekolah_info', function ($row) {
+                    $badgeArr = [
+                        'TK' => 'badge-light-primary',
+                        'SD' => 'badge-light-success',
+                        'SMP' => 'badge-light-info',
+                        'SMA' => 'badge-light-warning',
+                    ];
+                    $badge = $badgeArr[$row->jenjang] ?? 'badge-light-secondary';
+
+                    return '
+                        <div class="d-flex flex-column">
+                            <a href="'.route('sekolah.show', $row->id).'" class="text-gray-800 text-hover-primary mb-1 fw-bolder">'.$row->nama_sekolah.'</a>
+                            <div class="d-flex align-items-center">
+                                <span class="badge '.$badge.' fs-9 px-2 py-1 me-2">'.$row->jenjang.'</span>
+                                <span class="text-muted fs-7">NPSN: '.$row->npsn.'</span>
+                            </div>
+                        </div>
+                    ';
+                })
+                ->addColumn('total_daya_tampung', function ($row) {
+                    return $row->total_daya_tampung;
                 })
                 ->addColumn('status_pilihan_1', function ($row) {
                     if ($row->status_pilihan_1 == 1) {
-                        return '<span class="badge badge-primary">Pilihan 1</span>';
+                        return '<span class="badge badge-light-primary fw-bolder">Pilihan 1</span>';
                     } elseif ($row->status_pilihan_1 == 0 && $row->status_pilihan_1 !== null) {
-                        return '<span class="badge badge-secondary">Pilihan 2</span>';
+                        return '<span class="badge badge-light-secondary fw-bolder">Pilihan 2</span>';
                     } else {
                         return '<span class="badge badge-light text-dark">-</span>';
                     }
@@ -55,14 +67,14 @@ class SekolahController extends Controller
                                     <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
                                         '.csrf_field().'
                                         '.method_field('DELETE').'
-                                        <button type="submit" class="dropdown-item text-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->nama_sekolah.'">Delete</button>
                                     </form>
                                 </li>
                             </ul>
                         </div>
                     ';
                 })
-                ->rawColumns(['status_unggulan', 'status_pilihan_1', 'action'])
+                ->rawColumns(['sekolah_info', 'status_pilihan_1', 'action'])
                 ->make(true);
         }
 
@@ -82,10 +94,54 @@ class SekolahController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SekolahRequest $request)
+    public function store(Request $request)
     {
         try {
-            DB::table('sekolah')->insert($request->validated());
+            $data = $request->validate([
+                'nama_sekolah' => 'required|string|max:255',
+                'npsn' => 'nullable|string|max:255|unique:sekolah,npsn',
+                'jenjang' => 'required|in:TK,SD,SMP,SMA',
+                'id_provinsi' => 'nullable|exists:provinsi,id',
+                'id_kabupaten' => 'nullable|exists:kabupaten,id',
+                'id_kecamatan' => 'nullable|exists:kecamatan,id',
+                'id_desa' => 'nullable|exists:desa,id',
+                'alamat' => 'nullable|string',
+                'email' => 'nullable|email|max:255',
+                'kode_pos' => 'nullable|string|max:10',
+                'website' => 'nullable|url|max:255',
+                'telepon' => 'nullable|string|max:20',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180',
+                'status_perbatasan' => 'nullable|boolean',
+                'status_unggulan' => 'nullable|boolean',
+                'status_pilihan_1' => 'nullable|boolean',
+                'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'daya_tampung_prestasi' => 'required|integer|min:0',
+                'daya_tampung_domisili' => 'required|integer|min:0',
+                'daya_tampung_afirmasi' => 'required|integer|min:0',
+                'daya_tampung_mutasi' => 'required|integer|min:0',
+            ], [
+                'nama_sekolah.required' => 'Nama sekolah wajib diisi.',
+                'npsn.unique' => 'NPSN sudah digunakan.',
+                'email.email' => 'Format email tidak valid.',
+                'website.url' => 'Format website tidak valid.',
+            ]);
+
+            if ($request->hasFile('thumbnail')) {
+                $file = $request->file('thumbnail');
+                $filename = time().'.'.$file->getClientOriginalExtension();
+
+                // Ensure directory exists
+                $uploadDir = public_path('uploads/sekolah');
+                if (! file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $file->move($uploadDir, $filename);
+                $data['thumbnail'] = 'uploads/sekolah/'.$filename;
+            }
+
+            DB::table('sekolah')->insert($data);
 
             return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil ditambahkan');
         } catch (\Exception $e) {
@@ -119,12 +175,62 @@ class SekolahController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SekolahRequest $request, Sekolah $sekolah)
+    public function update(Request $request, Sekolah $sekolah)
     {
         try {
-            DB::table('sekolah')
-                ->where('id', $sekolah->id)
-                ->update($request->validated());
+            $data = $request->validate([
+                'nama_sekolah' => 'required|string|max:255',
+                'npsn' => 'nullable|string|max:255|unique:sekolah,npsn,'.$sekolah->id,
+                'jenjang' => 'required|in:TK,SD,SMP,SMA',
+                'id_provinsi' => 'nullable|exists:provinsi,id',
+                'id_kabupaten' => 'nullable|exists:kabupaten,id',
+                'id_kecamatan' => 'nullable|exists:kecamatan,id',
+                'id_desa' => 'nullable|exists:desa,id',
+                'alamat' => 'nullable|string',
+                'email' => 'nullable|email|max:255',
+                'kode_pos' => 'nullable|string|max:10',
+                'website' => 'nullable|url|max:255',
+                'telepon' => 'nullable|string|max:20',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180',
+                'status_perbatasan' => 'nullable|boolean',
+                'status_unggulan' => 'nullable|boolean',
+                'status_pilihan_1' => 'nullable|boolean',
+                'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'daya_tampung_prestasi' => 'required|integer|min:0',
+                'daya_tampung_domisili' => 'required|integer|min:0',
+                'daya_tampung_afirmasi' => 'required|integer|min:0',
+                'daya_tampung_mutasi' => 'required|integer|min:0',
+            ], [
+                'nama_sekolah.required' => 'Nama sekolah wajib diisi.',
+                'npsn.unique' => 'NPSN sudah digunakan.',
+                'email.email' => 'Format email tidak valid.',
+                'website.url' => 'Format website tidak valid.',
+            ]);
+
+            if ($request->hasFile('thumbnail')) {
+                // Delete old thumbnail
+                if ($sekolah->thumbnail && file_exists(public_path($sekolah->thumbnail))) {
+                    unlink(public_path($sekolah->thumbnail));
+                }
+
+                $file = $request->file('thumbnail');
+                $filename = time().'.'.$file->getClientOriginalExtension();
+
+                // Ensure directory exists
+                $uploadDir = public_path('uploads/sekolah');
+                if (! file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $file->move($uploadDir, $filename);
+                $data['thumbnail'] = 'uploads/sekolah/'.$filename;
+            } else {
+                // Remove thumbnail from data to prevent overwriting with null
+                unset($data['thumbnail']);
+            }
+
+            DB::table('sekolah')->where('id', $sekolah->id)->update($data);
 
             return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil diupdate');
         } catch (\Exception $e) {
@@ -137,8 +243,17 @@ class SekolahController extends Controller
      */
     public function destroy(Sekolah $sekolah)
     {
-        $sekolah->delete();
+        try {
+            // Delete old thumbnail if exists
+            if ($sekolah->thumbnail && file_exists(public_path($sekolah->thumbnail))) {
+                unlink(public_path($sekolah->thumbnail));
+            }
 
-        return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil dihapus');
+            $sekolah->delete();
+
+            return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil dihapus');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus sekolah: '.$e->getMessage());
+        }
     }
 }
