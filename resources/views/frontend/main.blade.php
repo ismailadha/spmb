@@ -12,6 +12,98 @@
     <title>{{ $appConfig['nama_sistem'] ?? 'Sistem Penerimaan Siswa Baru' }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('front/img/favicon.png') }}">
     @include('frontend.css')
+    <style>
+        .btn-login-top:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff !important;
+            transform: translateY(-2px);
+        }
+        .btn-register-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4) !important;
+            filter: brightness(1.1);
+        }
+        .auth-buttons a {
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 576px) {
+            .navbar-brand img {
+                max-width: 150px !important;
+                height: auto !important;
+            }
+        }
+        
+        /* Premium Footer Styles */
+        .footer-premium {
+            background: linear-gradient(135deg, #1e2a4a 0%, #111827 100%) !important;
+            color: #cbd5e1 !important;
+            border-top: 4px solid #3498db;
+            position: relative;
+        }
+        .footer-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        .footer-premium .widget__title {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+        .footer-premium .links {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-premium .links li {
+            margin-bottom: 12px;
+        }
+        .footer-premium .links li a {
+            color: #94a3b8 !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .footer-premium .links li a i {
+            font-size: 0.7rem;
+            margin-right: 8px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        .footer-premium .links li a:hover {
+            color: #3498db !important;
+            transform: translateX(8px);
+        }
+        .footer-premium .links li a:hover i {
+            opacity: 1;
+            color: #3498db;
+        }
+        .footer-premium .text_widget p {
+            color: #94a3b8 !important;
+            line-height: 1.8;
+        }
+        .footer-premium .footer_logo {
+            transition: transform 0.3s ease;
+        }
+        .footer-premium .footer_logo:hover {
+            transform: scale(1.05);
+        }
+        .footer-bottom-premium {
+            background-color: #0f172a !important;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 25px 0;
+            color: #64748b !important;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,6 +129,15 @@
                                     @csrf
                                 </form>
                             </div>
+                        @else
+                            <div class="d-flex align-items-center auth-buttons">
+                                <a href="{{ route('login-peserta') }}" class="btn-login-top mr-2" style="color: #ffffff; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 6px 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; display: inline-flex; align-items: center; transition: all 0.3s ease;">
+                                    <i class="la la-sign-in mr-1" style="font-size: 1.1rem;"></i> LOGIN
+                                </a>
+                                <a href="{{ route('register-peserta') }}" class="btn-register-top" style="color: #ffffff; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 7px 20px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-radius: 30px; display: inline-flex; align-items: center; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); transition: all 0.3s ease; border: none;">
+                                    <i class="la la-user-plus mr-1" style="font-size: 1.1rem;"></i> REGISTRASI
+                                </a>
+                            </div>
                         @endauth
                     </div>
                 </div>
@@ -46,9 +147,9 @@
         <!-- Main Navbar -->
         <div class="menu_area menu1 menu--sticky bg-white" style="box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
             <div class="container">
-                <nav class="navbar navbar-expand-lg navbar-light px-0 py-3">
-                    <a class="navbar-brand order-sm-1 order-1" href="{{ route('home') }}">
-                        <img height="48" src="{{ $logoUrl }}" alt="Logo {{ $appConfig['logo_path'] ?? 'SPMB' }}" style="object-fit: contain; max-width: 180px;" />
+                <nav class="navbar navbar-expand-lg navbar-light px-0 py-2">
+                    <a class="navbar-brand" href="{{ route('home') }}">
+                        <img src="{{ $logoUrl }}" alt="Logo {{ $appConfig['logo_path'] ?? 'SPMB' }}" style="height: 48px; width: auto; max-width: 100%; object-fit: contain;" />
                     </a>
 
                     <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="outline: none;">
@@ -65,7 +166,13 @@
                                 <div class="dropdown-menu border-0 shadow-sm" style="border-radius: 12px; margin-top: 10px;">
                                     <a class="dropdown-item py-2" href="{{ route('juknis') }}">Petunjuk Teknis</a>
                                     <a class="dropdown-item py-2" href="{{ route('persyaratan') }}">Persyaratan</a>
-                                    <a class="dropdown-item py-2" href="{{ route('datasekolah') }}">Data Sekolah</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle font-weight-bold mx-2" href="#" data-toggle="dropdown" style="color: #1e2a4a; font-size: 0.95rem;">Data Sekolah</a>
+                                <div class="dropdown-menu border-0 shadow-sm" style="border-radius: 12px; margin-top: 10px;">
+                                    <a class="dropdown-item py-2" href="{{ route('sekolah-sd') }}">SD</a>
+                                    <a class="dropdown-item py-2" href="{{ route('sekolah-smp') }}">SMP</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -81,21 +188,6 @@
                             <li class="nav-item">
                                 <a class="nav-link font-weight-bold mx-2" href="{{ route('kontak') }}" style="color: #1e2a4a; font-size: 0.95rem;">Kontak</a>
                             </li>
-                            @auth
-                                <li class="nav-item">
-                                    <a class="nav-link font-weight-bold mx-2" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #1e2a4a; font-size: 0.95rem;">Logout</a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </li>
-                            @else
-                                <li class="nav-item">
-                                    <a class="nav-link font-weight-bold mx-2" href="{{ route('register-peserta') }}" style="color: #1e2a4a; font-size: 0.95rem;">Registrasi SPMB</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link font-weight-bold mx-2" href="{{ route('login-peserta') }}" style="color: #1e2a4a; font-size: 0.95rem;">Login SPMB</a>
-                                </li>
-                            @endauth
                         </ul>
                     </div>
                 </nav>
@@ -103,73 +195,56 @@
         </div>
     </section><!-- end: .header -->
     @yield('content')
-    <footer class="footer5 footer--bw">
+    <footer class="footer-premium">
         <div class="footer__big">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="col-lg-6 col-md-12 mb-5 mb-lg-0">
                         <div class="widget text_widget">
-                            <img class="footer_logo" src="{{ $logoUrl }}" alt="logo" style="max-height: 50px; width: auto; margin-bottom: 20px; background-color: white; border-radius: 5px;">
-                            <p>{{ $appConfig['nama_sistem'] ?? 'Sistem Penerimaan Siswa Baru' }} - {{ $appConfig['nama_instansi'] ?? 'Dinas Pendidikan' }}</p>
-                            <p style="font-size: 0.9rem; margin-top: 10px;">{{ $appConfig['alamat'] ?? '' }}</p>
-                        </div><!-- ends: .widget -->
-                    </div><!-- ends: .col-lg-3 -->
-                    <div class="col-lg-3 col-md-6 col-sm-6 d-flex justify-content-lg-center">
-                        <div class="widget widget--links">
-                            <h4 class="widget__title">quick links</h4>
-                            <ul class="links">
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Contacts Us</a></li>
-                                <li><a href="#">Testimonials</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Our Team</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                            </ul>
-                        </div><!-- ends: .widget -->
-                    </div><!-- ends: .col-lg-3 -->
-                    <div class="col-lg-3 col-md-6 col-sm-6 d-flex justify-content-lg-center">
-                        <div class="widget widget--links">
-                            <h4 class="widget__title">our services</h4>
-                            <ul class="links">
-                                <li><a href="#">Business</a></li>
-                                <li><a href="#">Marketing</a></li>
-                                <li><a href="#">Management</a></li>
-                                <li><a href="#">Accounting</a></li>
-                                <li><a href="#">Training</a></li>
-                                <li><a href="#">Consultation</a></li>
-                            </ul>
-                        </div><!-- ends: .widget -->
-                    </div><!-- ends: .col-lg-3 -->
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="widget subcribe--widget">
-                            <h4 class="widget__title">Newsletter</h4>
-                            <p>Subscribe to get update and information. Don't worry, we won't send spam!</p>
-                            <form class="subscribe_form">
-                                <div class="input_with_embed">
-                                    <input type="text" class="form-control-lg input--rounded border-0" placeholder="Enter email">
-                                    <div class="embed_icon">
-                                        <span class="la la-envelope"></span>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="widget__social">
-                                <div class="social  ">
-                                    <ul class="d-flex flex-wrap">
-                                        <li><a href="#" class="facebook"><span class="fab fa-facebook-f"></span></a></li>
-                                        <li><a href="#" class="twitter"><span class="fab fa-twitter"></span></a></li>
-                                        <li><a href="#" class="linkedin"><span class="fab fa-linkedin-in"></span></a></li>
-                                        <li><a href="#" class="gplus"><span class="fab fa-google-plus-g"></span></a></li>
-                                    </ul>
-                                </div><!-- ends: .social -->
+                            <div style="background: #ffffff; padding: 20px; border-radius: 8px; display: inline-block; margin-bottom: 25px;">
+                                <img src="{{ $logoUrl }}" alt="logo" style="height: 45px; width: auto; display: block;">
+                            </div>
+                            <h4 class="widget__title mb-2" style="font-size: 1.4rem; color: #ffffff !important;">{{ $appConfig['nama_sistem'] ?? 'Sistem Penerimaan Siswa Baru' }}</h4>
+                            <p class="mb-4" style="color: #3498db !important; font-weight: 600; font-size: 1rem;">{{ $appConfig['nama_instansi'] ?? 'Dinas Pendidikan' }}</p>
+                            <div class="d-flex align-items-start mb-3">
+                                <i class="la la-map-marker mr-3 mt-1" style="color: #3498db; font-size: 1.2rem;"></i>
+                                <p class="m-0">{{ $appConfig['alamat'] ?? 'Alamat kantor resmi dinas pendidikan setempat.' }}</p>
                             </div>
                         </div><!-- ends: .widget -->
-                    </div><!-- ends: .col-lg-3 -->
+                    </div><!-- ends: .col-lg-6 -->
+
+                    <div class="col-lg-6 col-md-12">
+                        <div class="widget widget--links">
+                            <h4 class="widget__title">Menu Utama</h4>
+                            <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <ul class="links">
+                                        <li><a href="{{ route('home') }}"><i class="la la-angle-right"></i> Beranda</a></li>
+                                        <li><a href="{{ route('juknis') }}"><i class="la la-angle-right"></i> Petunjuk Teknis</a></li>
+                                        <li><a href="{{ route('persyaratan') }}"><i class="la la-angle-right"></i> Persyaratan</a></li>
+                                        <li><a href="{{ route('hasil-seleksi') }}"><i class="la la-angle-right"></i> Hasil Seleksi</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6 col-6">
+                                    <ul class="links">
+                                        <li><a href="{{ route('sekolah-sd') }}"><i class="la la-angle-right"></i> Data Sekolah SD</a></li>
+                                        <li><a href="{{ route('sekolah-smp') }}"><i class="la la-angle-right"></i> Data Sekolah SMP</a></li>
+                                        <li><a href="{{ route('zonasi-sd') }}"><i class="la la-angle-right"></i> Zonasi Sekolah SD</a></li>
+                                        <li><a href="{{ route('zonasi-smp') }}"><i class="la la-angle-right"></i> Zonasi Sekolah SMP</a></li>
+                                        <li><a href="{{ route('kontak') }}"><i class="la la-angle-right"></i> Kontak</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><!-- ends: .widget -->
+                    </div><!-- ends: .col-lg-6 -->
                 </div>
             </div>
         </div><!-- ends: .footer__big -->
-        <div class="footer__small text-center">
-            <p>{{ $appConfig['footer_teks'] ?? (date('Y') . ' © ' . ($appConfig['nama_instansi'] ?? 'SPMB')) }}</p>
-        </div><!-- ends: .footer__small -->
+        <div class="footer-bottom-premium text-center">
+            <div class="container">
+                <p class="m-0">{{ $appConfig['footer_teks'] ?? (date('Y') . ' © ' . ($appConfig['nama_instansi'] ?? 'SPMB')) }} - All Rights Reserved</p>
+            </div>
+        </div><!-- ends: .footer-bottom-premium -->
     </footer>
     <div class="go_top">
         <span class="la la-angle-up"></span>

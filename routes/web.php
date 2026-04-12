@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PeriodeDaftarController;
@@ -26,7 +27,8 @@ Route::get('persyaratan', function () {
 })->name('persyaratan');
 
 // Data Sekolah
-Route::get('datasekolah', [FrontendController::class, 'datasekolah'])->name('datasekolah');
+Route::get('sekolah-sd', [FrontendController::class, 'sekolah_sd'])->name('sekolah-sd');
+Route::get('sekolah-smp', [FrontendController::class, 'sekolah_smp'])->name('sekolah-smp');
 
 Route::get('berita/{slug}', [FrontendController::class, 'showPost'])->name('post.detail');
 
@@ -59,10 +61,13 @@ Route::middleware('auth')->group(function () {
     // resource periode
     Route::resource('periode', PeriodeDaftarController::class);
 
-    Route::resource('peserta', PesertaController::class);
+    Route::get('peserta/sd', [PesertaController::class, 'peserta_sd'])->name('peserta.sd');
+    Route::get('peserta/smp', [PesertaController::class, 'peserta_smp'])->name('peserta.smp');
     Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
-    Route::get('peserta/sd', [PesertaController::class, 'sd'])->name('peserta.sd');
-    Route::get('peserta/smp', [PesertaController::class, 'smp'])->name('peserta.smp');
+    Route::resource('peserta', PesertaController::class);
+
+    Route::get('kelulusan/sd', [KelulusanController::class, 'kelulusan_sd'])->name('kelulusan.sd');
+    Route::get('kelulusan/smp', [KelulusanController::class, 'kelulusan_smp'])->name('kelulusan.smp');
 
     Route::resource('pengguna', UserController::class);
 

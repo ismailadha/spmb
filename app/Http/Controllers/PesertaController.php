@@ -31,10 +31,7 @@ class PesertaController extends Controller
             ->get();
 
         if ($request->ajax()) {
-            $periodeId = $request->get('periode_id');
-            if (! $periodeId && $periode) {
-                $periodeId = $periode->id;
-            }
+            $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -86,6 +83,144 @@ class PesertaController extends Controller
         }
 
         return view('backend.peserta.index', compact('periode', 'semuaPeriode'));
+    }
+
+    /**
+     * Display a listing of SD participants.
+     */
+    public function peserta_sd(Request $request)
+    {
+        $periode = DB::table('periode_pendaftaran')
+            ->where('status_aktif', 1)
+            ->first();
+
+        $semuaPeriode = DB::table('periode_pendaftaran')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        if ($request->ajax()) {
+            $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+
+            $data = DB::table('pendaftaran')
+                ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+                ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+                ->where('pendaftaran.periode_id', $periodeId)
+                ->where('pendaftaran.jenjang', 'SD')
+                ->select(
+                    'pendaftaran.id as pendaftaran_id',
+                    'peserta.id as id',
+                    'pendaftaran.nomor_pendaftaran',
+                    'peserta.nama_lengkap',
+                    'jalur_pendaftaran.nama_jalur',
+                    'pendaftaran.jenjang',
+                    'pendaftaran.status'
+                );
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'Selesai') {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
+                    } elseif ($row->status == 'Draft') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
+                    } else {
+                        return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    return '
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
+                                <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
+                                <li>
+                                    <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" style="margin: 0;">
+                                        '.csrf_field().'
+                                        '.method_field('DELETE').'
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-id="'.$row->id.'">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    ';
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+
+        return view('backend.peserta.peserta_sd', compact('periode', 'semuaPeriode'));
+    }
+
+    /**
+     * Display a listing of SMP participants.
+     */
+    public function peserta_smp(Request $request)
+    {
+        $periode = DB::table('periode_pendaftaran')
+            ->where('status_aktif', 1)
+            ->first();
+
+        $semuaPeriode = DB::table('periode_pendaftaran')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        if ($request->ajax()) {
+            $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+
+            $data = DB::table('pendaftaran')
+                ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+                ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+                ->where('pendaftaran.periode_id', $periodeId)
+                ->where('pendaftaran.jenjang', 'SMP')
+                ->select(
+                    'pendaftaran.id as pendaftaran_id',
+                    'peserta.id as id',
+                    'pendaftaran.nomor_pendaftaran',
+                    'peserta.nama_lengkap',
+                    'jalur_pendaftaran.nama_jalur',
+                    'pendaftaran.jenjang',
+                    'pendaftaran.status'
+                );
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'Selesai') {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
+                    } elseif ($row->status == 'Draft') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
+                    } else {
+                        return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    return '
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
+                                <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
+                                <li>
+                                    <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" style="margin: 0;">
+                                        '.csrf_field().'
+                                        '.method_field('DELETE').'
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-id="'.$row->id.'">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    ';
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+
+        return view('backend.peserta.peserta_smp', compact('periode', 'semuaPeriode'));
     }
 
     /**

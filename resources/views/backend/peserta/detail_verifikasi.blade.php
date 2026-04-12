@@ -9,30 +9,18 @@
 @endsection
 
 @section('content')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
 <div class="d-flex flex-column flex-column-fluid">
     <!--begin::Toolbar-->
     <div class="toolbar mb-5 mb-lg-7" id="kt_toolbar">
         <div class="container-fluid d-flex flex-stack flex-wrap">
             <div class="page-title d-flex flex-column py-1">
                 <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Verifikasi Calon Peserta</h1>
-                <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
-                    <li class="breadcrumb-item text-muted">
-                        <a href="{{ route('dashboard') }}" class="text-muted text-hover-primary">Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <span class="bullet bg-gray-200 w-5px h-2px"></span>
-                    </li>
-                    <li class="breadcrumb-item text-muted">
-                        <a href="{{ route('peserta.index') }}" class="text-muted text-hover-primary">Data Peserta</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <span class="bullet bg-gray-200 w-5px h-2px"></span>
-                    </li>
-                    <li class="breadcrumb-item text-dark">Detail Verifikasi</li>
-                </ul>
             </div>
             <div class="d-flex align-items-center py-1">
-                <a href="{{ route('peserta.index') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
+                <a href="{{ route('peserta.sd') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
                 <button class="btn btn-sm btn-danger me-3">Tolak Pendaftaran</button>
                 <button class="btn btn-sm btn-primary">Setujui & Verifikasi</button>
             </div>
@@ -191,7 +179,7 @@
                                     <label class="col-lg-4 fw-bold text-muted">Koordinat</label>
                                     <div class="col-lg-8">
                                         <span class="fw-bolder fs-6 text-gray-800">{{ $peserta->latitude }}, {{ $peserta->longitude }}</span>
-                                        <a href="https://www.google.com/maps/search/{{ $peserta->latitude }},{{ $peserta->longitude }}" target="_blank" class="btn btn-sm btn-light-primary ms-3">Lihat Peta</a>
+                                        <button type="button" class="btn btn-sm btn-light-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal_map">Lihat Peta</button>
                                     </div>
                                 </div>
                             </div>
@@ -283,4 +271,67 @@
     </div>
     <!--end::Post-->
 </div>
+
+<!-- Modal Map -->
+<div class="modal fade" id="modal_map" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="fw-bolder">Lokasi Tempat Tinggal</h2>
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div id="map" style="height: 500px; width: 100%;"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-start flex-grow-1">
+                    <span class="text-muted fw-bold">Koordinat:</span>
+                    <span class="fw-bolder text-gray-800">{{ $peserta->latitude }}, {{ $peserta->longitude }}</span>
+                </div>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const lat = {{ $peserta->latitude }};
+        const lng = {{ $peserta->longitude }};
+        
+        let map;
+        let marker;
+
+        const modalMap = document.getElementById('modal_map');
+        modalMap.addEventListener('shown.bs.modal', function () {
+            if (!map) {
+                map = L.map('map').setView([lat, lng], 15);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup('Lokasi Tempat Tinggal Peserta')
+                    .openPopup();
+            } else {
+                map.invalidateSize();
+                map.setView([lat, lng], 15);
+            }
+        });
+    });
+</script>
 @endsection
