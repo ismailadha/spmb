@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kecamatan;
 use App\Models\PeriodeDaftar;
 use App\Models\Post;
 use App\Models\Sambutan;
+use App\Models\Sekolah;
 use App\Models\Slider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class FrontendController extends Controller
@@ -20,6 +23,56 @@ class FrontendController extends Controller
         return view('frontend.index', compact('sliders', 'sambutans', 'posts', 'activePeriode'));
     }
 
+    public function sekolah_sd(Request $request)
+    {
+        $query = Sekolah::query()->where('jenjang', 'SD');
+
+        if ($request->filled('search')) {
+            $query->where('nama_sekolah', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->where('id_kecamatan', $request->kecamatan);
+        }
+
+        $sekolah = $query->orderBy('nama_sekolah', 'asc')->paginate(9)->withQueryString();
+        $kecamatan = Kecamatan::orderBy('nama_kecamatan', 'asc')->get();
+
+        return view('frontend.sekolah_sd', compact('sekolah', 'kecamatan'));
+    }
+
+    public function sekolah_smp(Request $request)
+    {
+        $query = Sekolah::query()->where('jenjang', 'SMP');
+
+        if ($request->filled('search')) {
+            $query->where('nama_sekolah', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->filled('kecamatan')) {
+            $query->where('id_kecamatan', $request->kecamatan);
+        }
+
+        $sekolah = $query->orderBy('nama_sekolah', 'asc')->paginate(9)->withQueryString();
+        $kecamatan = Kecamatan::orderBy('nama_kecamatan', 'asc')->get();
+
+        return view('frontend.sekolah_smp', compact('sekolah', 'kecamatan'));
+    }
+
+    public function detail_sekolah_sd($id)
+    {
+        $sekolah = Sekolah::with('kecamatan')->findOrFail($id);
+
+        return view('frontend.detail_sekolah_sd', compact('sekolah'));
+    }
+
+    public function detail_sekolah_smp($id)
+    {
+        $sekolah = Sekolah::with('kecamatan')->findOrFail($id);
+
+        return view('frontend.detail_sekolah_smp', compact('sekolah'));
+    }
+
     public function showPost($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
@@ -30,11 +83,6 @@ class FrontendController extends Controller
             ->get();
 
         return view('frontend.detail_post', compact('post', 'recent_posts'));
-    }
-
-    public function datasekolah()
-    {
-        return view('frontend.daftar_cari_sekolah');
     }
 
     public function zonasi_sd()

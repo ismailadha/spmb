@@ -28,7 +28,9 @@ Route::get('persyaratan', function () {
 
 // Data Sekolah
 Route::get('sekolah-sd', [FrontendController::class, 'sekolah_sd'])->name('sekolah-sd');
+Route::get('sekolah-sd/{id}', [FrontendController::class, 'detail_sekolah_sd'])->name('sekolah-sd.detail');
 Route::get('sekolah-smp', [FrontendController::class, 'sekolah_smp'])->name('sekolah-smp');
+Route::get('sekolah-smp/{id}', [FrontendController::class, 'detail_sekolah_smp'])->name('sekolah-smp.detail');
 
 Route::get('berita/{slug}', [FrontendController::class, 'showPost'])->name('post.detail');
 
