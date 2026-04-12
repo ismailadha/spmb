@@ -3,7 +3,7 @@
 @section('content')
     <section class="breadcrumb_area breadcrumb2 bgimage biz_overlay">
         <div class="bg_image_holder">
-            <img src="{{ asset('front/img/breadbg.jpg') }}" alt="">
+            <img src="https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&w=1920&q=80" alt="">
         </div>
         <div class="container content_above">
             <div class="row">
