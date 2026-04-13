@@ -83,7 +83,22 @@
                                     <div class="fw-bolder mt-5">Gender</div>
                                     <div class="text-gray-600">{{ $peserta->jenis_kelamin }}</div>
                                     <div class="fw-bolder mt-5">Tempat/Tgl Lahir</div>
-                                    <div class="text-gray-600">{{ $peserta->tempat_lahir }}, {{ \Carbon\Carbon::parse($peserta->tanggal_lahir)->isoFormat('D MMMM YYYY') }}</div>
+                                    <div class="text-gray-600">
+                                        {{ $peserta->tempat_lahir }}, {{ \Carbon\Carbon::parse($peserta->tanggal_lahir)->isoFormat('D MMMM YYYY') }}
+                                        @php
+                                            $usia = $peserta->getUsiaSesuaiJenjang();
+                                        @endphp
+                                        @if($usia)
+                                            <div class="mt-1">
+                                                <span class="badge {{ $usia['is_valid'] ? 'badge-light-primary' : 'badge-light-danger' }} fw-bold">
+                                                    {{ $usia['string'] }}
+                                                </span>
+                                                @if(!$usia['is_valid'])
+                                                    <span class="text-danger fs-8 fw-bold ms-1"><i class="bi bi-exclamation-circle text-danger"></i> {{ $usia['message'] }}</span>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </div>
                                     <div class="fw-bolder mt-5">Agama</div>
                                     <div class="text-gray-600">{{ $peserta->agama }}</div>
                                 </div>

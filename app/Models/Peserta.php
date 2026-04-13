@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Peserta extends Model
@@ -63,5 +64,60 @@ class Peserta extends Model
     public function orang_tua()
     {
         return $this->hasOne(OrangTua::class);
+    }
+
+    /**
+     * Menghitung usia peserta berdasarkan jenjang pendaftaran dan tanggal batas usia (cut-off).
+     */
+    public function getUsiaSesuaiJenjang(): ?array
+    {
+        $pendaftaran = $this->pendaftaran;
+        if (! $pendaftaran || ! $pendaftaran->periode) {
+            return null;
+        }
+
+        $periode = $pendaftaran->periode;
+        $jenjang = $pendaftaran->jenjang;
+
+        $referenceDate = $jenjang == 'SD'
+            ? $periode->tanggal_batas_usia_sd
+            : $periode->tanggal_batas_usia_smp;
+
+        if (! $referenceDate) {
+            return null;
+        }
+
+        $birthDate = Carbon::parse($this->tanggal_lahir);
+        $refDate = Carbon::parse($referenceDate);
+        $diff = $birthDate->diff($refDate);
+
+        $years = $diff->y;
+        $months = $diff->m;
+
+        $isValid = true;
+        $message = '';
+
+        if ($jenjang == 'SD') {
+            if ($years < $periode->usia_min_sd) {
+                $isValid = false;
+                $message = "Usia di bawah minimal ({$periode->usia_min_sd} tahun)";
+            } elseif ($years > $periode->usia_max_sd) {
+                $isValid = false;
+                $message = "Usia di atas maksimal ({$periode->usia_max_sd} tahun)";
+            }
+        } elseif ($jenjang == 'SMP') {
+            if ($years > $periode->usia_max_smp) {
+                $isValid = false;
+                $message = "Usia di atas maksimal ({$periode->usia_max_smp} tahun)";
+            }
+        }
+
+        return [
+            'tahun' => $years,
+            'bulan' => $months,
+            'string' => "{$years} Tahun {$months} Bulan",
+            'is_valid' => $isValid,
+            'message' => $message,
+        ];
     }
 }

@@ -22,11 +22,19 @@
             <div class="card-toolbar">
                 <div class="d-flex align-items-center">
                     <label for="filter_periode" class="me-2 fw-bold text-muted">Periode:</label>
-                    <select id="filter_periode" class="form-select form-select-sm form-select-solid w-150px">
+                    <select id="filter_periode" class="form-select form-select-sm form-select-solid w-125px me-5">
                         @foreach($semuaPeriode as $p)
                             <option value="{{ $p->id }}" {{ ($periode && $periode->id == $p->id) ? 'selected' : '' }}>
                                 {{ $p->tahun_ajaran }}
                             </option>
+                        @endforeach
+                    </select>
+
+                    <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
+                    <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px">
+                        <option value="">Semua Jalur</option>
+                        @foreach($semuaJalur as $j)
+                            <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -85,6 +93,7 @@ $(document).ready(function() {
             url: "{{ route('peserta.sd') }}",
             data: function (d) {
                 d.periode_id = $('#filter_periode').val();
+                d.jalur_id = $('#filter_jalur').val();
             }
         },
         columns: [
@@ -165,7 +174,7 @@ $(document).ready(function() {
         });
     @endif
     
-    $('#filter_periode').change(function() {
+    $('#filter_periode, #filter_jalur').change(function() {
         $('#kt_table_peserta').DataTable().ajax.reload();
     });
 });

@@ -30,13 +30,19 @@ class PesertaController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $semuaJalur = DB::table('jalur_pendaftaran')->get();
+
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+            $jalurId = $request->get('jalur_id');
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
                 ->where('pendaftaran.periode_id', $periodeId)
+                ->when($jalurId, function ($query, $jalurId) {
+                    return $query->where('pendaftaran.jalur_id', $jalurId);
+                })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
@@ -82,7 +88,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.index', compact('periode', 'semuaPeriode'));
+        return view('backend.peserta.index', compact('periode', 'semuaPeriode', 'semuaJalur'));
     }
 
     /**
@@ -98,14 +104,20 @@ class PesertaController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $semuaJalur = DB::table('jalur_pendaftaran')->get();
+
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+            $jalurId = $request->get('jalur_id');
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
                 ->where('pendaftaran.periode_id', $periodeId)
                 ->where('pendaftaran.jenjang', 'SD')
+                ->when($jalurId, function ($query, $jalurId) {
+                    return $query->where('pendaftaran.jalur_id', $jalurId);
+                })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
@@ -151,7 +163,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.peserta_sd', compact('periode', 'semuaPeriode'));
+        return view('backend.peserta.peserta_sd', compact('periode', 'semuaPeriode', 'semuaJalur'));
     }
 
     /**
@@ -167,14 +179,20 @@ class PesertaController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $semuaJalur = DB::table('jalur_pendaftaran')->get();
+
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+            $jalurId = $request->get('jalur_id');
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
                 ->where('pendaftaran.periode_id', $periodeId)
                 ->where('pendaftaran.jenjang', 'SMP')
+                ->when($jalurId, function ($query, $jalurId) {
+                    return $query->where('pendaftaran.jalur_id', $jalurId);
+                })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
@@ -220,7 +238,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.peserta_smp', compact('periode', 'semuaPeriode'));
+        return view('backend.peserta.peserta_smp', compact('periode', 'semuaPeriode', 'semuaJalur'));
     }
 
     /**
