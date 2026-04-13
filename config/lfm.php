@@ -20,7 +20,7 @@ return [
     'use_package_routes' => true,
 
     // Middlewares to be applied to default routes when use_package_routes is true
-    'middlewares' => ['web', 'auth'],
+    'middlewares' => ['web', 'auth', 'role:admin_dinas'],
 
     // The url prefix to this package.
     'url_prefix' => 'filemanager',

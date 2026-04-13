@@ -95,6 +95,7 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Pendaftaran</span>
 									</div>
 								</div>
+								@if(auth()->user()->role == 'admin_dinas')
 								<div class="menu-item">
 									<a class="menu-link @yield('periode-menu-active')" href="{{ route('periode.index') }}">
 										<span class="menu-icon">
@@ -111,6 +112,8 @@
 										<span class="menu-title">Periode Pendaftaran</span>
 									</a>
 								</div>
+								@endif
+								@if(auth()->user()->role == 'peserta')
 								<div class="menu-item">
 									<a class="menu-link @yield('pendaftaran-menu-active')" href="{{ route('pendaftaran.index') }}">
 										<span class="menu-icon">
@@ -126,6 +129,8 @@
 										<span class="menu-title">Pendaftaran</span>
 									</a>
 								</div>
+								@endif
+								@if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah')
 								<div class="menu-item">
 									<div class="menu-content pt-8 pb-0">
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Verifikasi</span>
@@ -220,6 +225,8 @@
 										<span class="menu-title">Data Sekolah</span>
 									</a>
 								</div>
+								@endif
+								@if(auth()->user()->role == 'admin_dinas')
 								<div class="menu-item">
 									<div class="menu-content pt-8 pb-0">
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Beranda Website</span>
@@ -300,6 +307,7 @@
 										<span class="menu-title">Data Pengguna</span>
 									</a>
 								</div>
+								@endif
 							</div>
 							<!--end::Menu-->
 						</div>

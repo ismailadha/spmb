@@ -918,14 +918,10 @@
             // Override default if coordinates exist in inputs
             if(latInput && latInput.value && !isNaN(latInput.value)) {
                 defaultLat = parseFloat(latInput.value);
-            } else if (latInput) {
-                latInput.value = defaultLat.toFixed(6);
             }
 
             if(lngInput && lngInput.value && !isNaN(lngInput.value)) {
                 defaultLng = parseFloat(lngInput.value);
-            } else if (lngInput) {
-                lngInput.value = defaultLng.toFixed(6);
             }
 
             const map = L.map('map').setView([defaultLat, defaultLng], 13);

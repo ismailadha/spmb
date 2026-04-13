@@ -55,65 +55,74 @@ Route::middleware('auth')->group(function () {
         return view('backend.home');
     })->name('dashboard');
 
-    Route::get('konfigurasi', [KonfigurasiController::class, 'index'])->name('konfigurasi.index');
-    Route::put('konfigurasi', [KonfigurasiController::class, 'update'])->name('konfigurasi.update');
-
-    Route::resource('sekolah', SekolahController::class);
-
-    // resource periode
-    Route::resource('periode', PeriodeDaftarController::class);
-
-    Route::get('peserta/sd', [PesertaController::class, 'peserta_sd'])->name('peserta.sd');
-    Route::get('peserta/smp', [PesertaController::class, 'peserta_smp'])->name('peserta.smp');
-    Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
-    Route::resource('peserta', PesertaController::class);
-
-    Route::get('kelulusan/sd', [KelulusanController::class, 'kelulusan_sd'])->name('kelulusan.sd');
-    Route::get('kelulusan/smp', [KelulusanController::class, 'kelulusan_smp'])->name('kelulusan.smp');
-
-    Route::resource('pengguna', UserController::class);
-
-    Route::prefix('pendaftaran')->group(function () {
-        Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
-        Route::get('/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
-        Route::post('/', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
-
-        Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
-        Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
-        Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
-        Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
-        Route::get('/berkas/{id}', [PendaftaranController::class, 'showBerkas'])->name('pendaftaran.berkas.show');
-    });
-
     Route::prefix('wilayah')->group(function () {
         Route::get('/kabupaten/{id}', [WilayahController::class, 'getKabupaten'])->name('wilayah.kabupaten');
         Route::get('/kecamatan/{id}', [WilayahController::class, 'getKecamatan'])->name('wilayah.kecamatan');
         Route::get('/desa/{id}', [WilayahController::class, 'getDesa'])->name('wilayah.desa');
     });
 
-    // Post
-    Route::resource('posts', PostController::class);
-    Route::get('/search-post', [PostController::class, 'search_post'])->name('search-post');
+    Route::middleware('role:admin_dinas,admin_sekolah')->group(function () {
+        // sekolah
+        Route::resource('sekolah', SekolahController::class);
 
-    // Sambutan
-    Route::get('sambutan', [SambutanController::class, 'index'])->name('sambutan.index');
-    Route::get('sambutan/create', [SambutanController::class, 'create'])->name('sambutan.create');
-    Route::post('sambutan/destroy/{id}', [SambutanController::class, 'destroy'])->name('sambutan.destroy');
-    Route::get('sambutan/edit/{id}', [SambutanController::class, 'edit'])->name('sambutan.edit');
-    Route::put('sambutan/update/{id}', [SambutanController::class, 'update'])->name('sambutan.update');
-    Route::post('sambutan/store', [SambutanController::class, 'store'])->name('sambutan.store');
+        // peserta
+        Route::get('peserta/sd', [PesertaController::class, 'peserta_sd'])->name('peserta.sd');
+        Route::get('peserta/smp', [PesertaController::class, 'peserta_smp'])->name('peserta.smp');
+        Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
+        Route::resource('peserta', PesertaController::class);
 
-    // Slider
-    Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
-    Route::get('slider/create', [SliderController::class, 'create'])->name('slider.create');
-    Route::post('slider/destroy/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
-    Route::get('slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
-    Route::put('slider/update/{id}', [SliderController::class, 'update'])->name('slider.update');
-    Route::post('slider/store', [SliderController::class, 'store'])->name('slider.store');
+        // kelulusan
+        Route::get('kelulusan/sd', [KelulusanController::class, 'kelulusan_sd'])->name('kelulusan.sd');
+        Route::get('kelulusan/smp', [KelulusanController::class, 'kelulusan_smp'])->name('kelulusan.smp');
+    });
 
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::middleware('role:peserta')->group(function () {
+
+        // pendaftaran
+        Route::prefix('pendaftaran')->group(function () {
+            Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+            Route::get('/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+            Route::post('/', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+
+            Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
+            Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
+            Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+            Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
+            Route::get('/berkas/{id}', [PendaftaranController::class, 'showBerkas'])->name('pendaftaran.berkas.show');
+        });
+    });
+
+    Route::middleware('role:admin_dinas')->group(function () {
+        // konfigurasi
+        Route::get('konfigurasi', [KonfigurasiController::class, 'index'])->name('konfigurasi.index');
+        Route::put('konfigurasi', [KonfigurasiController::class, 'update'])->name('konfigurasi.update');
+
+        // resource periode
+        Route::resource('periode', PeriodeDaftarController::class);
+
+        // pengguna
+        Route::resource('pengguna', UserController::class);
+
+        // Post
+        Route::resource('posts', PostController::class);
+        Route::get('/search-post', [PostController::class, 'search_post'])->name('search-post');
+
+        // Sambutan
+        Route::get('sambutan', [SambutanController::class, 'index'])->name('sambutan.index');
+        Route::get('sambutan/create', [SambutanController::class, 'create'])->name('sambutan.create');
+        Route::post('sambutan/destroy/{id}', [SambutanController::class, 'destroy'])->name('sambutan.destroy');
+        Route::get('sambutan/edit/{id}', [SambutanController::class, 'edit'])->name('sambutan.edit');
+        Route::put('sambutan/update/{id}', [SambutanController::class, 'update'])->name('sambutan.update');
+        Route::post('sambutan/store', [SambutanController::class, 'store'])->name('sambutan.store');
+
+        // Slider
+        Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
+        Route::get('slider/create', [SliderController::class, 'create'])->name('slider.create');
+        Route::post('slider/destroy/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
+        Route::get('slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
+        Route::put('slider/update/{id}', [SliderController::class, 'update'])->name('slider.update');
+        Route::post('slider/store', [SliderController::class, 'store'])->name('slider.store');
+    });
 });
 
 require __DIR__.'/auth.php';
