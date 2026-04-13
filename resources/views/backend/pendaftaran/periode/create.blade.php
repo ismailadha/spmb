@@ -18,55 +18,75 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            <form action="{{ route('periode.store') }}" method="POST">
+            <form action="{{ route('periode.store') }}" method="POST" class="needs-validation" novalidate>
                 @csrf
 
                 <!-- Tahun Ajaran -->
-                <div class="row mb-3">
+                <div class="row mb-4">
                     <div class="col-12">
                         <label for="tahun_ajaran" class="form-label">Tahun Ajaran</label>
-                        <input type="text" class="form-control" id="tahun_ajaran" name="tahun_ajaran" placeholder="Contoh: 2024/2025" required>
+                        <input type="text" class="form-control" id="tahun_ajaran" name="tahun_ajaran" placeholder="Contoh: 2024/2025" maxlength="255" required>
                     </div>
                 </div>
 
-                <!-- Pendaftaran -->
-                <div class="row mb-3">
+                <!-- PENDAFTARAN Section -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h5 class="fw-bold text-muted">Pendaftaran</h5>
+                    </div>
+                </div>
+                <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="peserta_daftar_mulai" class="form-label">Pendaftaran Mulai</label>
+                        <label for="peserta_daftar_mulai" class="form-label">Mulai</label>
                         <input type="date" class="form-control" id="peserta_daftar_mulai" name="peserta_daftar_mulai" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="peserta_daftar_selesai" class="form-label">Pendaftaran Selesai</label>
+                        <label for="peserta_daftar_selesai" class="form-label">Selesai</label>
                         <input type="date" class="form-control" id="peserta_daftar_selesai" name="peserta_daftar_selesai" required>
                     </div>
                 </div>
 
-                <!-- Verifikasi -->
-                <div class="row mb-3">
+                <!-- VERIFIKASI Section -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h5 class="fw-bold text-muted">Verifikasi</h5>
+                    </div>
+                </div>
+                <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="verifikasi_mulai" class="form-label">Verifikasi Mulai</label>
+                        <label for="verifikasi_mulai" class="form-label">Mulai</label>
                         <input type="date" class="form-control" id="verifikasi_mulai" name="verifikasi_mulai">
                     </div>
                     <div class="col-md-6">
-                        <label for="verifikasi_selesai" class="form-label">Verifikasi Selesai</label>
+                        <label for="verifikasi_selesai" class="form-label">Selesai</label>
                         <input type="date" class="form-control" id="verifikasi_selesai" name="verifikasi_selesai">
                     </div>
                 </div>
 
-                <!-- Daftar Ulang -->
-                <div class="row mb-3">
+                <!-- DAFTAR ULANG Section -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h5 class="fw-bold text-muted">Daftar Ulang</h5>
+                    </div>
+                </div>
+                <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="daftar_ulang_mulai" class="form-label">Daftar Ulang Mulai</label>
+                        <label for="daftar_ulang_mulai" class="form-label">Mulai</label>
                         <input type="date" class="form-control" id="daftar_ulang_mulai" name="daftar_ulang_mulai">
                     </div>
                     <div class="col-md-6">
-                        <label for="daftar_ulang_selesai" class="form-label">Daftar Ulang Selesai</label>
+                        <label for="daftar_ulang_selesai" class="form-label">Selesai</label>
                         <input type="date" class="form-control" id="daftar_ulang_selesai" name="daftar_ulang_selesai">
                     </div>
                 </div>
 
-                <!-- Pengumuman & Masuk Sekolah -->
-                <div class="row mb-3">
+                <!-- PENGUMUMAN & MASUK SEKOLAH Section -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h5 class="fw-bold text-muted">Pengumuman & Masuk Sekolah</h5>
+                    </div>
+                </div>
+                <div class="row mb-4">
                     <div class="col-md-6">
                         <label for="tanggal_pengumuman_seleksi" class="form-label">Tanggal Pengumuman Seleksi</label>
                         <input type="date" class="form-control" id="tanggal_pengumuman_seleksi" name="tanggal_pengumuman_seleksi">
@@ -77,17 +97,47 @@
                     </div>
                 </div>
 
-                <!-- Batas Usia -->
-                <div class="row mb-3">
+                <!-- BATASAN USIA Section -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <h5 class="fw-bold text-muted">Batasan Usia</h5>
+                    </div>
+                </div>
+                <!-- SD -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label text-dark fw-semibold">SD</label>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="tanggal_batas_usia_sd" class="form-label">Tanggal Batas (Cut-off)</label>
+                        <input type="date" class="form-control" id="tanggal_batas_usia_sd" name="tanggal_batas_usia_sd">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="usia_min_sd" class="form-label">Usia Minimum (Tahun)</label>
+                        <input type="number" class="form-control" id="usia_min_sd" name="usia_min_sd" min="0">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="usia_max_sd" class="form-label">Usia Maksimum (Tahun)</label>
+                        <input type="number" class="form-control" id="usia_max_sd" name="usia_max_sd" min="0">
+                    </div>
+                </div>
+
+                <!-- SMP -->
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label text-dark fw-semibold">SMP</label>
+                    </div>
+                </div>
+                <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="batas_usia_sd" class="form-label">Batas Usia SD (Cut-off)</label>
-                        <input type="date" class="form-control" id="batas_usia_sd" name="batas_usia_sd">
-                        <div class="form-text">Tanggal batas usia untuk pendaftaran SD.</div>
+                        <label for="tanggal_batas_usia_smp" class="form-label">Tanggal Batas (Cut-off)</label>
+                        <input type="date" class="form-control" id="tanggal_batas_usia_smp" name="tanggal_batas_usia_smp">
                     </div>
                     <div class="col-md-6">
-                        <label for="batas_usia_smp" class="form-label">Batas Usia SMP (Cut-off)</label>
-                        <input type="date" class="form-control" id="batas_usia_smp" name="batas_usia_smp">
-                        <div class="form-text">Tanggal batas usia untuk pendaftaran SMP.</div>
+                        <label for="usia_max_smp" class="form-label">Usia Maksimum (Tahun)</label>
+                        <input type="number" class="form-control" id="usia_max_smp" name="usia_max_smp" min="0">
                     </div>
                 </div>
 
@@ -131,4 +181,42 @@
         </div>
     </div>
     <!--end::Card-->
+    <!--end::Card-->
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                // Check jalur
+                const checkboxes = document.querySelectorAll('input[name="jalur_id[]"]');
+                let isChecked = false;
+                checkboxes.forEach(function(checkbox) {
+                    if (checkbox.checked) {
+                        isChecked = true;
+                    }
+                });
+
+                if (!form.checkValidity() || !isChecked) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    form.classList.add('was-validated');
+
+                    Swal.fire({
+                        text: "Mohon lengkapi seluruh field yang wajib diisi dan pastikan minimal satu Jalur Seleksi terpilih.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, Mengerti!",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
+                }
+            }, false);
+        });
+    });
+</script>
 @endsection

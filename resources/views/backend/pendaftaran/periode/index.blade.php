@@ -7,11 +7,6 @@
 @section('content')
     <!--begin::Card-->
     <div class="card">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
         <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
@@ -88,10 +83,10 @@
                                 <!--end::Svg Icon-->
                             </a>
                             <!-- Delete button (form) -->
-                            <form action="{{ route('periode.destroy', $periode->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                            <form action="{{ route('periode.destroy', $periode->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm">
+                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm btn-delete" data-nama="{{ $periode->tahun_ajaran }}">
                                     <!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
                                     <span class="svg-icon svg-icon-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -128,6 +123,54 @@ $(document).ready(function() {
             { orderable: false, targets: 5 } // disable sorting for columns action
         ]
     });
+
+    // Delete confirmation
+    $(document).on('click', '.btn-delete', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var nama = $(this).data('nama');
+
+        Swal.fire({
+            text: "Apakah Anda yakin ingin menghapus " + nama + "?",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Tidak, Batal",
+            customClass: {
+                confirmButton: "btn fw-bold btn-danger",
+                cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+        }).then(function(result) {
+            if (result.value) {
+                form.submit();
+            }
+        });
+    });
+
+    @if (session('success'))
+        Swal.fire({
+            text: "{{ session('success') }}",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, Mengerti!",
+            customClass: {
+                confirmButton: "btn btn-primary"
+            }
+        });
+    @endif
+
+    @if (session('error'))
+        Swal.fire({
+            text: "{{ session('error') }}",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, Mengerti!",
+            customClass: {
+                confirmButton: "btn btn-danger"
+            }
+        });
+    @endif
 });
 </script>
 @endsection

@@ -6,6 +6,7 @@ use App\Models\JalurDaftar;
 use App\Models\PeriodeDaftar;
 use App\Models\PeriodeJalur;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class PeriodeDaftarController extends Controller
 {
@@ -44,8 +45,11 @@ class PeriodeDaftarController extends Controller
             'daftar_ulang_mulai' => 'nullable|date',
             'daftar_ulang_selesai' => 'nullable|date',
             'tanggal_masuk_sekolah' => 'nullable|date',
-            'batas_usia_sd' => 'nullable|date',
-            'batas_usia_smp' => 'nullable|date',
+            'tanggal_batas_usia_sd' => 'nullable|date',
+            'usia_min_sd' => 'nullable|integer|min:0',
+            'usia_max_sd' => 'nullable|integer|min:0',
+            'tanggal_batas_usia_smp' => 'nullable|date',
+            'usia_max_smp' => 'nullable|integer|min:0',
             'status_aktif' => 'required|boolean',
             'jalur_id' => 'required|array',
             'jalur_id.*' => 'exists:jalur_pendaftaran,id',
@@ -102,8 +106,11 @@ class PeriodeDaftarController extends Controller
             'daftar_ulang_mulai' => 'nullable|date',
             'daftar_ulang_selesai' => 'nullable|date',
             'tanggal_masuk_sekolah' => 'nullable|date',
-            'batas_usia_sd' => 'nullable|date',
-            'batas_usia_smp' => 'nullable|date',
+            'tanggal_batas_usia_sd' => 'nullable|date',
+            'usia_min_sd' => 'nullable|integer|min:0',
+            'usia_max_sd' => 'nullable|integer|min:0',
+            'tanggal_batas_usia_smp' => 'nullable|date',
+            'usia_max_smp' => 'nullable|integer|min:0',
             'status_aktif' => 'required|boolean',
             'jalur_id' => 'required|array',
             'jalur_id.*' => 'exists:jalur_pendaftaran,id',
@@ -133,12 +140,25 @@ class PeriodeDaftarController extends Controller
      */
     public function destroy($id)
     {
-        $periode = PeriodeDaftar::findOrFail($id);
-        // Hapus data relasi
-        PeriodeJalur::where('periode_id', $id)->delete();
+        try {
+            $periode = PeriodeDaftar::findOrFail($id);
+            // Hapus data relasi
+            PeriodeJalur::where('periode_id', $id)->delete();
 
-        $periode->delete();
+            $periode->delete();
 
-        return redirect()->route('periode.index')->with('success', 'Periode Pendaftaran berhasil dihapus!');
+            return redirect()->route('periode.index')->with('success', 'Periode Pendaftaran berhasil dihapus!');
+        } catch (QueryException $e) {
+            // Check for foreign key constraint violation
+            if ($e->getCode() == '23000') {
+                // Foreign key constraint violation
+                return redirect()->route('periode.index')->with('error', 'Tidak dapat menghapus periode pendaftaran karena masih ada data pendaftaran yang terkait. Silakan hapus data pendaftaran terlebih dahulu.');
+            }
+
+            // Other database errors
+            return redirect()->route('periode.index')->with('error', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return redirect()->route('periode.index')->with('error', 'Terjadi kesalahan yang tidak terduga.');
+        }
     }
 }
