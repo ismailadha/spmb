@@ -17,13 +17,10 @@ class KelulusanController extends Controller
             ->where('status_aktif', 1)
             ->first();
 
-        $semuaPeriode = DB::table('periode_pendaftaran')
-            ->orderBy('id', 'desc')
-            ->get();
-
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
+        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SD')->get();
 
-        return view('backend.kelulusan.kelulusan_sd', compact('periode', 'semuaPeriode', 'semuaJalur'));
+        return view('backend.kelulusan.kelulusan_sd', compact('periode', 'semuaJalur', 'semuaSekolah'));
     }
 
     /**
@@ -35,17 +32,44 @@ class KelulusanController extends Controller
             ->where('status_aktif', 1)
             ->first();
 
-        $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+        $periodeId = $periode->id ?? null;
         $jalurId = $request->get('jalur_id');
+        $sekolahId = $request->get('sekolah_id');
+        $pilihanKe = $request->get('pilihan_ke');
 
         $data = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
+            ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
             ->where('pendaftaran.periode_id', $periodeId)
             ->where('pendaftaran.jenjang', 'SD')
             ->where('pendaftaran.status', 'verifikasi')
             ->when($jalurId, function ($query, $jalurId) {
                 return $query->where('pendaftaran.jalur_id', $jalurId);
+            })
+            ->when($sekolahId, function ($query, $sekolahId) use ($pilihanKe) {
+                if ($pilihanKe == '1') {
+                    $query->where('pendaftaran.sekolah_pilihan_1', $sekolahId);
+                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
+                    $query->orderBy('peserta.tanggal_lahir', 'asc');
+                } elseif ($pilihanKe == '2') {
+                    $query->where('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    $query->orderBy('pendaftaran.jarak_sekolah_2', 'asc');
+                    $query->orderBy('peserta.tanggal_lahir', 'asc');
+                } else {
+                    $query->where(function ($q) use ($sekolahId) {
+                        $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                            ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    });
+                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
+                    $query->orderBy('peserta.tanggal_lahir', 'asc');
+                }
+
+                return $query;
+            }, function ($query) {
+                return $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+                    ->orderBy('peserta.tanggal_lahir', 'asc');
             })
             ->select(
                 'pendaftaran.id as pendaftaran_id',
@@ -54,11 +78,46 @@ class KelulusanController extends Controller
                 'peserta.nama_lengkap',
                 'jalur_pendaftaran.nama_jalur',
                 'pendaftaran.jenjang',
-                'pendaftaran.status'
+                'pendaftaran.status',
+                'sek1.nama_sekolah as pilihan_1',
+                'pendaftaran.jarak_sekolah_1',
+                'sek2.nama_sekolah as pilihan_2',
+                'pendaftaran.jarak_sekolah_2'
             );
+
+        $quota = 0;
+        if ($sekolahId && $jalurId) {
+            $sekolah = DB::table('sekolah')->where('id', $sekolahId)->first();
+            if ($sekolah) {
+                switch ($jalurId) {
+                    case 1: $quota = $sekolah->daya_tampung_domisili;
+                        break;
+                    case 2: $quota = $sekolah->daya_tampung_afirmasi;
+                        break;
+                    case 3: $quota = $sekolah->daya_tampung_prestasi;
+                        break;
+                    case 4: $quota = $sekolah->daya_tampung_mutasi;
+                        break;
+                }
+            }
+        }
+
+        $counter = $request->get('start', 0);
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('hasil', function ($row) use (&$counter, $quota) {
+                $counter++;
+                if ($quota > 0) {
+                    if ($counter <= $quota) {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lolos</span>';
+                    } else {
+                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Cadangan</span>';
+                    }
+                }
+
+                return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">-</span>';
+            })
             ->editColumn('status', function ($row) {
                 if ($row->status == 'Selesai') {
                     return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
@@ -71,7 +130,8 @@ class KelulusanController extends Controller
             ->addColumn('action', function ($row) {
                 return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
             })
-            ->rawColumns(['status', 'action'])
+            ->with('quota', $quota)
+            ->rawColumns(['status', 'action', 'hasil'])
             ->make(true);
     }
 
@@ -84,13 +144,10 @@ class KelulusanController extends Controller
             ->where('status_aktif', 1)
             ->first();
 
-        $semuaPeriode = DB::table('periode_pendaftaran')
-            ->orderBy('id', 'desc')
-            ->get();
-
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
+        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SMP')->get();
 
-        return view('backend.kelulusan.kelulusan_smp', compact('periode', 'semuaPeriode', 'semuaJalur'));
+        return view('backend.kelulusan.kelulusan_smp', compact('periode', 'semuaJalur', 'semuaSekolah'));
     }
 
     /**
@@ -102,17 +159,44 @@ class KelulusanController extends Controller
             ->where('status_aktif', 1)
             ->first();
 
-        $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
+        $periodeId = $periode->id ?? null;
         $jalurId = $request->get('jalur_id');
+        $sekolahId = $request->get('sekolah_id');
+        $pilihanKe = $request->get('pilihan_ke');
 
         $data = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
+            ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
             ->where('pendaftaran.periode_id', $periodeId)
             ->where('pendaftaran.jenjang', 'SMP')
             ->where('pendaftaran.status', 'verifikasi')
             ->when($jalurId, function ($query, $jalurId) {
                 return $query->where('pendaftaran.jalur_id', $jalurId);
+            })
+            ->when($sekolahId, function ($query, $sekolahId) use ($pilihanKe) {
+                if ($pilihanKe == '1') {
+                    $query->where('pendaftaran.sekolah_pilihan_1', $sekolahId);
+                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
+                    $query->orderBy('peserta.tanggal_lahir', 'asc');
+                } elseif ($pilihanKe == '2') {
+                    $query->where('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    $query->orderBy('pendaftaran.jarak_sekolah_2', 'asc');
+                    $query->orderBy('peserta.tanggal_lahir', 'asc');
+                } else {
+                    $query->where(function ($q) use ($sekolahId) {
+                        $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                            ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    });
+                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
+                    $query->orderBy('peserta.tanggal_lahir', 'asc');
+                }
+
+                return $query;
+            }, function ($query) {
+                return $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+                    ->orderBy('peserta.tanggal_lahir', 'asc');
             })
             ->select(
                 'pendaftaran.id as pendaftaran_id',
@@ -121,11 +205,46 @@ class KelulusanController extends Controller
                 'peserta.nama_lengkap',
                 'jalur_pendaftaran.nama_jalur',
                 'pendaftaran.jenjang',
-                'pendaftaran.status'
+                'pendaftaran.status',
+                'sek1.nama_sekolah as pilihan_1',
+                'pendaftaran.jarak_sekolah_1',
+                'sek2.nama_sekolah as pilihan_2',
+                'pendaftaran.jarak_sekolah_2'
             );
+
+        $quota = 0;
+        if ($sekolahId && $jalurId) {
+            $sekolah = DB::table('sekolah')->where('id', $sekolahId)->first();
+            if ($sekolah) {
+                switch ($jalurId) {
+                    case 1: $quota = $sekolah->daya_tampung_domisili;
+                        break;
+                    case 2: $quota = $sekolah->daya_tampung_afirmasi;
+                        break;
+                    case 3: $quota = $sekolah->daya_tampung_prestasi;
+                        break;
+                    case 4: $quota = $sekolah->daya_tampung_mutasi;
+                        break;
+                }
+            }
+        }
+
+        $counter = $request->get('start', 0);
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('hasil', function ($row) use (&$counter, $quota) {
+                $counter++;
+                if ($quota > 0) {
+                    if ($counter <= $quota) {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lolos</span>';
+                    } else {
+                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Cadangan</span>';
+                    }
+                }
+
+                return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">-</span>';
+            })
             ->editColumn('status', function ($row) {
                 if ($row->status == 'Selesai') {
                     return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
@@ -138,7 +257,8 @@ class KelulusanController extends Controller
             ->addColumn('action', function ($row) {
                 return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
             })
-            ->rawColumns(['status', 'action'])
+            ->with('quota', $quota)
+            ->rawColumns(['status', 'action', 'hasil'])
             ->make(true);
     }
 }
