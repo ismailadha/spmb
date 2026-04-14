@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartu Pendaftaran - {{ $pendaftaran->nama_lengkap }}</title>
+    <title>Kartu Pendaftaran - {{ $pendaftaran->nomor_pendaftaran }}</title>
     <style>
         @page {
             size: A4;
@@ -200,7 +200,7 @@
 
             <div class="footer">
                 <div>
-                    {!! QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran) !!}
+                    {{-- {!! QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran) !!} --}}
                 </div>
                 <div class="signature">
                     <p>Kota Lhokseumawe, {{ \Carbon\Carbon::now()->isoFormat('D MMMM YYYY') }}</p>

@@ -22,7 +22,12 @@
             <div class="d-flex align-items-center py-1">
                 <a href="{{ route('peserta.sd') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
                 <button class="btn btn-sm btn-danger me-3">Tolak Pendaftaran</button>
-                <button class="btn btn-sm btn-primary">Setujui & Verifikasi</button>
+                @if($peserta->pendaftaran)
+                <form id="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}" action="{{ route('peserta.verifikasi.setuju', $peserta->pendaftaran->id) }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+                <button type="button" class="btn btn-sm btn-primary" onclick="confirmSetuju({{ $peserta->pendaftaran->id }})">Setujui & Verifikasi</button>
+                @endif
             </div>
         </div>
     </div>
@@ -53,9 +58,15 @@
                                 <div class="d-flex flex-wrap flex-center">
                                     <div class="border border-gray-300 border-dashed rounded py-3 px-3 mb-3">
                                         <div class="fs-4 fw-bolder text-gray-700 text-center">
-                                            <span class="badge {{ $peserta->pendaftaran->status == 'submit' ? 'badge-light-success' : 'badge-light-warning' }} fw-bolder px-4 py-3">
-                                                {{ ucfirst($peserta->pendaftaran->status) }}
-                                            </span>
+                                            @if($peserta->pendaftaran->status == 'submit')
+                                                <span class="badge badge-light-success fw-bolder px-4 py-3">Proses Verifikasi</span>
+                                            @elseif($peserta->pendaftaran->status == 'verifikasi')
+                                                <span class="badge badge-light-primary fw-bolder px-4 py-3">Terverifikasi</span>
+                                            @elseif($peserta->pendaftaran->status == 'diterima')
+                                                <span class="badge badge-light-success fw-bolder px-4 py-3">Diterima</span>
+                                            @elseif($peserta->pendaftaran->status == 'ditolak')
+                                                <span class="badge badge-light-danger fw-bolder px-4 py-3">Ditolak</span>
+                                            @endif
                                         </div>
                                         <div class="fw-bold text-muted text-center fs-7">Status</div>
                                     </div>
@@ -81,7 +92,13 @@
                                     <div class="fw-bolder mt-5">NISN</div>
                                     <div class="text-gray-600">{{ $peserta->nisn }}</div>
                                     <div class="fw-bolder mt-5">Gender</div>
-                                    <div class="text-gray-600">{{ $peserta->jenis_kelamin }}</div>
+                                    <div class="text-gray-600">
+                                        @if($peserta->jenis_kelamin == 'L')
+                                            Laki-laki
+                                        @else
+                                            Perempuan
+                                        @endif
+                                    </div>
                                     <div class="fw-bolder mt-5">Tempat/Tgl Lahir</div>
                                     <div class="text-gray-600">
                                         {{ $peserta->tempat_lahir }}, {{ \Carbon\Carbon::parse($peserta->tanggal_lahir)->isoFormat('D MMMM YYYY') }}
@@ -322,6 +339,23 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
+    function confirmSetuju(id) {
+        Swal.fire({
+            title: 'Konfirmasi Verifikasi',
+            text: "Apakah Anda yakin ingin menyetujui dan memverifikasi pendaftaran ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Setujui!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-setuju-verifikasi-' + id).submit();
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const lat = {{ $peserta->latitude }};
         const lng = {{ $peserta->longitude }};

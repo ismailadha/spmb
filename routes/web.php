@@ -12,6 +12,7 @@ use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\WilayahController;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
@@ -69,12 +70,16 @@ Route::middleware('auth')->group(function () {
         Route::get('peserta/sd', [PesertaController::class, 'peserta_sd'])->name('peserta.sd');
         Route::get('peserta/smp', [PesertaController::class, 'peserta_smp'])->name('peserta.smp');
         Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
+        Route::post('peserta/{id}/setuju-verifikasi', [VerifikasiController::class, 'setuju_verifikasi'])->name('peserta.verifikasi.setuju');
         Route::resource('peserta', PesertaController::class);
 
         // kelulusan
         Route::get('kelulusan/sd', [KelulusanController::class, 'kelulusan_sd'])->name('kelulusan.sd');
         Route::get('kelulusan/smp', [KelulusanController::class, 'kelulusan_smp'])->name('kelulusan.smp');
     });
+
+    // Route berkas bisa diakses oleh admin dan peserta
+    Route::get('/pendaftaran/berkas/{id}', [PendaftaranController::class, 'showBerkas'])->name('pendaftaran.berkas.show');
 
     Route::middleware('role:peserta')->group(function () {
 
@@ -88,7 +93,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
             Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
             Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
-            Route::get('/berkas/{id}', [PendaftaranController::class, 'showBerkas'])->name('pendaftaran.berkas.show');
         });
     });
 
