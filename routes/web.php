@@ -75,7 +75,11 @@ Route::middleware('auth')->group(function () {
 
         // kelulusan
         Route::get('kelulusan/sd', [KelulusanController::class, 'kelulusan_sd'])->name('kelulusan.sd');
+        Route::get('kelulusan/sd/data', [KelulusanController::class, 'data_sd'])->name('kelulusan.sd.data');
+        Route::post('kelulusan/sd/sahkan', [KelulusanController::class, 'sahkan_sd'])->name('kelulusan.sd.sahkan');
         Route::get('kelulusan/smp', [KelulusanController::class, 'kelulusan_smp'])->name('kelulusan.smp');
+        Route::get('kelulusan/smp/data', [KelulusanController::class, 'data_smp'])->name('kelulusan.smp.data');
+        Route::post('kelulusan/smp/sahkan', [KelulusanController::class, 'sahkan_smp'])->name('kelulusan.smp.sahkan');
     });
 
     // Route berkas bisa diakses oleh admin dan peserta
