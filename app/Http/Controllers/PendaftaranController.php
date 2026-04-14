@@ -71,7 +71,7 @@ class PendaftaranController extends Controller
                     ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
                     ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
                     ->where('peserta.user_id', Auth::id())
-                    ->where('pendaftaran.status', 'submit')
+                    ->where('pendaftaran.id', $pendaftaran->id)
                     ->select(
                         'pendaftaran.id',
                         'pendaftaran.status',

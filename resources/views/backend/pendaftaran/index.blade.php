@@ -11,7 +11,7 @@
         @endif
     </div>
 
-    @if ($pendaftaran && $pendaftaran->status == 'submit')
+    @if ($pendaftaran && $pendaftaran->status != 'draft')
         <!--begin::Navbar-->
         <div class="card mb-5 mb-xl-10">
             <div class="card-body pt-9 pb-0">
