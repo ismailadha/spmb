@@ -68,7 +68,7 @@ class PendaftaranController extends Controller
                     ->join('desa', 'peserta.desa_id', '=', 'desa.id')
                     ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
                     ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
-                    ->join('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+                    ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
                     ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
                     ->where('peserta.user_id', Auth::id())
                     ->where('pendaftaran.status', 'submit')
@@ -573,7 +573,7 @@ class PendaftaranController extends Controller
             ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
-            ->join('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+            ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
             ->where('pendaftaran.id', $id)
             ->where('pendaftaran.status', 'submit')
             ->select(

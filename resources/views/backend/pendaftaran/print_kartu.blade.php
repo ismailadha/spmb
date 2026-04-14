@@ -1,3 +1,7 @@
+@php
+    $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
+    $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -94,7 +98,7 @@
         }
         .signature {
             text-align: center;
-            width: 200px;
+            width: 280px;
         }
         .signature-space {
             height: 60px;
@@ -126,13 +130,21 @@
     <button class="print-btn" onclick="window.print()">Cetak Sekarang</button>
 
     <div class="card-container">
-        <div class="header">
-            <h1>Sistem Penerimaan Murid Baru</h1>
-            <h2>Dinas Pendidikan dan Kebudayaan Kota Lhokseumawe</h2>
-            <p>Tahun Ajaran {{ $pendaftaran->tahun_ajaran ?? date('Y').'/'.(date('Y')+1) }}</p>
+        <div class="header" style="display: flex; align-items: center; padding-bottom: 15px;">
+            <div style="flex: 0 0 180px; text-align: center;">
+                <img src="{{ $logoUrl }}" alt="Logo" style="max-height: 130px; max-width: 100%;">
+            </div>
+            <div style="flex: 1; text-align: center; padding-left: 20px;">
+                <h1 style="font-size: 18px;">{{ strtoupper($appConfig['nama_sistem'] ?? 'Sistem Penerimaan Murid Baru') }}</h1>
+                <h2 style="font-size: 16px;">{{ strtoupper($appConfig['nama_instansi'] ?? 'Dinas Pendidikan') }}</h2>
+                <p style="font-size: 12px; margin-top: 3px;">{{ $appConfig['alamat'] ?? '' }} | Telp: {{ $appConfig['telepon'] ?? '-' }} | Email: {{ $appConfig['email_resmi'] ?? '-' }}</p>
+            </div>
         </div>
 
         <div class="content">
+            {{-- Kartu Pendaftaran --}}
+
+
             <div class="registration-number">
                 <h3>NOMOR PENDAFTARAN</h3>
                 <div>{{ $pendaftaran->nomor_pendaftaran }}</div>
@@ -165,6 +177,11 @@
                     <td style="font-weight: bold;">{{ strtoupper($pendaftaran->nama_jalur) }}</td>
                 </tr>
                 <tr>
+                    <td class="label">Tahun Ajaran</td>
+                    <td class="separator">:</td>
+                    <td>{{ $pendaftaran->tahun_ajaran ?? '-' }}</td>
+                </tr>
+                <tr>
                     <td class="label">Pilihan Sekolah 1</td>
                     <td class="separator">:</td>
                     <td>{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</td>
@@ -182,8 +199,8 @@
             </table>
 
             <div class="footer">
-                <div class="qr-placeholder">
-                    QR CODE<br>VERIFIKASI
+                <div>
+                    {!! QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran) !!}
                 </div>
                 <div class="signature">
                     <p>Kota Lhokseumawe, {{ \Carbon\Carbon::now()->isoFormat('D MMMM YYYY') }}</p>
