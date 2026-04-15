@@ -375,7 +375,7 @@
                                 @if($berkas->where('jenis_berkas', 'pasfoto')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'pasfoto')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -388,7 +388,7 @@
                                 @if($berkas->where('jenis_berkas', 'akta_lahir')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'akta_lahir')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -404,7 +404,7 @@
                                 @if($berkas->where('jenis_berkas', 'kk')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'kk')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -417,7 +417,7 @@
                                 @if($berkas->where('jenis_berkas', 'ktp_orang_tua')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'ktp_orang_tua')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -433,7 +433,7 @@
                                 @if($berkas->where('jenis_berkas', 'kartu_pkh')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'kartu_pkh')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -446,7 +446,7 @@
                                 @if($berkas->where('jenis_berkas', 'surat_dokter')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'surat_dokter')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -459,7 +459,7 @@
                                 @if($berkas->where('jenis_berkas', 'surat_pindah')->first())
                                     <div class="mt-2">
                                         <small class="text-primary fw-bold">
-                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                            <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                             <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'surat_pindah')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                         </small>
                                     </div>
@@ -470,10 +470,6 @@
                         <div class="row mb-4">
                             <div class="col-md-6" id="prestasi_akademik_container" style="display: none;">
                                 <h5 class="mb-3">Dokumen Prestasi Akademik (Jalur Prestasi)</h5>
-                                <div class="mb-3">
-                                    <label for="nilai_tka" class="form-label">Nilai TKA</label>
-                                    <input type="number" class="form-control" id="nilai_tka" name="nilai_tka" placeholder="Masukkan Nilai TKA">
-                                </div>
                                 <div>
                                     <label for="dokumen_tka" class="form-label">Dokumen Hasil Tes TKA</label>
                                     <input type="file" class="form-control" id="dokumen_tka" name="dokumen_tka">
@@ -481,7 +477,7 @@
                                     @if($berkas->where('jenis_berkas', 'dokumen_tka')->first())
                                         <div class="mt-2">
                                             <small class="text-primary fw-bold">
-                                                <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                                <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                                 <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'dokumen_tka')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                             </small>
                                         </div>
@@ -490,10 +486,6 @@
                             </div>
                             <div class="col-md-6" id="prestasi_nonakademik_container" style="display: none;">
                                 <h5 class="mb-3">Dokumen Prestasi Non-Akademik (Jalur Prestasi)</h5>
-                                <div class="mb-3">
-                                    <label for="nama_perlombaan" class="form-label">Nama Perlombaan</label>
-                                    <input type="text" class="form-control" id="nama_perlombaan" name="nama_perlombaan" placeholder="Masukkan Nama Perlombaan">
-                                </div>
                                 <div>
                                     <label for="sertifikat_penghargaan" class="form-label">Sertifikat Penghargaan</label>
                                     <input type="file" class="form-control" id="sertifikat_penghargaan" name="sertifikat_penghargaan">
@@ -501,7 +493,7 @@
                                     @if($berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first())
                                         <div class="mt-2">
                                             <small class="text-primary fw-bold">
-                                                <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah. 
+                                                <i class="fa fa-check-circle text-primary"></i> Berkas sudah diunggah.
                                                 <a href="{{ route('pendaftaran.berkas.show', $berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first()->id) }}" target="_blank" class="text-decoration-underline">Lihat Berkas</a>
                                             </small>
                                         </div>
@@ -839,7 +831,7 @@
                                 <p class="mb-0">Dinas Pendidikan dan Kebudayaan Kota Lhokseumawe</p>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-8">
                                 <table class="table table-borderless gy-2">
@@ -911,7 +903,7 @@
             // -- Leaflet Map Initialization --
             let defaultLat = 5.179858; // Islamic Center Lhokseumawe
             let defaultLng = 97.141969; // Islamic Center Lhokseumawe
-            
+
             const latInput = document.getElementById('latitude');
             const lngInput = document.getElementById('longitude');
 
@@ -989,7 +981,7 @@
             const hasSuratPindah = {{ $berkas->where('jenis_berkas', 'surat_pindah')->first() ? 'true' : 'false' }};
             const hasPrestasiAkd = {{ $berkas->where('jenis_berkas', 'dokumen_tka')->first() ? 'true' : 'false' }};
             const hasPrestasiNon = {{ $berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first() ? 'true' : 'false' }};
-            
+
             function toggleDokumen() {
                 const kartuPkhContainer = document.getElementById('kartu_pkh_container');
                 const suratDokterContainer = document.getElementById('surat_dokter_container');
@@ -1004,8 +996,6 @@
                 document.getElementById('surat_pindah').required = false;
                 if(document.getElementById('dokumen_tka')) document.getElementById('dokumen_tka').required = false;
                 if(document.getElementById('sertifikat_penghargaan')) document.getElementById('sertifikat_penghargaan').required = false;
-                if(document.getElementById('nilai_tka')) document.getElementById('nilai_tka').required = false;
-                if(document.getElementById('nama_perlombaan')) document.getElementById('nama_perlombaan').required = false;
 
                 let selectedText = '';
                 if (jalur.selectedIndex !== -1) {
@@ -1033,19 +1023,17 @@
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'none';
-                    
+
                     if(prestasiAkademikContainer) {
                         prestasiAkademikContainer.style.display = 'block';
                         if (!hasPrestasiAkd) {
                             document.getElementById('dokumen_tka').required = true;
-                            document.getElementById('nilai_tka').required = true;
                         }
                     }
                     if(prestasiNonakademikContainer) {
                         prestasiNonakademikContainer.style.display = 'block';
                         if (!hasPrestasiNon) {
                             document.getElementById('sertifikat_penghargaan').required = true;
-                            document.getElementById('nama_perlombaan').required = true;
                         }
                     }
                 } else {
@@ -1138,7 +1126,7 @@
             if (provinsiSelect) {
                 provinsiSelect.addEventListener('change', function() {
                     const provinsiId = this.value;
-                    
+
                     // Reset children
                     kabupatenSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
                     kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
@@ -1164,7 +1152,7 @@
             if (kabupatenSelect) {
                 kabupatenSelect.addEventListener('change', function() {
                     const kabupatenId = this.value;
-                    
+
                     // Reset children
                     kecamatanSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
                     desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
@@ -1189,7 +1177,7 @@
             if (kecamatanSelect) {
                 kecamatanSelect.addEventListener('change', function() {
                     const kecamatanId = this.value;
-                    
+
                     // Reset children
                     desaSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
 
@@ -1250,7 +1238,7 @@
                 // Get display texts instead of values where applicable
                 const jalurText = jalur.options[jalur.selectedIndex] ? jalur.options[jalur.selectedIndex].text : '-';
                 const jenjangVal = document.getElementById('jenjang').value || '-';
-                
+
                 const sekolah1Text = sekolahPilihan1.options[sekolahPilihan1.selectedIndex] ? sekolahPilihan1.options[sekolahPilihan1.selectedIndex].text : '-';
                 const sekolah2Text = sekolahPilihan2.options[sekolahPilihan2.selectedIndex] ? sekolahPilihan2.options[sekolahPilihan2.selectedIndex].text : '-';
 
@@ -1259,12 +1247,12 @@
                 document.getElementById('sum-jenjang').innerText = jenjangVal;
                 document.getElementById('sum-sekolah1').innerText = sekolah1Text;
                 document.getElementById('sum-jarak1').innerText = (document.getElementById('jarak_sekolah_1').value ? document.getElementById('jarak_sekolah_1').value + ' km' : '-');
-                
+
                 // Summary Pilihan 2 (Only if Domisili)
                 const sumSekolah2Row = document.getElementById('sum-sekolah2-row');
                 const sumJarak2Row = document.getElementById('sum-jarak2-row');
                 const sumSep2 = document.getElementById('sum-sep2');
-                
+
                 if (jalurText.toLowerCase().includes('domisili')) {
                     if(sumSekolah2Row) sumSekolah2Row.style.display = 'flex';
                     if(sumJarak2Row) sumJarak2Row.style.display = 'flex';
@@ -1280,20 +1268,20 @@
                 document.getElementById('sum-nama').innerText = document.getElementById('nama_lengkap').value || '-';
                 document.getElementById('sum-nik').innerText = document.getElementById('nik').value || '-';
                 document.getElementById('sum-nisn').innerText = document.getElementById('nisn').value || '-';
-                
+
                 const jk = document.getElementById('jenis_kelamin').value === 'L' ? 'Laki-laki' : (document.getElementById('jenis_kelamin').value === 'P' ? 'Perempuan' : '-');
                 document.getElementById('sum-jk-agama').innerText = `${jk} / ${document.getElementById('agama').value || '-'}`;
-                
+
                 document.getElementById('sum-ttl').innerText = `${document.getElementById('tempat_lahir').value || '-'}, ${document.getElementById('tanggal_lahir').value || '-'}`;
                 document.getElementById('sum-kk').innerText = document.getElementById('nomor_kk').value || '-';
                 document.getElementById('sum-tgl-kk').innerText = document.getElementById('tanggal_kk').value || '-';
                 document.getElementById('sum-alamat').innerText = document.getElementById('alamat').value || '-';
-                
+
                 const provText = provinsiSelect.options[provinsiSelect.selectedIndex] ? provinsiSelect.options[provinsiSelect.selectedIndex].text : '-';
                 const kabText = kabupatenSelect.options[kabupatenSelect.selectedIndex] ? kabupatenSelect.options[kabupatenSelect.selectedIndex].text : '-';
                 const kecText = kecamatanSelect.options[kecamatanSelect.selectedIndex] ? kecamatanSelect.options[kecamatanSelect.selectedIndex].text : '-';
                 const desaText = desaSelect.options[desaSelect.selectedIndex] ? desaSelect.options[desaSelect.selectedIndex].text : '-';
-                
+
                 document.getElementById('sum-provinsi').innerText = provText;
                 document.getElementById('sum-wilayah').innerText = `${kabText} / ${kecText} / ${desaText}`;
 
@@ -1309,7 +1297,7 @@
             if (btnPreview) {
                 btnPreview.addEventListener('click', function() {
                     populateSummary(); // Ensure data is up to date
-                    
+
                     // Fill Modal
                     document.getElementById('pre-jalur').innerText = document.getElementById('sum-jalur').innerText;
                     document.getElementById('pre-nama').innerText = document.getElementById('sum-nama').innerText;
@@ -1319,7 +1307,7 @@
                     document.getElementById('pre-jk').innerText = document.getElementById('sum-jk-agama').innerText.split(' / ')[0];
                     document.getElementById('pre-sekolah1').innerText = document.getElementById('sum-sekolah1').innerText;
                     document.getElementById('pre-jarak1').innerText = document.getElementById('sum-jarak1').innerText;
-                    
+
                     const preSekolah2Row = document.getElementById('pre-sekolah2-row');
                     if (document.getElementById('sum-jalur').innerText.toLowerCase().includes('domisili')) {
                         if(preSekolah2Row) preSekolah2Row.style.display = 'table-row';
@@ -1452,7 +1440,7 @@
                         optionsHTML2 += `<optgroup label="Kecamatan ${kecamatan}">`;
                         sekolahData[jenjang][kecamatan].forEach(sekolah => {
                             optionsHTML1 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
-                            
+
                             // Jika sekolah tidak di-set hanya untuk pilihan 1
                             if (sekolah.status_pilihan_1 != 1) {
                                 optionsHTML2 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
@@ -1464,7 +1452,7 @@
                 }
                 sekolahPilihan1.innerHTML = optionsHTML1;
                 sekolahPilihan2.innerHTML = optionsHTML2;
-                
+
                 // Refresh Select2 if applicable
                 if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
                     $(sekolahPilihan1).trigger('change');
@@ -1477,10 +1465,10 @@
             if (jenjangSelect) {
                 jenjangSelect.addEventListener('change', function() {
                     renderSekolah(this.value);
-                    
+
                     // Sesuaikan penegasan validasi di JS
                     if (sekolahPilihan1) sekolahPilihan1.required = true;
-                    
+
                     // Pilihan 2 hanya required jika jalur Domisili
                     const selectedText = jalur.options[jalur.selectedIndex] ? jalur.options[jalur.selectedIndex].text.toLowerCase() : '';
                     if (sekolahPilihan2) {
@@ -1495,10 +1483,10 @@
                 // Initial load
                 if (jenjangSelect.value) {
                     renderSekolah(jenjangSelect.value);
-                    
+
                     // Sesuaikan penegasan validasi di JS
                     if (sekolahPilihan1) sekolahPilihan1.required = true;
-                    
+
                     // Pilihan 2 hanya required jika jalur Domisili
                     const selectedText = jalur.options[jalur.selectedIndex] ? jalur.options[jalur.selectedIndex].text.toLowerCase() : '';
                     if (sekolahPilihan2) {
@@ -1508,7 +1496,7 @@
                     @if ($mode == 'edit')
                         const selectedSekolah1 = "{{ $data->sekolah_pilihan_1 ?? '' }}";
                         const selectedSekolah2 = "{{ $data->sekolah_pilihan_2 ?? '' }}";
-                        
+
                         if (selectedSekolah1) {
                             sekolahPilihan1.value = selectedSekolah1;
                         }
@@ -1526,11 +1514,11 @@
             Array.prototype.slice.call(forms).forEach(function (form) {
                 form.addEventListener('submit', function (event) {
                     const isDraft = event.submitter && event.submitter.value === 'draft';
-                    
+
                     // Reset visual validation state
                     form.classList.remove('was-validated');
                     form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-                    
+
                     let isValid = true;
                     if (isDraft) {
                         // Minimal validation for Draft: Jalur, Jenjang, Nama, NIK, NISN, Wilayah
@@ -1550,7 +1538,7 @@
                     if (!isValid) {
                         event.preventDefault()
                         event.stopPropagation()
-                        
+
                         // Temukan tab pertama yang memiliki error dan pindah ke sana
                         const firstInvalid = form.querySelector(':invalid, .is-invalid');
                         if (firstInvalid) {
@@ -1560,7 +1548,7 @@
                                 if (tabTrigger) {
                                     const tab = new bootstrap.Tab(tabTrigger);
                                     tab.show();
-                                    
+
                                     // Beri sedikit delay agar transisi tab selesai sebelum scroll
                                     setTimeout(() => {
                                         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1572,7 +1560,7 @@
 
                         // Show error alert
                         Swal.fire({
-                            text: isDraft 
+                            text: isDraft
                                 ? "Mohon lengkapi data minimal (Pilihan Sekolah 1, Jalur, Jenjang, Identitas & Wilayah) sebelum simpan sebagai draft."
                                 : "Mohon lengkapi seluruh field yang wajib diisi. Silakan periksa kembali pada setiap tab sebelumnya.",
                             icon: "error",
@@ -1587,14 +1575,14 @@
                         if (!isDraft) {
                             form.classList.add('was-validated');
                         }
-                        
+
                         return;
                     }
 
                     // If valid and submit button clicked, show confirmation
                     if (event.submitter && event.submitter.value === 'submit') {
                         event.preventDefault(); // Stop normal submission to show Swal
-                        
+
                         Swal.fire({
                             title: "Konfirmasi Pendaftaran",
                             html: "Saya menyatakan bahwa seluruh data yang diisikan adalah benar dan dapat dipertanggungjawabkan sesuai ketentuan yang berlaku.<br><br><b>Perhatian:</b> Data yang sudah di-submit tidak dapat diubah kembali.",
@@ -1614,7 +1602,7 @@
                                 hiddenInput.name = 'status';
                                 hiddenInput.value = 'submit';
                                 form.appendChild(hiddenInput);
-                                
+
                                 form.submit(); // Bypass listener and native submit
                             }
                         });

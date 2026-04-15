@@ -110,7 +110,7 @@ class KelulusanController extends Controller
                 $counter++;
                 if ($quota > 0) {
                     if ($counter <= $quota) {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lolos</span>';
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
                     } else {
                         return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Cadangan</span>';
                     }
@@ -237,7 +237,7 @@ class KelulusanController extends Controller
                 $counter++;
                 if ($quota > 0) {
                     if ($counter <= $quota) {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lolos</span>';
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
                     } else {
                         return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Cadangan</span>';
                     }

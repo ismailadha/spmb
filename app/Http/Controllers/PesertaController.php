@@ -260,9 +260,45 @@ class PesertaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Peserta $peserta)
+    public function show($id)
     {
-        //
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->leftJoin('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
+            ->leftJoin('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
+            ->leftJoin('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
+            ->leftJoin('desa', 'peserta.desa_id', '=', 'desa.id')
+            ->leftJoin('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
+            ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
+            ->leftJoin('orang_tua_wali', 'orang_tua_wali.peserta_id', '=', 'peserta.id')
+            ->where('pendaftaran.id', $id)
+            ->select(
+                'pendaftaran.*',
+                'peserta.*',
+                'provinsi.nama_provinsi',
+                'kabupaten.nama_kabupaten',
+                'kecamatan.nama_kecamatan',
+                'desa.nama_desa',
+                'jalur_pendaftaran.nama_jalur',
+                'sek1.nama_sekolah as pilihan_1',
+                'sek2.nama_sekolah as pilihan_2',
+                'orang_tua_wali.nama_wali',
+                'orang_tua_wali.alamat_wali',
+                'orang_tua_wali.pekerjaan_wali',
+                'orang_tua_wali.no_hp'
+            )
+            ->first();
+
+        if (! $pendaftaran) {
+            abort(404);
+        }
+
+        $berkas = DB::table('berkas_pendaftaran')
+            ->where('pendaftaran_id', $id)
+            ->get();
+
+        return view('backend.pendaftaran.detail', compact('pendaftaran', 'berkas'));
     }
 
     /**

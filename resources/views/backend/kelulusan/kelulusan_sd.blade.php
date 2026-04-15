@@ -20,31 +20,35 @@
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
-                <div class="d-flex align-items-center">
-                    <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
-                    <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px me-5" data-control="select2" data-placeholder="Semua Sekolah">
-                        <option value="">Semua Sekolah</option>
-                        @foreach($semuaSekolah as $s)
-                            <option value="{{ $s->id }}">{{ $s->nama_sekolah }}</option>
-                        @endforeach
-                    </select>
+                <div class="d-flex align-items-center flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
+                        <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px me-5" data-control="select2" data-placeholder="Semua Sekolah">
+                            <option value="">Semua Sekolah</option>
+                            @foreach($semuaSekolah as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama_sekolah }}</option>
+                            @endforeach
+                        </select>
 
-                    <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
-                    <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px me-5">
-                        <option value="">Semua Jalur</option>
-                        @foreach($semuaJalur as $j)
-                            <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
-                        @endforeach
-                    </select>
+                        <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
+                        <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px me-5">
+                            <option value="">Semua Jalur</option>
+                            @foreach($semuaJalur as $j)
+                                <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
+                            @endforeach
+                        </select>
 
-                    <div id="container_filter_pilihan" style="display: none;">
-                        <div class="d-flex align-items-center">
-                            <label for="filter_pilihan" class="me-2 fw-bold text-muted">Urutan:</label>
-                            <select id="filter_pilihan" class="form-select form-select-sm form-select-solid w-150px">
-                                <option value="1" selected>Pilihan 1</option>
-                                <option value="2">Pilihan 2</option>
-                            </select>
+                        <div id="container_filter_pilihan" style="display: none;">
+                            <div class="d-flex align-items-center">
+                                <label for="filter_pilihan" class="me-2 fw-bold text-muted">Urutan:</label>
+                                <select id="filter_pilihan" class="form-select form-select-sm form-select-solid w-150px">
+                                    <option value="1" selected>Pilihan 1</option>
+                                    <option value="2">Pilihan 2</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <button id="bulk-luluskan" type="button" class="btn btn-sm btn-primary" disabled>Luluskan</button>
                     </div>
                 </div>
             </div>
@@ -68,6 +72,9 @@
                 <!--begin::Table head-->
                 <thead>
                     <tr class="text-start text-dark-400 fw-bolder fs-7 text-uppercase gs-0">
+                        <th class="w-10px pe-2 text-center">
+                            <input type="checkbox" id="select_all" />
+                        </th>
                         <th class="w-10px pe-2">No</th>
                         <th class="min-w-125px">No. Pendaftaran</th>
                         <th class="min-w-150px">Nama Lengkap</th>
@@ -76,7 +83,6 @@
                         <th class="min-w-100px">Jarak 1 (km)</th>
                         <th class="min-w-150px col-pilihan2">Pilihan 2</th>
                         <th class="min-w-100px col-jarak2">Jarak 2 (km)</th>
-                        <th class="text-end min-w-70px">Actions</th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
@@ -119,15 +125,31 @@ $(document).ready(function() {
             }
         },
         columns: [
+            {
+                data: 'pendaftaran_id',
+                name: 'pendaftaran_id',
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                width: '20px',
+                render: function(data, type) {
+                    return '<input type="checkbox" class="row-checkbox" data-id="' + data + '">';
+                }
+            },
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
-            { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
+            {
+                data: 'nomor_pendaftaran',
+                name: 'nomor_pendaftaran',
+                render: function(data, type, row) {
+                    return '<a href="' + '{{ url("peserta/detail") }}/' + row.pendaftaran_id + '" target="_blank" class="text-primary fw-semibold">' + data + '</a>';
+                }
+            },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
             { data: 'hasil', name: 'hasil', className: 'text-center' },
             { data: 'pilihan_1', name: 'pilihan_1' },
             { data: 'jarak_sekolah_1', name: 'jarak_sekolah_1' },
             { data: 'pilihan_2', name: 'pilihan_2' },
-            { data: 'jarak_sekolah_2', name: 'jarak_sekolah_2' },
-            { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
+            { data: 'jarak_sekolah_2', name: 'jarak_sekolah_2' }
         ],
         language: {
             "emptyTable": "Tidak ada data yang tersedia",
@@ -148,7 +170,9 @@ $(document).ready(function() {
         },
         drawCallback: function(settings) {
             adjustColumnsVisibility();
-            
+            $('#select_all').prop('checked', false);
+            updateBulkButton();
+
             // Update Quota Info
             var json = table.ajax.json();
             if (json && json.quota > 0) {
@@ -158,20 +182,75 @@ $(document).ready(function() {
             } else {
                 $('#quota_info_container').attr('style', 'display: none !important;');
             }
+
+            // Hide bulk button if no data
+            if (json && json.recordsFiltered === 0) {
+                $('#bulk-luluskan').hide();
+            } else {
+                $('#bulk-luluskan').show();
+            }
         }
     });
 
     function adjustColumnsVisibility() {
         var jalurId = $('#filter_jalur').val();
         var pilihanKe = $('#filter_pilihan').val();
-        
+
         // Pilihan 2 columns are only visible if:
         // 1. Path is Domisili (1) AND Choice filter is Pilihan 2
         var showPilihan2 = (jalurId == '1' && pilihanKe == '2');
-        
-        table.column(5).visible(showPilihan2);
+
         table.column(6).visible(showPilihan2);
+        table.column(7).visible(showPilihan2);
     }
+
+    function updateBulkButton() {
+        var selectedCount = $('.row-checkbox:checked').length;
+        $('#bulk-luluskan').prop('disabled', selectedCount === 0);
+    }
+
+    $('#select_all').on('change', function() {
+        var checked = $(this).is(':checked');
+        $('.row-checkbox').prop('checked', checked);
+        updateBulkButton();
+    });
+
+    $(document).on('change', '.row-checkbox', function() {
+        var totalRows = $('.row-checkbox').length;
+        var checkedRows = $('.row-checkbox:checked').length;
+        $('#select_all').prop('checked', totalRows > 0 && totalRows === checkedRows);
+        updateBulkButton();
+    });
+
+    $('#bulk-luluskan').on('click', function() {
+        var selectedIds = $('.row-checkbox:checked').map(function() {
+            return $(this).data('id');
+        }).get();
+
+        if (selectedIds.length === 0) {
+            return;
+        }
+
+        Swal.fire({
+            title: 'Luluskan peserta terpilih?',
+            text: 'Anda akan meluluskan ' + selectedIds.length + ' peserta.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Luluskan!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: 'btn fw-bold btn-primary',
+                cancelButton: 'btn fw-bold btn-active-light-primary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('Bulk luluskan peserta:', selectedIds);
+                // Future implementation: kirim selectedIds ke server untuk diproses
+            }
+        });
+    });
 
     function adjustFiltersVisibility() {
         var jalurId = $('#filter_jalur').val();
@@ -198,7 +277,7 @@ $(document).ready(function() {
     $(document).on('click', '.btn-luluskan', function(e) {
         e.preventDefault();
         var id = $(this).data('id');
-        
+
         Swal.fire({
             title: 'Apakah hasil ini sudah benar?',
             text: "Anda akan meluluskan peserta ini!",
@@ -244,7 +323,7 @@ $(document).ready(function() {
             }
         });
     @endif
-    
+
     $('#filter_sekolah, #filter_jalur').change(function() {
         $('#kt_table_kelulusan').DataTable().ajax.reload();
     });

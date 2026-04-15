@@ -6,7 +6,6 @@ use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PeriodeDaftarController;
 use App\Http\Controllers\PesertaController;
-// use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
@@ -71,6 +70,7 @@ Route::middleware('auth')->group(function () {
         Route::get('peserta/smp', [PesertaController::class, 'peserta_smp'])->name('peserta.smp');
         Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
         Route::post('peserta/{id}/setuju-verifikasi', [VerifikasiController::class, 'setuju_verifikasi'])->name('peserta.verifikasi.setuju');
+        Route::get('peserta/detail/{id}', [PesertaController::class, 'show'])->name('peserta.detail');
         Route::resource('peserta', PesertaController::class);
 
         // kelulusan
