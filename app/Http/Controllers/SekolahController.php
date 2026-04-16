@@ -19,7 +19,10 @@ class SekolahController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Sekolah::select('*');
+            $data = Sekolah::query();
+            if (auth()->user()->role == 'admin_sekolah') {
+                $data->where('id', auth()->user()->sekolah_id);
+            }
 
             return DataTables::of($data)
                 ->addIndexColumn()

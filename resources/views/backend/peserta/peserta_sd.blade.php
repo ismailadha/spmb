@@ -31,10 +31,20 @@
                     </select>
 
                     <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
-                    <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px">
+                    <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px me-5">
                         <option value="">Semua Jalur</option>
                         @foreach($semuaJalur as $j)
                             <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
+                        @endforeach
+                    </select>
+
+                    <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
+                    <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
+                        @if(auth()->user()->role != 'admin_sekolah')
+                            <option value="">Semua Sekolah</option>
+                        @endif
+                        @foreach($semuaSekolah as $s)
+                            <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -94,6 +104,7 @@ $(document).ready(function() {
             data: function (d) {
                 d.periode_id = $('#filter_periode').val();
                 d.jalur_id = $('#filter_jalur').val();
+                d.sekolah_id = $('#filter_sekolah').val();
             }
         },
         columns: [
@@ -174,7 +185,7 @@ $(document).ready(function() {
         });
     @endif
     
-    $('#filter_periode, #filter_jalur').change(function() {
+    $('#filter_periode, #filter_jalur, #filter_sekolah').change(function() {
         $('#kt_table_peserta').DataTable().ajax.reload();
     });
 });

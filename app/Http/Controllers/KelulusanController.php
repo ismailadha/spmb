@@ -18,7 +18,11 @@ class KelulusanController extends Controller
             ->first();
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
-        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SD')->get();
+        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SD')
+            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+                return $query->where('id', auth()->user()->sekolah_id);
+            })
+            ->get();
 
         return view('backend.kelulusan.kelulusan_sd', compact('periode', 'semuaJalur', 'semuaSekolah'));
     }
@@ -35,6 +39,11 @@ class KelulusanController extends Controller
         $periodeId = $periode->id ?? null;
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+
+        if (auth()->user()->role == 'admin_sekolah') {
+            $sekolahId = auth()->user()->sekolah_id;
+        }
+
         $pilihanKe = $request->get('pilihan_ke');
 
         $data = DB::table('pendaftaran')
@@ -145,7 +154,11 @@ class KelulusanController extends Controller
             ->first();
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
-        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SMP')->get();
+        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SMP')
+            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+                return $query->where('id', auth()->user()->sekolah_id);
+            })
+            ->get();
 
         return view('backend.kelulusan.kelulusan_smp', compact('periode', 'semuaJalur', 'semuaSekolah'));
     }
@@ -162,6 +175,11 @@ class KelulusanController extends Controller
         $periodeId = $periode->id ?? null;
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+
+        if (auth()->user()->role == 'admin_sekolah') {
+            $sekolahId = auth()->user()->sekolah_id;
+        }
+
         $pilihanKe = $request->get('pilihan_ke');
 
         $data = DB::table('pendaftaran')

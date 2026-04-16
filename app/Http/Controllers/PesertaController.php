@@ -31,10 +31,20 @@ class PesertaController extends Controller
             ->get();
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
+        $semuaSekolah = DB::table('sekolah')
+            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+                return $query->where('id', auth()->user()->sekolah_id);
+            })
+            ->get();
 
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
             $jalurId = $request->get('jalur_id');
+            $sekolahId = $request->get('sekolah_id');
+
+            if (auth()->user()->role == 'admin_sekolah') {
+                $sekolahId = auth()->user()->sekolah_id;
+            }
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -42,6 +52,12 @@ class PesertaController extends Controller
                 ->where('pendaftaran.periode_id', $periodeId)
                 ->when($jalurId, function ($query, $jalurId) {
                     return $query->where('pendaftaran.jalur_id', $jalurId);
+                })
+                ->when($sekolahId, function ($query, $sekolahId) {
+                    return $query->where(function ($q) use ($sekolahId) {
+                        $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                            ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    });
                 })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
@@ -88,7 +104,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.index', compact('periode', 'semuaPeriode', 'semuaJalur'));
+        return view('backend.peserta.index', compact('periode', 'semuaPeriode', 'semuaJalur', 'semuaSekolah'));
     }
 
     /**
@@ -105,10 +121,20 @@ class PesertaController extends Controller
             ->get();
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
+        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SD')
+            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+                return $query->where('id', auth()->user()->sekolah_id);
+            })
+            ->get();
 
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
             $jalurId = $request->get('jalur_id');
+            $sekolahId = $request->get('sekolah_id');
+
+            if (auth()->user()->role == 'admin_sekolah') {
+                $sekolahId = auth()->user()->sekolah_id;
+            }
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -117,6 +143,12 @@ class PesertaController extends Controller
                 ->where('pendaftaran.jenjang', 'SD')
                 ->when($jalurId, function ($query, $jalurId) {
                     return $query->where('pendaftaran.jalur_id', $jalurId);
+                })
+                ->when($sekolahId, function ($query, $sekolahId) {
+                    return $query->where(function ($q) use ($sekolahId) {
+                        $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                            ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    });
                 })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
@@ -163,7 +195,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.peserta_sd', compact('periode', 'semuaPeriode', 'semuaJalur'));
+        return view('backend.peserta.peserta_sd', compact('periode', 'semuaPeriode', 'semuaJalur', 'semuaSekolah'));
     }
 
     /**
@@ -180,10 +212,20 @@ class PesertaController extends Controller
             ->get();
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
+        $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SMP')
+            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+                return $query->where('id', auth()->user()->sekolah_id);
+            })
+            ->get();
 
         if ($request->ajax()) {
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
             $jalurId = $request->get('jalur_id');
+            $sekolahId = $request->get('sekolah_id');
+
+            if (auth()->user()->role == 'admin_sekolah') {
+                $sekolahId = auth()->user()->sekolah_id;
+            }
 
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -192,6 +234,12 @@ class PesertaController extends Controller
                 ->where('pendaftaran.jenjang', 'SMP')
                 ->when($jalurId, function ($query, $jalurId) {
                     return $query->where('pendaftaran.jalur_id', $jalurId);
+                })
+                ->when($sekolahId, function ($query, $sekolahId) {
+                    return $query->where(function ($q) use ($sekolahId) {
+                        $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                            ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                    });
                 })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
@@ -238,7 +286,7 @@ class PesertaController extends Controller
                 ->make(true);
         }
 
-        return view('backend.peserta.peserta_smp', compact('periode', 'semuaPeriode', 'semuaJalur'));
+        return view('backend.peserta.peserta_smp', compact('periode', 'semuaPeriode', 'semuaJalur', 'semuaSekolah'));
     }
 
     /**

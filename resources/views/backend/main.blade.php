@@ -150,6 +150,7 @@
 										<span class="menu-arrow"></span>
 									</span>
 									<div class="menu-sub menu-sub-accordion menu-active-bg">
+										@if(auth()->user()->role == 'admin_dinas' || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah?->jenjang == 'SD'))
 										<div class="menu-item">
 											<a class="menu-link @yield('peserta-sd-menu-active')" href="{{ route('peserta.sd') }}">
 												<span class="menu-bullet">
@@ -158,6 +159,8 @@
 												<span class="menu-title">SD</span>
 											</a>
 										</div>
+										@endif
+										@if(auth()->user()->role == 'admin_dinas' || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah?->jenjang == 'SMP'))
 										<div class="menu-item">
 											<a class="menu-link @yield('peserta-smp-menu-active')" href="{{ route('peserta.smp') }}">
 												<span class="menu-bullet">
@@ -166,6 +169,7 @@
 												<span class="menu-title">SMP</span>
 											</a>
 										</div>
+										@endif
 									</div>
 								</div>
 								<div class="menu-item">
@@ -187,6 +191,7 @@
 										<span class="menu-arrow"></span>
 									</span>
 									<div class="menu-sub menu-sub-accordion menu-active-bg">
+										@if(auth()->user()->role == 'admin_dinas' || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah?->jenjang == 'SD'))
 										<div class="menu-item">
 											<a class="menu-link @yield('kelulusan-sd-menu-active')" href="{{ route('kelulusan.sd') }}">
 												<span class="menu-bullet">
@@ -195,6 +200,8 @@
 												<span class="menu-title">SD</span>
 											</a>
 										</div>
+										@endif
+										@if(auth()->user()->role == 'admin_dinas' || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah?->jenjang == 'SMP'))
 										<div class="menu-item">
 											<a class="menu-link @yield('kelulusan-smp-menu-active')" href="{{ route('kelulusan.smp') }}">
 												<span class="menu-bullet">
@@ -203,6 +210,7 @@
 												<span class="menu-title">SMP</span>
 											</a>
 										</div>
+										@endif
 									</div>
 								</div>
                                 <div class="menu-item">

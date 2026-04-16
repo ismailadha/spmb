@@ -24,13 +24,15 @@
                     <button id="bulk-luluskan" type="button" class="btn btn-sm btn-primary" disabled>Luluskan</button>
 
                     <div class="d-flex align-items-center">
-                        <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
-                        <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px me-5" data-control="select2" data-placeholder="Semua Sekolah">
-                            <option value="">Semua Sekolah</option>
-                            @foreach($semuaSekolah as $s)
-                                <option value="{{ $s->id }}">{{ $s->nama_sekolah }}</option>
-                            @endforeach
-                        </select>
+                         <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
+                         <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px me-5" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
+                             @if(auth()->user()->role != 'admin_sekolah')
+                                 <option value="">Semua Sekolah</option>
+                             @endif
+                             @foreach($semuaSekolah as $s)
+                                 <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
+                             @endforeach
+                         </select>
 
                         <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
                         <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px me-5">
