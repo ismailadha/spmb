@@ -72,6 +72,9 @@
                             <!--end::User-->
                             <!--begin::Actions-->
                             <div class="d-flex my-4">
+                                <a href="{{ route('pendaftaran.download', $pendaftaran->id) }}" class="btn btn-sm btn-success me-2">
+                                    <i class="bi bi-file-earmark-pdf fs-4 me-1"></i>Download PDF
+                                </a>
                                 <a href="{{ route('pendaftaran.print', $pendaftaran->id) }}" target="_blank" class="btn btn-sm btn-primary me-2">
                                     <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu
                                 </a>

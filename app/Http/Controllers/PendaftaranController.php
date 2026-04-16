@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Konfigurasi;
 use App\Models\Pendaftaran;
 use App\Models\Peserta;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -608,7 +610,12 @@ class PendaftaranController extends Controller
             return back()->with('error', 'Nomor pendaftaran belum tersedia. Silakan hubungi admin.');
         }
 
-        return view('backend.pendaftaran.print_kartu', compact('pendaftaran'));
+        $pasfoto = DB::table('berkas_pendaftaran')
+            ->where('pendaftaran_id', $id)
+            ->where('jenis_berkas', 'pasfoto')
+            ->first();
+
+        return view('backend.pendaftaran.print_kartu', compact('pendaftaran', 'pasfoto'));
     }
 
     public function getSekolahByJalur($jalur_id)
@@ -722,5 +729,76 @@ class PendaftaranController extends Controller
         // if (Auth::id() !== $pendaftaran->user_id && !Auth::user()->isAdmin()) abort(403);
 
         return response()->file(storage_path('app/'.$berkas->file_path));
+    }
+
+    public function downloadPdf($id)
+    {
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+            ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+            ->where('pendaftaran.id', $id)
+            ->whereIn('pendaftaran.status', ['submit', 'verifikasi', 'lulus'])
+            ->select(
+                'pendaftaran.nomor_pendaftaran',
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.jalur_id',
+                'pendaftaran.jenjang',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'peserta.nisn',
+                'peserta.nama_lengkap',
+                'peserta.tempat_lahir',
+                'peserta.tanggal_lahir',
+                'peserta.jenis_kelamin',
+                'periode_pendaftaran.id as periode_id',
+                'periode_pendaftaran.tahun_ajaran',
+                'jalur_pendaftaran.id as jalur_id',
+                'jalur_pendaftaran.nama_jalur',
+                'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
+                'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
+            )
+            ->first();
+
+        if (! $pendaftaran) {
+            abort(404);
+        }
+
+        $appConfig = Konfigurasi::pluck('nilai', 'kunci')->toArray();
+
+        // Convert logo to base64 for PDF compatibility
+        $logoBase64 = null;
+        if (! empty($appConfig['logo_path']) && File::exists(public_path($appConfig['logo_path']))) {
+            $logoData = File::get(public_path($appConfig['logo_path']));
+            $logoType = File::extension(public_path($appConfig['logo_path']));
+            $logoBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
+        }
+
+        // Fetch pasfoto and convert to base64 for PDF compatibility
+        $pasfotoBase64 = null;
+        $pasfoto = DB::table('berkas_pendaftaran')
+            ->where('pendaftaran_id', $id)
+            ->where('jenis_berkas', 'pasfoto')
+            ->first();
+
+        if ($pasfoto && File::exists(storage_path('app/'.$pasfoto->file_path))) {
+            $pasfotoData = File::get(storage_path('app/'.$pasfoto->file_path));
+            $pasfotoType = File::extension(storage_path('app/'.$pasfoto->file_path));
+            $pasfotoBase64 = 'data:image/'.$pasfotoType.';base64,'.base64_encode($pasfotoData);
+        }
+
+        $pdf = Pdf::loadView('backend.pendaftaran.print_kartu', [
+            'pendaftaran' => $pendaftaran,
+            'isPdf' => true,
+            'logoBase64' => $logoBase64,
+            'pasfotoBase64' => $pasfotoBase64,
+        ]);
+
+        // Set paper size to A4
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download('Kartu-Pendaftaran-'.$pendaftaran->nomor_pendaftaran.'.pdf');
     }
 }
