@@ -23,7 +23,7 @@
                 <a href="{{ route('peserta.sd') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
                 <button class="btn btn-sm btn-danger me-3">Tolak Pendaftaran</button>
                 @if($peserta->pendaftaran)
-                <form id="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}" action="{{ route('peserta.verifikasi.setuju', $peserta->pendaftaran->id) }}" method="POST" style="display: none;">
+                <form id="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}" action="{{ route('peserta.verifikasi.setuju', $peserta->pendaftaran->id) }}" method="POST">
                     @csrf
                 </form>
                 <button type="button" class="btn btn-sm btn-primary" onclick="confirmSetuju({{ $peserta->pendaftaran->id }})">Setujui & Verifikasi</button>
@@ -168,6 +168,48 @@
                             </div>
                         </div>
                     </div>
+                    
+                    @if($peserta->pendaftaran->jalur_id == 3)
+                    <div class="card mb-5 mb-xl-10">
+                        <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_penilaian_details" aria-expanded="true" aria-controls="kt_penilaian_details">
+                            <div class="card-title m-0">
+                                <h3 class="fw-bolder m-0">Penilaian Jalur Prestasi</h3>
+                            </div>
+                        </div>
+                        <div id="kt_penilaian_details" class="collapse show">
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-7">
+                                    <label class="col-lg-4 fw-bold text-muted">Rata-rata Rapor (NR)</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" step="0.01" class="form-control form-control-solid input-penilaian" name="rata_rapor" id="rata_rapor" placeholder="0.00" value="{{ $peserta->pendaftaran->nilaiSeleksi->rata_rapor ?? '' }}" form="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}">
+                                        <div class="text-muted fs-7 mt-1">Bobot: 40% (NR)</div>
+                                    </div>
+                                </div>
+                                <div class="row mb-7">
+                                    <label class="col-lg-4 fw-bold text-muted">Nilai Tes Akademik (NHTKA)</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" step="0.01" class="form-control form-control-solid input-penilaian" name="nilai_tes_akademik" id="nilai_tes_akademik" placeholder="0.00" value="{{ $peserta->pendaftaran->nilaiSeleksi->nilai_tes_akademik ?? '' }}" form="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}">
+                                        <div class="text-muted fs-7 mt-1">Bobot: 30% (NHTKA)</div>
+                                    </div>
+                                </div>
+                                <div class="row mb-7">
+                                    <label class="col-lg-4 fw-bold text-muted">Nilai Prestasi (NP)</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" step="0.01" class="form-control form-control-solid input-penilaian" name="nilai_prestasi" id="nilai_prestasi" placeholder="0.00" value="{{ $peserta->pendaftaran->nilaiSeleksi->nilai_prestasi ?? '' }}" form="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}">
+                                        <div class="text-muted fs-7 mt-1">Bobot: 30% (NP)</div>
+                                    </div>
+                                </div>
+                                <div class="row mb-7">
+                                    <label class="col-lg-4 fw-bold text-muted">Nilai Akhir (NA)</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control form-control-solid bg-light" id="nilai_akhir" readonly value="{{ $peserta->pendaftaran->nilaiSeleksi->nilai_akhir ?? '0.00' }}">
+                                        <div class="text-muted fs-7 mt-1">Formula: (NR * 40%) + (NHTKA * 30%) + (NP * 30%)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     <div class="card mb-5 mb-xl-10">
                         <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_alamat_details" aria-expanded="true" aria-controls="kt_alamat_details">
@@ -381,6 +423,29 @@
                 map.setView([lat, lng], 15);
             }
         });
+    });
+
+    // Real-time calculation for Jalur Prestasi
+    document.addEventListener('DOMContentLoaded', function() {
+        const nrInput = document.getElementById('rata_rapor');
+        const nhtkaInput = document.getElementById('nilai_tes_akademik');
+        const npInput = document.getElementById('nilai_prestasi');
+        const naInput = document.getElementById('nilai_akhir');
+
+        if (nrInput && nhtkaInput && npInput) {
+            function calculateNA() {
+                const nr = parseFloat(nrInput.value) || 0;
+                const nhtka = parseFloat(nhtkaInput.value) || 0;
+                const np = parseFloat(npInput.value) || 0;
+
+                const na = (nr * 0.4) + (nhtka * 0.3) + (np * 0.3);
+                naInput.value = na.toFixed(2);
+            }
+
+            nrInput.addEventListener('input', calculateNA);
+            nhtkaInput.addEventListener('input', calculateNA);
+            npInput.addEventListener('input', calculateNA);
+        }
     });
 </script>
 @endsection
