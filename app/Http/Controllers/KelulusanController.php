@@ -109,11 +109,13 @@ class KelulusanController extends Controller
                 ->orderBy('total_skor', 'desc');
         } elseif (in_array($jalurId, [2, 4])) {
             // Afirmasi (2) & Mutasi (4) SD: Age then Distance
-            $data->orderBy('peserta.tanggal_lahir', 'asc')
+            $data->selectRaw("NULL as skor_jarak, NULL as skor_usia, NULL as total_skor")
+                ->orderBy('peserta.tanggal_lahir', 'asc')
                 ->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
         } else {
             // Standard: Distance then Age
-            $data->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+            $data->selectRaw("NULL as skor_jarak, NULL as skor_usia, NULL as total_skor")
+                ->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
                 ->orderBy('peserta.tanggal_lahir', 'asc');
         }
 
@@ -268,7 +270,8 @@ class KelulusanController extends Controller
                 ->orderBy('total_skor', 'desc');
         } else {
             // All other SMP paths: Distance then Age
-            $data->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+            $data->selectRaw("NULL as skor_jarak, NULL as skor_usia, NULL as total_skor")
+                ->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
                 ->orderBy('peserta.tanggal_lahir', 'asc');
         }
 

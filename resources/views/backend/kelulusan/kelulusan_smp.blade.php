@@ -91,7 +91,7 @@
                 </div>
                 <!--end::Wrapper-->
                 <!--begin::Close-->
-                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" onclick="$('#scoring_info_container').attr('style', 'display: none !important;')">
                     <span class="svg-icon svg-icon-1 svg-icon-info">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
@@ -182,7 +182,9 @@ $(document).ready(function() {
                 className: 'text-center',
                 width: '20px',
                 render: function(data, type) {
-                    return '<input type="checkbox" class="row-checkbox" data-id="' + data + '">';
+                    var jalurId = $('#filter_jalur').val();
+                    var disabled = !jalurId ? 'disabled' : '';
+                    return '<input type="checkbox" class="row-checkbox" data-id="' + data + '" ' + disabled + '>';
                 }
             },
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
@@ -238,9 +240,9 @@ $(document).ready(function() {
             // Update Scoring Info Visibility
             var jalurId = $('#filter_jalur').val();
             if (jalurId == '1') {
-                $('#scoring_info_container').fadeIn();
+                $('#scoring_info_container').attr('style', 'display: flex !important;');
             } else {
-                $('#scoring_info_container').hide();
+                $('#scoring_info_container').attr('style', 'display: none !important;');
             }
  
             // Hide bulk button if no data
@@ -271,8 +273,19 @@ $(document).ready(function() {
     }
 
     function updateBulkButton() {
+        var jalurId = $('#filter_jalur').val();
         var selectedCount = $('.row-checkbox:checked').length;
-        $('#bulk-luluskan').prop('disabled', selectedCount === 0);
+
+        if (!jalurId) {
+            $('#bulk-luluskan').prop('disabled', true);
+            $('#select_all').prop('disabled', true);
+            $('.row-checkbox').prop('checked', false).prop('disabled', true);
+            $('#select_all').prop('checked', false);
+        } else {
+            $('#select_all').prop('disabled', false);
+            $('.row-checkbox').prop('disabled', false);
+            $('#bulk-luluskan').prop('disabled', selectedCount === 0);
+        }
     }
 
     $('#select_all').on('change', function() {
