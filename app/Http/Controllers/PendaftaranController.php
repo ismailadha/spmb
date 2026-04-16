@@ -575,7 +575,8 @@ class PendaftaranController extends Controller
             ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
             ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
             ->where('pendaftaran.id', $id)
-            ->where('pendaftaran.status', 'submit')
+            // where status submit atau verifikasi atau lulus
+            ->whereIn('pendaftaran.status', ['submit', 'verifikasi', 'lulus'])
             ->select(
                 'pendaftaran.nomor_pendaftaran',
                 'pendaftaran.tanggal_daftar',

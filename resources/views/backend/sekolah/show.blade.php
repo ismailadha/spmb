@@ -32,7 +32,7 @@
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <a href="{{ route('sekolah.edit', $sekolah->id) }}" class="btn btn-primary">Edit</a>
-                <a href="{{ route('sekolah.index') }}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ $sekolah->jenjang == 'SD' ? route('sekolah.sd') : ($sekolah->jenjang == 'SMP' ? route('sekolah.smp') : route('sekolah.index')) }}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
         <!--end::Card header-->

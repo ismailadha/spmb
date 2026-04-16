@@ -26,6 +26,7 @@ class Sekolah extends Model
         'latitude',
         'longitude',
         'status_perbatasan',
+        'status_unggulan',
         'status_pilihan_1',
         'daya_tampung_prestasi',
         'daya_tampung_domisili',

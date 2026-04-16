@@ -20,6 +20,7 @@ class KonfigurasiController extends Controller
         // Validasi data input
         $validated = $request->validate([
             'logo_path' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'favicon' => 'nullable|image|mimes:png,jpg,jpeg,ico|max:1024',
             'nama_sistem' => 'required|string|min:3|max:255',
             'nama_instansi' => 'required|string|min:3|max:255',
             'email_resmi' => 'required|email',
@@ -51,6 +52,29 @@ class KonfigurasiController extends Controller
             $data['logo_path'] = 'images/logo/'.$filename;
         } else {
             unset($data['logo_path']);
+        }
+
+        // Handle favicon file upload
+        if ($request->hasFile('favicon')) {
+            // Hapus favicon yang lama jika ada
+            $oldFavicon = Konfigurasi::where('kunci', 'favicon')->value('nilai');
+            if ($oldFavicon && file_exists(public_path($oldFavicon))) {
+                unlink(public_path($oldFavicon));
+            }
+
+            // Buat directory jika belum ada
+            $logoDir = public_path('images/logo');
+            if (! file_exists($logoDir)) {
+                mkdir($logoDir, 0755, true);
+            }
+
+            // Upload file baru
+            $file = $request->file('favicon');
+            $filename = 'favicon_'.time().'_'.$file->getClientOriginalName();
+            $file->move($logoDir, $filename);
+            $data['favicon'] = 'images/logo/'.$filename;
+        } else {
+            unset($data['favicon']);
         }
 
         // Update konfigurasi menggunakan query builder

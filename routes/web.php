@@ -63,6 +63,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:admin_dinas,admin_sekolah')->group(function () {
         // sekolah
+        Route::get('sekolah/sd', [SekolahController::class, 'sekolah_sd'])->name('sekolah.sd');
+        Route::get('sekolah/smp', [SekolahController::class, 'sekolah_smp'])->name('sekolah.smp');
         Route::resource('sekolah', SekolahController::class);
 
         // peserta

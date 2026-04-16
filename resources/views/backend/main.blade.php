@@ -9,7 +9,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="csrf-token" content="{{ csrf_token() }}" />
-		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+		<link rel="shortcut icon" href="{{ !empty($appConfig['favicon']) ? asset($appConfig['favicon']) : asset('assets/media/logos/favicon.ico') }}" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -218,20 +218,42 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Informasi Sekolah</span>
 									</div>
 								</div>
-								<div class="menu-item">
-									<a class="menu-link @yield('sekolah-menu-active')" href="{{ route('sekolah.index') }}">
+								{{-- Sekolah: SD, SMP --}}
+								<div data-kt-menu-trigger="click" class="menu-item here @yield('sekolah-menu-open') menu-accordion">
+									<span class="menu-link">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
-                                                <span class="svg-icon svg-icon-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                        <path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor"/>
-                                                        <rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor"/>
-                                                    </svg>
-                                                </span>
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="currentColor" />
+													<path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001Z" fill="currentColor" />
+												</svg>
 											</span>
 										</span>
 										<span class="menu-title">Data Sekolah</span>
-									</a>
+										<span class="menu-arrow"></span>
+									</span>
+									<div class="menu-sub menu-sub-accordion menu-active-bg">
+										@if(auth()->user()->role == 'admin_dinas' || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah?->jenjang == 'SD'))
+										<div class="menu-item">
+											<a class="menu-link @yield('sekolah-sd-menu-active')" href="{{ route('sekolah.sd') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">SD</span>
+											</a>
+										</div>
+										@endif
+										@if(auth()->user()->role == 'admin_dinas' || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah?->jenjang == 'SMP'))
+										<div class="menu-item">
+											<a class="menu-link @yield('sekolah-smp-menu-active')" href="{{ route('sekolah.smp') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">SMP</span>
+											</a>
+										</div>
+										@endif
+									</div>
 								</div>
 								@endif
 								@if(auth()->user()->role == 'admin_dinas')

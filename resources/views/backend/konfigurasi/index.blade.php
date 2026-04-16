@@ -63,6 +63,34 @@
                     </div>
                 </div>
 
+                <!-- Favicon -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Favicon Sistem</label>
+                    <div class="col-lg-8">
+
+                        <!-- Upload area -->
+                        <div id="favicon-upload-container">
+                            <div id="favicon-preview-container" class="mb-4 d-none">
+                                <img id="favicon-preview" src="" alt="Preview Favicon" style="max-height: 50px; max-width: 100%; object-fit: contain;">
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-sm btn-danger" id="remove-favicon-btn">
+                                        <i class="ki-duotone ki-trash fs-4">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        Hapus Favicon
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="favicon-upload-prompt">
+                                <input type="file" name="favicon" id="favicon-input" class="form-control form-control-lg" accept=".png, .jpg, .jpeg, .ico" />
+                                <div class="form-text mt-2">Format: PNG, JPG, JPEG, ICO • Maksimal 1MB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Nama Sistem -->
                 <div class="row mb-6">
                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Nama Sistem</label>
@@ -143,15 +171,30 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Logo variables
     const fileInput = document.getElementById('logo-input');
     const previewContainer = document.getElementById('logo-preview-container');
     const uploadPrompt = document.getElementById('logo-upload-prompt');
     const logoPreview = document.getElementById('logo-preview');
     const removeLogoBtn = document.getElementById('remove-logo-btn');
+
+    // Favicon variables
+    const faviconInput = document.getElementById('favicon-input');
+    const faviconPreviewContainer = document.getElementById('favicon-preview-container');
+    const faviconUploadPrompt = document.getElementById('favicon-upload-prompt');
+    const faviconPreview = document.getElementById('favicon-preview');
+    const removeFaviconBtn = document.getElementById('remove-favicon-btn');
+
     const form = document.getElementById('kt_konfigurasi_form');
     const resetBtn = document.getElementById('btn-reset');
+
+    // Logo state
     let hasExistingLogo = false;
     let existingLogoUrl = '';
+
+    // Favicon state
+    let hasExistingFavicon = false;
+    let existingFaviconUrl = '';
 
     // Check if logo already exists
     @if (!empty($konfigurasi['logo_path']))
@@ -162,35 +205,46 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadPrompt.classList.add('d-none');
     @endif
 
-    // File input change
-    fileInput.addEventListener('change', handleFileSelect);
+    // Check if favicon already exists
+    @if (!empty($konfigurasi['favicon']))
+        hasExistingFavicon = true;
+        existingFaviconUrl = '{{ asset($konfigurasi['favicon']) }}';
+        faviconPreview.src = existingFaviconUrl;
+        faviconPreviewContainer.classList.remove('d-none');
+        faviconUploadPrompt.classList.add('d-none');
+    @endif
 
-    function handleFileSelect() {
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
+    // Logo input change
+    fileInput.addEventListener('change', () => handleFileSelect(fileInput, logoPreview, previewContainer, uploadPrompt, 'image/png', 'image/jpeg', 'image/jpg'));
+
+    // Favicon input change
+    faviconInput.addEventListener('change', () => handleFileSelect(faviconInput, faviconPreview, faviconPreviewContainer, faviconUploadPrompt, 'image/png', 'image/jpeg', 'image/jpg', 'image/x-icon', 'image/vnd.microsoft.icon'));
+
+    function handleFileSelect(input, preview, container, prompt, ...allowedTypes) {
+        if (input.files.length > 0) {
+            const file = input.files[0];
 
             // Validate file type
-            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-            if (!allowedTypes.includes(file.type)) {
-                alert('Format file tidak valid. Gunakan PNG atau JPG.');
-                fileInput.value = '';
+            if (allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
+                alert('Format file tidak valid.');
+                input.value = '';
                 return;
             }
 
-            // Validate file size (2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran file tidak boleh lebih dari 2MB.');
-                fileInput.value = '';
+            // Validate file size (2MB for logo, 1MB for favicon)
+            const maxSize = (input.id === 'logo-input') ? 2 * 1024 * 1024 : 1 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('Ukuran file tidak boleh lebih dari ' + (maxSize / 1024 / 1024) + 'MB.');
+                input.value = '';
                 return;
             }
 
             // Show preview
             const reader = new FileReader();
             reader.onload = (e) => {
-                logoPreview.src = e.target.result;
-                previewContainer.classList.remove('d-none');
-                uploadPrompt.classList.add('d-none');
-                hasExistingLogo = false;
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+                prompt.classList.add('d-none');
             };
             reader.readAsDataURL(file);
         }
@@ -205,12 +259,22 @@ document.addEventListener('DOMContentLoaded', function() {
         logoPreview.src = '';
     });
 
+    // Remove favicon
+    removeFaviconBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        faviconInput.value = '';
+        faviconPreviewContainer.classList.add('d-none');
+        faviconUploadPrompt.classList.remove('d-none');
+        faviconPreview.src = '';
+    });
+
     // Reset button - clear form
     resetBtn.addEventListener('click', function() {
         form.reset();
         fileInput.value = '';
+        faviconInput.value = '';
 
-        // Reset logo display based on existing logo
+        // Reset logo display
         if (hasExistingLogo) {
             logoPreview.src = existingLogoUrl;
             previewContainer.classList.remove('d-none');
@@ -219,6 +283,17 @@ document.addEventListener('DOMContentLoaded', function() {
             previewContainer.classList.add('d-none');
             uploadPrompt.classList.remove('d-none');
             logoPreview.src = '';
+        }
+
+        // Reset favicon display
+        if (hasExistingFavicon) {
+            faviconPreview.src = existingFaviconUrl;
+            faviconPreviewContainer.classList.remove('d-none');
+            faviconUploadPrompt.classList.add('d-none');
+        } else {
+            faviconPreviewContainer.classList.add('d-none');
+            faviconUploadPrompt.classList.remove('d-none');
+            faviconPreview.src = '';
         }
 
         form.classList.remove('was-validated');

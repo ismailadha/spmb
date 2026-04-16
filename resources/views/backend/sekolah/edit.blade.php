@@ -211,6 +211,7 @@
                     </div>
                 </div>
 
+                @if(auth()->user()->role == 'admin_dinas')
                 <!-- Status Perbatasan & Status Unggulan -->
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -231,12 +232,13 @@
                         <small class="text-muted">Aktifkan untuk menjadikan sebagai Sekolah Pilihan 1. (Jika dimatikan, akan menjadi Pilihan 2)</small>
                     </div>
                 </div>
+                @endif
 
                 <!-- Buttons -->
                 <div class="row">
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">Update</button>
-                        <a href="{{ route('sekolah.index') }}" class="btn btn-secondary">Cancel</a>
+                        <a href="{{ $sekolah->jenjang == 'SD' ? route('sekolah.sd') : ($sekolah->jenjang == 'SMP' ? route('sekolah.smp') : route('sekolah.index')) }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
             </form>

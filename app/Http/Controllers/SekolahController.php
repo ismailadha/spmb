@@ -84,6 +84,126 @@ class SekolahController extends Controller
         return view('backend.sekolah.index');
     }
 
+    public function sekolah_sd(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Sekolah::where('jenjang', 'SD');
+            if (auth()->user()->role == 'admin_sekolah') {
+                $data->where('id', auth()->user()->sekolah_id);
+            }
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('sekolah_info', function ($row) {
+                    return '
+                        <div class="d-flex flex-column">
+                            <a href="'.route('sekolah.show', $row->id).'" class="text-gray-800 text-hover-primary mb-1 fw-bolder">'.$row->nama_sekolah.'</a>
+                            <div class="d-flex align-items-center">
+                                <span class="badge badge-light-success fs-9 px-2 py-1 me-2">'.$row->jenjang.'</span>
+                                <span class="text-muted fs-7">NPSN: '.$row->npsn.'</span>
+                            </div>
+                        </div>
+                    ';
+                })
+                ->addColumn('total_daya_tampung', function ($row) {
+                    return $row->total_daya_tampung;
+                })
+                ->addColumn('status_pilihan_1', function ($row) {
+                    if ($row->status_pilihan_1 == 1) {
+                        return '<span class="badge badge-light-primary fw-bolder">Pilihan 1</span>';
+                    } elseif ($row->status_pilihan_1 == 0 && $row->status_pilihan_1 !== null) {
+                        return '<span class="badge badge-light-secondary fw-bolder">Pilihan 2</span>';
+                    } else {
+                        return '<span class="badge badge-light text-dark">-</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    return '
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.route('sekolah.show', $row->id).'">View</a></li>
+                                <li><a class="dropdown-item" href="'.route('sekolah.edit', $row->id).'">Edit</a></li>
+                                <li>
+                                    <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
+                                        '.csrf_field().'
+                                        '.method_field('DELETE').'
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->nama_sekolah.'">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    ';
+                })
+                ->rawColumns(['sekolah_info', 'status_pilihan_1', 'action'])
+                ->make(true);
+        }
+
+        return view('backend.sekolah.sekolah_sd');
+    }
+
+    public function sekolah_smp(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Sekolah::where('jenjang', 'SMP');
+            if (auth()->user()->role == 'admin_sekolah') {
+                $data->where('id', auth()->user()->sekolah_id);
+            }
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('sekolah_info', function ($row) {
+                    return '
+                        <div class="d-flex flex-column">
+                            <a href="'.route('sekolah.show', $row->id).'" class="text-gray-800 text-hover-primary mb-1 fw-bolder">'.$row->nama_sekolah.'</a>
+                            <div class="d-flex align-items-center">
+                                <span class="badge badge-light-info fs-9 px-2 py-1 me-2">'.$row->jenjang.'</span>
+                                <span class="text-muted fs-7">NPSN: '.$row->npsn.'</span>
+                            </div>
+                        </div>
+                    ';
+                })
+                ->addColumn('total_daya_tampung', function ($row) {
+                    return $row->total_daya_tampung;
+                })
+                ->addColumn('status_pilihan_1', function ($row) {
+                    if ($row->status_pilihan_1 == 1) {
+                        return '<span class="badge badge-light-primary fw-bolder">Pilihan 1</span>';
+                    } elseif ($row->status_pilihan_1 == 0 && $row->status_pilihan_1 !== null) {
+                        return '<span class="badge badge-light-secondary fw-bolder">Pilihan 2</span>';
+                    } else {
+                        return '<span class="badge badge-light text-dark">-</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    return '
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.route('sekolah.show', $row->id).'">View</a></li>
+                                <li><a class="dropdown-item" href="'.route('sekolah.edit', $row->id).'">Edit</a></li>
+                                <li>
+                                    <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
+                                        '.csrf_field().'
+                                        '.method_field('DELETE').'
+                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->nama_sekolah.'">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    ';
+                })
+                ->rawColumns(['sekolah_info', 'status_pilihan_1', 'action'])
+                ->make(true);
+        }
+
+        return view('backend.sekolah.sekolah_smp');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -144,9 +264,15 @@ class SekolahController extends Controller
                 $data['thumbnail'] = 'uploads/sekolah/'.$filename;
             }
 
-            DB::table('sekolah')->insert($data);
+            $sekolah = Sekolah::create($data);
 
-            return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil ditambahkan');
+            $route = match ($sekolah->jenjang) {
+                'SD' => 'sekolah.sd',
+                'SMP' => 'sekolah.smp',
+                default => 'sekolah.index',
+            };
+
+            return redirect()->route($route)->with('success', 'Sekolah berhasil ditambahkan');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Gagal menambahkan sekolah: '.$e->getMessage());
         }
@@ -235,7 +361,13 @@ class SekolahController extends Controller
 
             DB::table('sekolah')->where('id', $sekolah->id)->update($data);
 
-            return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil diupdate');
+            $route = match ($sekolah->fresh()->jenjang) {
+                'SD' => 'sekolah.sd',
+                'SMP' => 'sekolah.smp',
+                default => 'sekolah.index',
+            };
+
+            return redirect()->route($route)->with('success', 'Sekolah berhasil diupdate');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Gagal mengupdate sekolah: '.$e->getMessage());
         }
@@ -252,9 +384,16 @@ class SekolahController extends Controller
                 unlink(public_path($sekolah->thumbnail));
             }
 
+            $jenjang = $sekolah->jenjang;
             $sekolah->delete();
 
-            return redirect()->route('sekolah.index')->with('success', 'Sekolah berhasil dihapus');
+            $route = match ($jenjang) {
+                'SD' => 'sekolah.sd',
+                'SMP' => 'sekolah.smp',
+                default => 'sekolah.index',
+            };
+
+            return redirect()->route($route)->with('success', 'Sekolah berhasil dihapus');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menghapus sekolah: '.$e->getMessage());
         }

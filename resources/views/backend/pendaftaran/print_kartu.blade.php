@@ -200,7 +200,7 @@
 
             <div class="footer">
                 <div>
-                    {{-- {!! QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran) !!} --}}
+                    {!! QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran) !!}
                 </div>
                 <div class="signature">
                     <p>Kota Lhokseumawe, {{ \Carbon\Carbon::now()->isoFormat('D MMMM YYYY') }}</p>
