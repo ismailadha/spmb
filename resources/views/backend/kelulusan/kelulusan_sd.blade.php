@@ -60,7 +60,7 @@
         <!--begin::Card body-->
 		<div class="card-body py-4">
             <!--begin::Information-->
-            <div class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5 mb-5">
+            <div id="scoring_info_container" class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5 mb-5" style="display: none;">
                 <!--begin::Icon-->
                 <span class="svg-icon svg-icon-2hx svg-icon-info me-4 mb-5 mb-sm-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -235,6 +235,14 @@ $(document).ready(function() {
                 $('#quota_info_container').attr('style', 'display: none !important;');
             }
 
+            // Update Scoring Info Visibility
+            var jalurId = $('#filter_jalur').val();
+            if (jalurId == '1') {
+                $('#scoring_info_container').fadeIn();
+            } else {
+                $('#scoring_info_container').hide();
+            }
+ 
             // Hide bulk button if no data
             if (json && json.recordsFiltered === 0) {
                 $('#bulk-luluskan').hide();
@@ -247,6 +255,12 @@ $(document).ready(function() {
     function adjustColumnsVisibility() {
         var jalurId = $('#filter_jalur').val();
         var pilihanKe = $('#filter_pilihan').val();
+
+        // Scoring columns (4, 5, 6) are ONLY visible if Jalur Domisili (1)
+        var isDomisili = (jalurId == '1');
+        table.column(4).visible(isDomisili);
+        table.column(5).visible(isDomisili);
+        table.column(6).visible(isDomisili);
 
         // Pilihan 2 columns are only visible if:
         // 1. Path is Domisili (1) AND Choice filter is Pilihan 2

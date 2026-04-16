@@ -90,6 +90,7 @@ class KelulusanController extends Controller
                 'pendaftaran.nomor_pendaftaran',
                 'peserta.nama_lengkap',
                 'peserta.tanggal_lahir',
+                'jalur_pendaftaran.id as jalur_id',
                 'jalur_pendaftaran.nama_jalur',
                 'pendaftaran.jenjang',
                 'pendaftaran.status',
@@ -97,11 +98,24 @@ class KelulusanController extends Controller
                 'pendaftaran.jarak_sekolah_1',
                 'sek2.nama_sekolah as pilihan_2',
                 'pendaftaran.jarak_sekolah_2'
-            )
-            ->selectRaw("$skorJarakSql as skor_jarak")
-            ->selectRaw("$skorUsiaSql as skor_usia")
-            ->selectRaw("($skorJarakSql + $skorUsiaSql) as total_skor")
-            ->orderBy('total_skor', 'desc');
+            );
+
+        // Conditional Ranking & Scoring
+        if ($jalurId == 1) {
+            // Domisili: Score Based
+            $data->selectRaw("$skorJarakSql as skor_jarak")
+                ->selectRaw("$skorUsiaSql as skor_usia")
+                ->selectRaw("($skorJarakSql + $skorUsiaSql) as total_skor")
+                ->orderBy('total_skor', 'desc');
+        } elseif (in_array($jalurId, [2, 4])) {
+            // Afirmasi (2) & Mutasi (4) SD: Age then Distance
+            $data->orderBy('peserta.tanggal_lahir', 'asc')
+                ->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
+        } else {
+            // Standard: Distance then Age
+            $data->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+                ->orderBy('peserta.tanggal_lahir', 'asc');
+        }
 
         $quota = 0;
         if ($sekolahId && $jalurId) {
@@ -235,6 +249,7 @@ class KelulusanController extends Controller
                 'pendaftaran.nomor_pendaftaran',
                 'peserta.nama_lengkap',
                 'peserta.tanggal_lahir',
+                'jalur_pendaftaran.id as jalur_id',
                 'jalur_pendaftaran.nama_jalur',
                 'pendaftaran.jenjang',
                 'pendaftaran.status',
@@ -242,11 +257,20 @@ class KelulusanController extends Controller
                 'pendaftaran.jarak_sekolah_1',
                 'sek2.nama_sekolah as pilihan_2',
                 'pendaftaran.jarak_sekolah_2'
-            )
-            ->selectRaw("$skorJarakSql as skor_jarak")
-            ->selectRaw("$skorUsiaSql as skor_usia")
-            ->selectRaw("($skorJarakSql + $skorUsiaSql) as total_skor")
-            ->orderBy('total_skor', 'desc');
+            );
+
+        // Conditional Ranking & Scoring
+        if ($jalurId == 1) {
+            // Domisili: Score Based
+            $data->selectRaw("$skorJarakSql as skor_jarak")
+                ->selectRaw("$skorUsiaSql as skor_usia")
+                ->selectRaw("($skorJarakSql + $skorUsiaSql) as total_skor")
+                ->orderBy('total_skor', 'desc');
+        } else {
+            // All other SMP paths: Distance then Age
+            $data->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+                ->orderBy('peserta.tanggal_lahir', 'asc');
+        }
 
         $quota = 0;
         if ($sekolahId && $jalurId) {
