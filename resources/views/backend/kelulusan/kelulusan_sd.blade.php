@@ -59,6 +59,50 @@
         <!--end::Card header-->
         <!--begin::Card body-->
 		<div class="card-body py-4">
+            <!--begin::Information-->
+            <div class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5 mb-5">
+                <!--begin::Icon-->
+                <span class="svg-icon svg-icon-2hx svg-icon-info me-4 mb-5 mb-sm-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"></rect>
+                        <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"></rect>
+                        <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"></rect>
+                    </svg>
+                </span>
+                <!--end::Icon-->
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-column pe-0 pe-sm-10">
+                    <!--begin::Title-->
+                    <h5 class="mb-1 text-info">Informasi Perhitungan Skor</h5>
+                    <!--end::Title-->
+                    <!--begin::Content-->
+                    <div class="fs-7">
+                        Urutan peringkat ditentukan oleh <strong>Total Skor</strong> yang merupakan penjumlahan dari <strong>Skor Jarak + Usia (Hari)</strong>.<br>
+                        <strong>Detail Skor Jarak:</strong> 
+                        <span class="badge badge-light-primary">0-500m: 800</span>
+                        <span class="badge badge-light-primary">501m-1km: 600</span>
+                        <span class="badge badge-light-primary">1-3km: 400</span>
+                        <span class="badge badge-light-primary">3-5km: 300</span>
+                        <span class="badge badge-light-primary">5-7.5km: 200</span>
+                        <span class="badge badge-light-primary">> 7.5km: 100</span><br>
+                        <strong>Skor Usia:</strong> Dihitung dalam satuan hari berdasarkan selisih antara tanggal lahir dengan batas usia minimal ({{ \Carbon\Carbon::parse($periode->tanggal_batas_usia_sd)->format('d F Y') }}).
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Wrapper-->
+                <!--begin::Close-->
+                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                    <span class="svg-icon svg-icon-1 svg-icon-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                        </svg>
+                    </span>
+                </button>
+                <!--end::Close-->
+            </div>
+            <!--end::Information-->
+
             <!--begin::Quota Info-->
             <div id="quota_info_container" class="alert alert-dismissible bg-light-primary d-flex flex-column flex-sm-row p-5 mb-5" style="display: none !important;">
                 <div class="d-flex flex-column pe-0 pe-sm-10">
@@ -80,6 +124,9 @@
                         <th class="w-10px pe-2">No</th>
                         <th class="min-w-125px">No. Pendaftaran</th>
                         <th class="min-w-150px">Nama Lengkap</th>
+                        <th class="min-w-100px text-center">Skor Jarak</th>
+                        <th class="min-w-100px text-center">Usia (Hari)</th>
+                        <th class="min-w-100px text-center">Total Skor</th>
                         <th class="min-w-100px text-center">Hasil</th>
                         <th class="min-w-150px">Pilihan 1</th>
                         <th class="min-w-100px">Jarak 1 (km)</th>
@@ -147,6 +194,9 @@ $(document).ready(function() {
                 }
             },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
+            { data: 'skor_jarak', name: 'skor_jarak', className: 'text-center' },
+            { data: 'skor_usia', name: 'skor_usia', className: 'text-center' },
+            { data: 'total_skor', name: 'total_skor', className: 'text-center' },
             { data: 'hasil', name: 'hasil', className: 'text-center' },
             { data: 'pilihan_1', name: 'pilihan_1' },
             { data: 'jarak_sekolah_1', name: 'jarak_sekolah_1' },
@@ -202,8 +252,8 @@ $(document).ready(function() {
         // 1. Path is Domisili (1) AND Choice filter is Pilihan 2
         var showPilihan2 = (jalurId == '1' && pilihanKe == '2');
 
-        table.column(6).visible(showPilihan2);
-        table.column(7).visible(showPilihan2);
+        table.column(10).visible(showPilihan2);
+        table.column(11).visible(showPilihan2);
     }
 
     function updateBulkButton() {

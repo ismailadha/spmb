@@ -44,7 +44,20 @@ class KelulusanController extends Controller
             $sekolahId = auth()->user()->sekolah_id;
         }
 
-        $pilihanKe = $request->get('pilihan_ke');
+        $pilihanKe = $request->get('pilihan_ke', '1');
+        $distanceCol = ($pilihanKe == '2') ? 'jarak_sekolah_2' : 'jarak_sekolah_1';
+        $tanggalBatas = $periode->tanggal_batas_usia_sd ?? '2026-07-01';
+
+        $skorJarakSql = "(CASE 
+            WHEN pendaftaran.$distanceCol <= 0.5 THEN 800 
+            WHEN pendaftaran.$distanceCol <= 1.0 THEN 600 
+            WHEN pendaftaran.$distanceCol <= 3.0 THEN 400 
+            WHEN pendaftaran.$distanceCol <= 5.0 THEN 300 
+            WHEN pendaftaran.$distanceCol <= 7.5 THEN 200 
+            ELSE 100 
+        END)";
+
+        $skorUsiaSql = "DATEDIFF('$tanggalBatas', peserta.tanggal_lahir)";
 
         $data = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -60,31 +73,23 @@ class KelulusanController extends Controller
             ->when($sekolahId, function ($query, $sekolahId) use ($pilihanKe) {
                 if ($pilihanKe == '1') {
                     $query->where('pendaftaran.sekolah_pilihan_1', $sekolahId);
-                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
-                    $query->orderBy('peserta.tanggal_lahir', 'asc');
                 } elseif ($pilihanKe == '2') {
                     $query->where('pendaftaran.sekolah_pilihan_2', $sekolahId);
-                    $query->orderBy('pendaftaran.jarak_sekolah_2', 'asc');
-                    $query->orderBy('peserta.tanggal_lahir', 'asc');
                 } else {
                     $query->where(function ($q) use ($sekolahId) {
                         $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                             ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                     });
-                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
-                    $query->orderBy('peserta.tanggal_lahir', 'asc');
                 }
 
                 return $query;
-            }, function ($query) {
-                return $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
-                    ->orderBy('peserta.tanggal_lahir', 'asc');
             })
             ->select(
                 'pendaftaran.id as pendaftaran_id',
                 'peserta.id as id',
                 'pendaftaran.nomor_pendaftaran',
                 'peserta.nama_lengkap',
+                'peserta.tanggal_lahir',
                 'jalur_pendaftaran.nama_jalur',
                 'pendaftaran.jenjang',
                 'pendaftaran.status',
@@ -92,7 +97,11 @@ class KelulusanController extends Controller
                 'pendaftaran.jarak_sekolah_1',
                 'sek2.nama_sekolah as pilihan_2',
                 'pendaftaran.jarak_sekolah_2'
-            );
+            )
+            ->selectRaw("$skorJarakSql as skor_jarak")
+            ->selectRaw("$skorUsiaSql as skor_usia")
+            ->selectRaw("($skorJarakSql + $skorUsiaSql) as total_skor")
+            ->orderBy('total_skor', 'desc');
 
         $quota = 0;
         if ($sekolahId && $jalurId) {
@@ -180,7 +189,20 @@ class KelulusanController extends Controller
             $sekolahId = auth()->user()->sekolah_id;
         }
 
-        $pilihanKe = $request->get('pilihan_ke');
+        $pilihanKe = $request->get('pilihan_ke', '1');
+        $distanceCol = ($pilihanKe == '2') ? 'jarak_sekolah_2' : 'jarak_sekolah_1';
+        $tanggalBatas = $periode->tanggal_batas_usia_smp ?? '2026-07-01';
+
+        $skorJarakSql = "(CASE 
+            WHEN pendaftaran.$distanceCol <= 0.5 THEN 800 
+            WHEN pendaftaran.$distanceCol <= 1.0 THEN 600 
+            WHEN pendaftaran.$distanceCol <= 3.0 THEN 400 
+            WHEN pendaftaran.$distanceCol <= 5.0 THEN 300 
+            WHEN pendaftaran.$distanceCol <= 7.5 THEN 200 
+            ELSE 100 
+        END)";
+
+        $skorUsiaSql = "DATEDIFF('$tanggalBatas', peserta.tanggal_lahir)";
 
         $data = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -196,31 +218,23 @@ class KelulusanController extends Controller
             ->when($sekolahId, function ($query, $sekolahId) use ($pilihanKe) {
                 if ($pilihanKe == '1') {
                     $query->where('pendaftaran.sekolah_pilihan_1', $sekolahId);
-                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
-                    $query->orderBy('peserta.tanggal_lahir', 'asc');
                 } elseif ($pilihanKe == '2') {
                     $query->where('pendaftaran.sekolah_pilihan_2', $sekolahId);
-                    $query->orderBy('pendaftaran.jarak_sekolah_2', 'asc');
-                    $query->orderBy('peserta.tanggal_lahir', 'asc');
                 } else {
                     $query->where(function ($q) use ($sekolahId) {
                         $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                             ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                     });
-                    $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
-                    $query->orderBy('peserta.tanggal_lahir', 'asc');
                 }
 
                 return $query;
-            }, function ($query) {
-                return $query->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
-                    ->orderBy('peserta.tanggal_lahir', 'asc');
             })
             ->select(
                 'pendaftaran.id as pendaftaran_id',
                 'peserta.id as id',
                 'pendaftaran.nomor_pendaftaran',
                 'peserta.nama_lengkap',
+                'peserta.tanggal_lahir',
                 'jalur_pendaftaran.nama_jalur',
                 'pendaftaran.jenjang',
                 'pendaftaran.status',
@@ -228,7 +242,11 @@ class KelulusanController extends Controller
                 'pendaftaran.jarak_sekolah_1',
                 'sek2.nama_sekolah as pilihan_2',
                 'pendaftaran.jarak_sekolah_2'
-            );
+            )
+            ->selectRaw("$skorJarakSql as skor_jarak")
+            ->selectRaw("$skorUsiaSql as skor_usia")
+            ->selectRaw("($skorJarakSql + $skorUsiaSql) as total_skor")
+            ->orderBy('total_skor', 'desc');
 
         $quota = 0;
         if ($sekolahId && $jalurId) {
