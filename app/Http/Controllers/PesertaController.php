@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PesertaExport;
 use App\Models\Peserta;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -199,6 +201,78 @@ class PesertaController extends Controller
     }
 
     /**
+     * Export Peserta SD to Excel.
+     */
+    public function exportExcel_sd(Request $request)
+    {
+        $periodeId = $request->get('periode_id');
+        $jalurId = $request->get('jalur_id');
+        $sekolahId = $request->get('sekolah_id');
+
+        if (auth()->user()->role == 'admin_sekolah') {
+            $sekolahId = auth()->user()->sekolah_id;
+        }
+
+        $filename = 'data_peserta_sd_'.date('YmdHis').'.xlsx';
+
+        return (new PesertaExport($periodeId, $jalurId, $sekolahId, 'SD'))->download($filename);
+    }
+
+    /**
+     * Export Peserta SD to PDF.
+     */
+    public function exportPdf_sd(Request $request)
+    {
+        $periodeId = $request->get('periode_id');
+        $jalurId = $request->get('jalur_id');
+        $sekolahId = $request->get('sekolah_id');
+
+        if (auth()->user()->role == 'admin_sekolah') {
+            $sekolahId = auth()->user()->sekolah_id;
+        }
+
+        $data = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
+            ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
+            ->where('pendaftaran.periode_id', $periodeId)
+            ->where('pendaftaran.jenjang', 'SD')
+            ->when($jalurId, function ($query, $jalurId) {
+                return $query->where('pendaftaran.jalur_id', $jalurId);
+            })
+            ->when($sekolahId, function ($query, $sekolahId) {
+                return $query->where(function ($q) use ($sekolahId) {
+                    $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                        ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                });
+            })
+            ->select(
+                'pendaftaran.nomor_pendaftaran',
+                'peserta.nama_lengkap',
+                'peserta.nik',
+                'jalur_pendaftaran.nama_jalur',
+                'sek1.nama_sekolah as pilihan_1',
+                'pendaftaran.status'
+            )
+            ->get();
+
+        $periode = DB::table('periode_pendaftaran')->where('id', $periodeId)->first();
+        $sekolah = $sekolahId ? DB::table('sekolah')->where('id', $sekolahId)->first() : null;
+        $jalur = $jalurId ? DB::table('jalur_pendaftaran')->where('id', $jalurId)->first() : null;
+
+        $pdf = Pdf::loadView('backend.peserta.export_pdf', [
+            'data' => $data,
+            'periode' => $periode,
+            'sekolah' => $sekolah,
+            'jalur' => $jalur,
+            'jenjang' => 'SD',
+        ]);
+
+        return $pdf->setPaper('a4', 'landscape')->download('data_peserta_sd_'.date('YmdHis').'.pdf');
+    }
+
+    /**
      * Display a listing of SMP participants.
      */
     public function peserta_smp(Request $request)
@@ -287,6 +361,78 @@ class PesertaController extends Controller
         }
 
         return view('backend.peserta.peserta_smp', compact('periode', 'semuaPeriode', 'semuaJalur', 'semuaSekolah'));
+    }
+
+    /**
+     * Export Peserta SMP to Excel.
+     */
+    public function exportExcel_smp(Request $request)
+    {
+        $periodeId = $request->get('periode_id');
+        $jalurId = $request->get('jalur_id');
+        $sekolahId = $request->get('sekolah_id');
+
+        if (auth()->user()->role == 'admin_sekolah') {
+            $sekolahId = auth()->user()->sekolah_id;
+        }
+
+        $filename = 'data_peserta_smp_'.date('YmdHis').'.xlsx';
+
+        return (new PesertaExport($periodeId, $jalurId, $sekolahId, 'SMP'))->download($filename);
+    }
+
+    /**
+     * Export Peserta SMP to PDF.
+     */
+    public function exportPdf_smp(Request $request)
+    {
+        $periodeId = $request->get('periode_id');
+        $jalurId = $request->get('jalur_id');
+        $sekolahId = $request->get('sekolah_id');
+
+        if (auth()->user()->role == 'admin_sekolah') {
+            $sekolahId = auth()->user()->sekolah_id;
+        }
+
+        $data = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
+            ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
+            ->where('pendaftaran.periode_id', $periodeId)
+            ->where('pendaftaran.jenjang', 'SMP')
+            ->when($jalurId, function ($query, $jalurId) {
+                return $query->where('pendaftaran.jalur_id', $jalurId);
+            })
+            ->when($sekolahId, function ($query, $sekolahId) {
+                return $query->where(function ($q) use ($sekolahId) {
+                    $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
+                        ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
+                });
+            })
+            ->select(
+                'pendaftaran.nomor_pendaftaran',
+                'peserta.nama_lengkap',
+                'peserta.nik',
+                'jalur_pendaftaran.nama_jalur',
+                'sek1.nama_sekolah as pilihan_1',
+                'pendaftaran.status'
+            )
+            ->get();
+
+        $periode = DB::table('periode_pendaftaran')->where('id', $periodeId)->first();
+        $sekolah = $sekolahId ? DB::table('sekolah')->where('id', $sekolahId)->first() : null;
+        $jalur = $jalurId ? DB::table('jalur_pendaftaran')->where('id', $jalurId)->first() : null;
+
+        $pdf = Pdf::loadView('backend.peserta.export_pdf', [
+            'data' => $data,
+            'periode' => $periode,
+            'sekolah' => $sekolah,
+            'jalur' => $jalur,
+            'jenjang' => 'SMP',
+        ]);
+
+        return $pdf->setPaper('a4', 'landscape')->download('data_peserta_smp_'.date('YmdHis').'.pdf');
     }
 
     /**

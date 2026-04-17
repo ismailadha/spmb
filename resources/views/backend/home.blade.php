@@ -25,7 +25,7 @@
                 <div class="card-body d-flex align-items-end pt-0 pb-6">
                     <div class="d-flex align-items-center flex-wrap">
                         <div class="d-flex align-items-center me-5">
-                            <span class="badge badge-light-primary fw-bold fs-7 px-3 py-2">Live Statistics</span>
+                            
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                             <div class="text-gray-600">Jenjang SD</div>
                             <div class="fw-bolder text-gray-800">{{ $stats['domisili']['sd'] }}</div>
                         </div>
-                        <div class="h-6px w-100 bg-white bg-opacity-50 rounded mb-5">
+                        <div class="h-6px w-100 bg-primary bg-opacity-50 rounded mb-5">
                             <div class="bg-primary rounded h-6px" role="progressbar" style="width: {{ $stats['domisili']['total'] > 0 ? ($stats['domisili']['sd'] / $stats['domisili']['total']) * 100 : 0 }}%"></div>
                         </div>
                         <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
@@ -90,7 +90,7 @@
                             <div class="text-gray-600">Jenjang SD</div>
                             <div class="fw-bolder text-gray-800">{{ $stats['afirmasi']['sd'] }}</div>
                         </div>
-                        <div class="h-6px w-100 bg-white bg-opacity-50 rounded mb-5">
+                        <div class="h-6px w-100 bg-success bg-opacity-50 rounded mb-5">
                             <div class="bg-success rounded h-6px" role="progressbar" style="width: {{ $stats['afirmasi']['total'] > 0 ? ($stats['afirmasi']['sd'] / $stats['afirmasi']['total']) * 100 : 0 }}%"></div>
                         </div>
                         <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
@@ -109,11 +109,11 @@
         <!--begin::Col - Mutasi-->
         <div class="col-md-6 col-lg-3">
             <div class="card card-flush h-md-100 bg-light-warning border-warning border-opacity-25 border-dashed position-relative overflow-hidden">
-                <i class="bi bi-people-fill text-warning position-absolute opacity-10 end-0 bottom-0 me-n5 mb-n5" style="font-size: 8rem;"></i>
+                <i class="bi bi-arrow-left-right text-warning position-absolute opacity-10 end-0 bottom-0 me-n5 mb-n5" style="font-size: 8rem;"></i>
                 <div class="card-header pt-5">
                     <div class="card-title d-flex flex-column">
                         <div class="d-flex align-items-center mb-1">
-                            <i class="bi bi-people-fill fs-2hx text-warning me-2"></i>
+                            <i class="bi bi-arrow-left-right fs-2hx text-warning me-2"></i>
                             <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['mutasi']['total'] }}</span>
                         </div>
                         <span class="text-warning fw-bold fs-7 text-uppercase">Jalur Mutasi</span>

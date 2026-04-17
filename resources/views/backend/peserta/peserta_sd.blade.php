@@ -19,34 +19,55 @@
             </div>
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
-            <div class="card-toolbar">
-                <div class="d-flex align-items-center">
-                    <label for="filter_periode" class="me-2 fw-bold text-muted">Periode:</label>
-                    <select id="filter_periode" class="form-select form-select-sm form-select-solid w-125px me-5">
-                        @foreach($semuaPeriode as $p)
-                            <option value="{{ $p->id }}" {{ ($periode && $periode->id == $p->id) ? 'selected' : '' }}>
-                                {{ $p->tahun_ajaran }}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="card-toolbar w-100">
+                <div class="d-flex flex-stack flex-wrap gap-2 w-100">
+                    <!--begin::Filters-->
+                    <div class="d-flex align-items-center flex-wrap gap-2 gap-md-5">
+                        <div class="d-flex align-items-center">
+                            <label for="filter_periode" class="me-2 fw-bold text-muted">Periode:</label>
+                            <select id="filter_periode" class="form-select form-select-sm form-select-solid w-125px">
+                                @foreach($semuaPeriode as $p)
+                                    <option value="{{ $p->id }}" {{ ($periode && $periode->id == $p->id) ? 'selected' : '' }}>
+                                        {{ $p->tahun_ajaran }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
-                    <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px me-5">
-                        <option value="">Semua Jalur</option>
-                        @foreach($semuaJalur as $j)
-                            <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
-                        @endforeach
-                    </select>
+                        <div class="d-flex align-items-center">
+                            <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
+                            <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px">
+                                <option value="">Semua Jalur</option>
+                                @foreach($semuaJalur as $j)
+                                    <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
-                    <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
-                        @if(auth()->user()->role != 'admin_sekolah')
-                            <option value="">Semua Sekolah</option>
-                        @endif
-                        @foreach($semuaSekolah as $s)
-                            <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
-                        @endforeach
-                    </select>
+                        <div class="d-flex align-items-center">
+                            <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
+                            <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
+                                @if(auth()->user()->role != 'admin_sekolah')
+                                    <option value="">Semua Sekolah</option>
+                                @endif
+                                @foreach($semuaSekolah as $s)
+                                    <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Filters-->
+
+                    <!--begin::Export Buttons-->
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" id="btn_export_excel" class="btn btn-sm btn-success d-flex align-items-center">
+                            <i class="fas fa-file-excel fs-4 me-2"></i> Excel
+                        </button>
+                        <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
+                            <i class="fas fa-file-pdf fs-4 me-2"></i> PDF
+                        </button>
+                    </div>
+                    <!--end::Export Buttons-->
                 </div>
             </div>
             <!--end::Card toolbar-->
@@ -187,6 +208,27 @@ $(document).ready(function() {
     
     $('#filter_periode, #filter_jalur, #filter_sekolah').change(function() {
         $('#kt_table_peserta').DataTable().ajax.reload();
+    });
+
+    // Handle Export clicks
+    $('#btn_export_excel').click(function() {
+        let params = {
+            periode_id: $('#filter_periode').val(),
+            jalur_id: $('#filter_jalur').val(),
+            sekolah_id: $('#filter_sekolah').val(),
+        };
+        let url = "{{ route('peserta.sd.export.excel') }}?" + $.param(params);
+        window.location.href = url;
+    });
+
+    $('#btn_export_pdf').click(function() {
+        let params = {
+            periode_id: $('#filter_periode').val(),
+            jalur_id: $('#filter_jalur').val(),
+            sekolah_id: $('#filter_sekolah').val(),
+        };
+        let url = "{{ route('peserta.sd.export.pdf') }}?" + $.param(params);
+        window.location.href = url;
     });
 });
 </script>

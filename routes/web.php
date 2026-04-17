@@ -93,7 +93,11 @@ Route::middleware('auth')->group(function () {
 
         // peserta
         Route::get('peserta/sd', [PesertaController::class, 'peserta_sd'])->name('peserta.sd');
+        Route::get('peserta/sd/export/excel', [PesertaController::class, 'exportExcel_sd'])->name('peserta.sd.export.excel');
+        Route::get('peserta/sd/export/pdf', [PesertaController::class, 'exportPdf_sd'])->name('peserta.sd.export.pdf');
         Route::get('peserta/smp', [PesertaController::class, 'peserta_smp'])->name('peserta.smp');
+        Route::get('peserta/smp/export/excel', [PesertaController::class, 'exportExcel_smp'])->name('peserta.smp.export.excel');
+        Route::get('peserta/smp/export/pdf', [PesertaController::class, 'exportPdf_smp'])->name('peserta.smp.export.pdf');
         Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
         Route::post('peserta/{id}/setuju-verifikasi', [VerifikasiController::class, 'setuju_verifikasi'])->name('peserta.verifikasi.setuju');
         Route::get('peserta/detail/{id}', [PesertaController::class, 'show'])->name('peserta.detail');
