@@ -406,10 +406,10 @@
                                 <p><strong>{{ $pendaftaran->nama_lengkap }}</strong></p>
                             </td>
                             <td class="signature">
-                                <p>Lhokseumawe, ......................</p>
+                                <p>Lhokseumawe, ...................... </p>
                                 <p>Panitia Sekolah,</p>
                                 <div class ="signature-space"></div>
-                                <p><strong>( ..................................... )</strong></p>
+                                <p><strong>..................................... </strong></p>
                             </td>
                         </tr>
                     </table>
