@@ -8,10 +8,7 @@
         $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
     }
 
-    // QR Code for PDF (SVG format - avoid Imagick dependency)
-    if (isset($isPdf) && $isPdf) {
-        $qrCode = QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran);
-    }
+    // QR Code source is now handled by the controller via $qrCodeBase64
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -355,10 +352,10 @@
             <table class="footer-table">
                 <tr>
                     <td style="vertical-align: bottom;">
-                        @if(isset($isPdf) && $isPdf)
-                            {!! $qrCode !!}
+                        @if(isset($qrCodeBase64))
+                            <img src="{{ $qrCodeBase64 }}" alt="QR Code" style="width: 130px; height: 130px;">
                         @else
-                            {!! QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran) !!}
+                            <img src="data:image/svg+xml;base64,{{ base64_encode(QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran)) }}" alt="QR Code" style="width: 130px; height: 130px;">
                         @endif
                     </td>
                     <td class="signature">

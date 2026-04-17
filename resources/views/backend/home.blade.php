@@ -5,477 +5,171 @@
 @endsection
 
 @section('content')
-    <!--begin::Row-->
+    <!--begin::Row - Hero Stats-->
     <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
         <!--begin::Col-->
-        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-            <!--begin::Card widget 4-->
-            <div class="card card-flush h-md-100">
+        <div class="col-12">
+            <div class="card card-flush h-md-100" style="background-color: #F8F5FF; border: 1px solid #E1D9FE;">
                 <!--begin::Header-->
                 <div class="card-header pt-5">
                     <!--begin::Title-->
                     <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Currency-->
-                            <span class="fs-4 fw-semibold text-gray-400 align-self-start me-1"></span>
-                            <!--end::Currency-->
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">1,284</span>
-                            <!--end::Amount-->
-                            <!--begin::Badge-->
-                            <span class="badge badge-light-success fs-base">
-                            <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>2.2%</span>
-                            <!--end::Badge-->
+                        <div class="d-flex align-items-center mb-2">
+                             <i class="bi bi-people-fill fs-2hx text-primary me-3"></i>
+                             <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ number_format($stats['total']) }}</span>
                         </div>
-                        <!--end::Info-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Total Pendaftar Terverifikasi</span>
-                        <!--end::Subtitle-->
+                        <span class="text-gray-600 pt-1 fw-semibold fs-6">Total Seluruh Peserta Pendaftar (Seluruh Jalur)</span>
                     </div>
-                    <!--end::Title-->
                 </div>
-                <!--end::Header-->
                 <!--begin::Card body-->
-                <div class="card-body pt-2 pb-4 d-flex align-items-center">
-                    <!--begin::Chart-->
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="kt_card_widget_4_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11"></div>
-                    </div>
-                    <!--end::Chart-->
-                    <!--begin::Labels-->
-                    <div class="d-flex flex-column content-justify-center w-100">
-                        <!--begin::Label-->
-                        <div class="d-flex fs-6 fw-semibold align-items-center">
-                            <!--begin::Bullet-->
-                            <div class="bullet w-8px h-6px rounded-2 bg-danger me-3"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
-                            <div class="text-gray-500 flex-grow-1 me-4">Laki-laki</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
-                            <div class="fw-bolder text-gray-700 text-xxl-end">762</div>
-                            <!--end::Stats-->
+                <div class="card-body d-flex align-items-end pt-0 pb-6">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <div class="d-flex align-items-center me-5">
+                            <span class="badge badge-light-primary fw-bold fs-7 px-3 py-2">Live Statistics</span>
                         </div>
-                        <!--end::Label-->
-                        <!--begin::Label-->
-                        <div class="d-flex fs-6 fw-semibold align-items-center my-1">
-                            <!--begin::Bullet-->
-                            <div class="bullet w-8px h-6px rounded-2 bg-primary me-3"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
-                            <div class="text-gray-500 flex-grow-1 me-4">Perempuan</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
-                            <div class="fw-bolder text-gray-700 text-xxl-end">522</div>
-                            <!--end::Stats-->
-                        </div>
-                        <!--end::Label-->
                     </div>
-                    <!--end::Labels-->
                 </div>
-                <!--end::Card body-->
             </div>
-            <!--end::Card widget 4-->
         </div>
-        <!--end::Col-->
-        <!--begin::Col-->
-        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-            <!--begin::Card widget 5-->
-            <div class="card card-flush h-md-100">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">156</span>
-                            <!--end::Amount-->
-                            <!--begin::Badge-->
-                            <span class="badge badge-light-warning fs-base">Pending</span>
-                            <!--end::Badge-->
-                        </div>
-                        <!--end::Info-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Menunggu Verifikasi</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
-                <div class="card-body d-flex align-items-end pt-0">
-                    <!--begin::Progress-->
-                    <div class="d-flex align-items-center flex-column mt-3 w-100">
-                        <div class="d-flex justify-content-between w-100 mt-auto mb-2">
-                            <span class="fw-boldest fs-6 text-dark">Berkas Masuk Hari Ini</span>
-                            <span class="fw-bolder fs-6 text-gray-400">12 Berkas</span>
-                        </div>
-                        <div class="h-8px mx-3 w-100 bg-light-warning rounded">
-                            <div class="bg-warning rounded h-8px" role="progressbar" style="width: 76%; shadow: 0 0 10px rgba(0,0,0,0.1);" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <!--end::Progress-->
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 5-->
-        </div>
-        <!--end::Col-->
-        <!--begin::Col-->
-        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-            <!--begin::Card widget 7-->
-            <div class="card card-flush h-md-100">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">892</span>
-                            <!--end::Amount-->
-                            <!--begin::Badge-->
-                            <span class="badge badge-light-primary fs-base">SMA/SMK</span>
-                            <!--end::Badge-->
-                        </div>
-                        <!--end::Info-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Kapasitas Kursi Tersedia</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
-                <div class="card-body d-flex flex-column justify-content-end pe-0">
-                    <!--begin::Title-->
-                    <span class="fs-6 fw-bolder text-gray-800 d-block mb-2">Pendaftar Terakhir</span>
-                    <!--end::Title-->
-                    <!--begin::Users group-->
-                    <div class="symbol-group symbol-hover mb-3">
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Alan Warden">
-                            <span class="symbol-label bg-warning text-inverse-warning fw-bold">A</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                            <img alt="Pic" src="{{ asset('back/media/avatars/300-11.jpg') }}" />
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
-                            <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                            <img alt="Pic" src="{{ asset('back/media/avatars/300-2.jpg') }}" />
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Perry Matthew">
-                            <span class="symbol-label bg-danger text-inverse-danger fw-bold">P</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Barry Walter">
-                            <img alt="Pic" src="{{ asset('back/media/avatars/300-12.jpg') }}" />
-                        </div>
-                        <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-                            <span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
-                        </a>
-                    </div>
-                    <!--end::Users group-->
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 7-->
-        </div>
-        <!--end::Col-->
-        <!--begin::Col-->
-        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-            <!--begin::Card widget 17-->
-            <div class="card card-flush h-md-100">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
-                        <div class="d-flex align-items-center">
-                            <!--begin::Amount-->
-                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">95%</span>
-                            <!--end::Amount-->
-                            <!--begin::Badge-->
-                            <span class="badge badge-light-success fs-base">Sangat Baik</span>
-                            <!--end::Badge-->
-                        </div>
-                        <!--end::Info-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Kelengkapan Berkas</span>
-                        <!--end::Subtitle-->
-                    </div>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
-                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-                    <!--begin::Chart-->
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="kt_card_widget_17_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11"></div>
-                    </div>
-                    <!--end::Chart-->
-                    <!--begin::Labels-->
-                    <div class="d-flex flex-column content-justify-center flex-row-fluid">
-                        <!--begin::Label-->
-                        <div class="d-flex fw-semibold align-items-center">
-                            <!--begin::Bullet-->
-                            <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
-                            <div class="text-gray-500 flex-grow-1 me-4">Lengkap</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
-                            <div class="fw-bolder text-gray-700 text-xxl-end">1,120</div>
-                            <!--end::Stats-->
-                        </div>
-                        <!--end::Label-->
-                        <!--begin::Label-->
-                        <div class="d-flex fw-semibold align-items-center my-1">
-                            <!--begin::Bullet-->
-                            <div class="bullet w-8px h-3px rounded-2 bg-warning me-3"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
-                            <div class="text-gray-500 flex-grow-1 me-4">Belum Lengkap</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
-                            <div class="fw-bolder text-gray-700 text-xxl-end">164</div>
-                            <!--end::Stats-->
-                        </div>
-                        <!--end::Label-->
-                    </div>
-                    <!--end::Labels-->
-                </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 17-->
-        </div>
-        <!--end::Col-->
     </div>
     <!--end::Row-->
 
-    <!--begin::Row-->
+    <!--begin::Row - Path Breakdown-->
     <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-        <!--begin::Col-->
-        <div class="col-xl-8">
-            <!--begin::Table widget 14-->
-            <div class="card card-flush h-md-100">
-                <!--begin::Header-->
-                <div class="card-header pt-7">
-                    <!--begin::Title-->
-                    <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label fw-bold text-gray-800">Pendaftar Terbaru</span>
-                        <span class="text-gray-400 mt-1 fw-semibold fs-6">Update terakhir hari ini jam 12:00</span>
-                    </h3>
-                    <!--end::Title-->
-                    <!--begin::Toolbar-->
-                    <div class="card-toolbar">
-                        <a href="{{ route('peserta.index') }}" class="btn btn-sm btn-light">Lihat Semua</a>
+        <!--begin::Col - Domisili-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100 bg-light-primary border-primary border-opacity-25 border-dashed position-relative overflow-hidden">
+                <i class="bi bi-geo-alt-fill text-primary position-absolute opacity-10 end-0 bottom-0 me-n5 mb-n5" style="font-size: 8rem;"></i>
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-geo-alt-fill fs-2hx text-primary me-2"></i>
+                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['domisili']['total'] }}</span>
+                        </div>
+                        <span class="text-primary fw-bold fs-7 text-uppercase">Jalur Domisili</span>
                     </div>
-                    <!--end::Toolbar-->
                 </div>
-                <!--end::Header-->
-                <!--begin::Body-->
-                <div class="card-body pt-6">
-                    <!--begin::Table container-->
-                    <div class="table-responsive">
-                        <!--begin::Table-->
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                            <!--begin::Table head-->
-                            <thead>
-                                <tr class="fw-bold text-muted">
-                                    <th class="min-w-150px">Nama Siswa</th>
-                                    <th class="min-w-120px">Nomor Reg</th>
-                                    <th class="min-w-120px">Jalur</th>
-                                    <th class="min-w-120px">Status</th>
-                                    <th class="min-w-100px text-end">Aksi</th>
-                                </tr>
-                            </thead>
-                            <!--end::Table head-->
-                            <!--begin::Table body-->
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-45px me-5">
-                                                <img src="{{ asset('back/media/avatars/300-1.jpg') }}" alt="" />
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <a href="#" class="text-dark fw-bold text-hover-primary fs-6">Ahmad Fauzan</a>
-                                                <span class="text-muted fw-semibold d-block fs-7">Lhokseumawe</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark fw-bold d-block fs-6">2024/001/012</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-primary">Zonasi</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-success">Terverifikasi</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                                            <i class="ki-duotone ki-eye fs-3">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                            </i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-45px me-5">
-                                                <img src="{{ asset('back/media/avatars/300-2.jpg') }}" alt="" />
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <a href="#" class="text-dark fw-bold text-hover-primary fs-6">Siti Aminah</a>
-                                                <span class="text-muted fw-semibold d-block fs-7">Aceh Utara</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark fw-bold d-block fs-6">2024/001/013</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-warning">Afirmasi</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-warning">Pending</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                                            <i class="ki-duotone ki-eye fs-3">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                            </i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-45px me-5">
-                                                <img src="{{ asset('back/media/avatars/300-5.jpg') }}" alt="" />
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <a href="#" class="text-dark fw-bold text-hover-primary fs-6">Rizki Ramadhan</a>
-                                                <span class="text-muted fw-semibold d-block fs-7">Bireuen</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark fw-bold d-block fs-6">2024/001/014</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-info">Prestasi</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-light-success">Terverifikasi</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                                            <i class="ki-duotone ki-eye fs-3">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                            </i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <!--end::Table body-->
-                        </table>
-                        <!--end::Table-->
+                <div class="card-body pt-2 pb-4">
+                    <div class="d-flex flex-column w-100 position-relative z-index-1">
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">Jenjang SD</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['domisili']['sd'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-white bg-opacity-50 rounded mb-5">
+                            <div class="bg-primary rounded h-6px" role="progressbar" style="width: {{ $stats['domisili']['total'] > 0 ? ($stats['domisili']['sd'] / $stats['domisili']['total']) * 100 : 0 }}%"></div>
+                        </div>
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">Jenjang SMP</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['domisili']['smp'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-dark bg-opacity-50 rounded">
+                            <div class="bg-info rounded h-6px" role="progressbar" style="width: {{ $stats['domisili']['total'] > 0 ? ($stats['domisili']['smp'] / $stats['domisili']['total']) * 100 : 0 }}%"></div>
+                        </div>
                     </div>
-                    <!--end::Table container-->
                 </div>
-                <!--end::Body-->
             </div>
-            <!--end::Table widget 14-->
         </div>
         <!--end::Col-->
-        <!--begin::Col-->
-        <div class="col-xl-4">
-            <!--begin::List widget 5-->
-            <div class="card card-flush h-md-100">
-                <!--begin::Header-->
-                <div class="card-header pt-7">
-                    <!--begin::Title-->
-                    <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label fw-bold text-gray-800">Timeline Pendaftaran</span>
-                        <span class="text-gray-400 mt-1 fw-semibold fs-6">Jadwal penting pendaftaran</span>
-                    </h3>
-                    <!--end::Title-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Body-->
-                <div class="card-body pt-5">
-                    <!--begin::Timeline-->
-                    <div class="timeline-label">
-                        <!--begin::Item-->
-                        <div class="timeline-item">
-                            <!--begin::Label-->
-                            <div class="timeline-label fw-bold text-gray-800 fs-6">08:42</div>
-                            <!--end::Label-->
-                            <!--begin::Badge-->
-                            <div class="timeline-badge">
-                                <i class="fa fa-genderless text-warning fs-1"></i>
-                            </div>
-                            <!--end::Badge-->
-                            <!--begin::Text-->
-                            <div class="fw-mormal timeline-content text-muted ps-3">Pendaftaran Gelombang 1 Dibuka</div>
-                            <!--end::Text-->
+
+        <!--begin::Col - Afirmasi-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100 bg-light-success border-success border-opacity-25 border-dashed position-relative overflow-hidden">
+                <i class="bi bi-heart-fill text-success position-absolute opacity-10 end-0 bottom-0 me-n5 mb-n5" style="font-size: 8rem;"></i>
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-heart-fill fs-2hx text-success me-2"></i>
+                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['afirmasi']['total'] }}</span>
                         </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="timeline-item">
-                            <!--begin::Label-->
-                            <div class="timeline-label fw-bold text-gray-800 fs-6">10:00</div>
-                            <!--end::Label-->
-                            <!--begin::Badge-->
-                            <div class="timeline-badge">
-                                <i class="fa fa-genderless text-success fs-1"></i>
-                            </div>
-                            <!--end::Badge-->
-                            <!--begin::Content-->
-                            <div class="timeline-content d-flex">
-                                <span class="fw-bold text-gray-800 ps-3">Verifikasi Berkas Manual</span>
-                            </div>
-                            <!--end::Content-->
-                        </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="timeline-item">
-                            <!--begin::Label-->
-                            <div class="timeline-label fw-bold text-gray-800 fs-6">14:30</div>
-                            <!--end::Label-->
-                            <!--begin::Badge-->
-                            <div class="timeline-badge">
-                                <i class="fa fa-genderless text-danger fs-1"></i>
-                            </div>
-                            <!--end::Badge-->
-                            <!--begin::Text-->
-                            <div class="timeline-content fw-bold text-gray-800 ps-3">Batas Akhir Upload Berkas Afirmasi</div>
-                            <!--end::Text-->
-                        </div>
-                        <!--end::Item-->
+                        <span class="text-success fw-bold fs-7 text-uppercase">Jalur Afirmasi</span>
                     </div>
-                    <!--end::Timeline-->
                 </div>
-                <!--end::Body-->
+                <div class="card-body pt-2 pb-4">
+                    <div class="d-flex flex-column w-100 position-relative z-index-1">
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">Jenjang SD</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['afirmasi']['sd'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-white bg-opacity-50 rounded mb-5">
+                            <div class="bg-success rounded h-6px" role="progressbar" style="width: {{ $stats['afirmasi']['total'] > 0 ? ($stats['afirmasi']['sd'] / $stats['afirmasi']['total']) * 100 : 0 }}%"></div>
+                        </div>
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">Jenjang SMP</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['afirmasi']['smp'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-dark bg-opacity-50 rounded">
+                            <div class="bg-teal rounded h-6px" role="progressbar" style="width: {{ $stats['afirmasi']['total'] > 0 ? ($stats['afirmasi']['smp'] / $stats['afirmasi']['total']) * 100 : 0 }}%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!--end::List widget 5-->
         </div>
         <!--end::Col-->
+
+        <!--begin::Col - Mutasi-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100 bg-light-warning border-warning border-opacity-25 border-dashed position-relative overflow-hidden">
+                <i class="bi bi-people-fill text-warning position-absolute opacity-10 end-0 bottom-0 me-n5 mb-n5" style="font-size: 8rem;"></i>
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-people-fill fs-2hx text-warning me-2"></i>
+                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['mutasi']['total'] }}</span>
+                        </div>
+                        <span class="text-warning fw-bold fs-7 text-uppercase">Jalur Mutasi</span>
+                    </div>
+                </div>
+                <div class="card-body pt-2 pb-4">
+                    <div class="d-flex flex-column w-100 position-relative z-index-1">
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">Jenjang SD</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['mutasi']['sd'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-warning bg-opacity-50 rounded mb-5">
+                            <div class="bg-warning rounded h-6px" role="progressbar" style="width: {{ $stats['mutasi']['total'] > 0 ? ($stats['mutasi']['sd'] / $stats['mutasi']['total']) * 100 : 0 }}%"></div>
+                        </div>
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">Jenjang SMP</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['mutasi']['smp'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-dark bg-opacity-50 rounded">
+                            <div class="bg-orange rounded h-6px" role="progressbar" style="width: {{ $stats['mutasi']['total'] > 0 ? ($stats['mutasi']['smp'] / $stats['mutasi']['total']) * 100 : 0 }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
+
+        <!--begin::Col - Prestasi-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100 bg-light-danger border-danger border-opacity-25 border-dashed position-relative overflow-hidden">
+                <i class="bi bi-trophy-fill text-danger position-absolute opacity-10 end-0 bottom-0 me-n5 mb-n5" style="font-size: 8rem;"></i>
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-trophy-fill fs-2hx text-danger me-2"></i>
+                            <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['prestasi']['total'] }}</span>
+                        </div>
+                        <span class="text-danger fw-bold fs-7 text-uppercase">Jalur Prestasi</span>
+                    </div>
+                </div>
+                <div class="card-body pt-2 pb-4">
+                    <div class="d-flex flex-column w-100 position-relative z-index-1">
+                        <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
+                            <div class="text-gray-600">SMP Only</div>
+                            <div class="fw-bolder text-gray-800">{{ $stats['prestasi']['smp'] }}</div>
+                        </div>
+                        <div class="h-6px w-100 bg-white bg-opacity-50 rounded">
+                            <div class="bg-danger rounded h-6px" role="progressbar" style="width: 100%"></div>
+                        </div>
+                        <div class="pt-8 text-center">
+                            <span class="text-gray-400 fs-8 italic">Prestasi tidak tersedia untuk SD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!--end::Row-->
 @endsection

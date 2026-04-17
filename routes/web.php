@@ -13,6 +13,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\WilayahController;
+use App\Models\Pendaftaran;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Route;
 
@@ -52,7 +53,30 @@ Route::middleware('auth')->group(function () {
 
     // Home
     Route::get('/dashboard', function () {
-        return view('backend.home');
+        $stats = [
+            'total' => Pendaftaran::count(),
+            'domisili' => [
+                'total' => Pendaftaran::where('jalur_id', 1)->count(),
+                'sd' => Pendaftaran::where('jalur_id', 1)->where('jenjang', 'SD')->count(),
+                'smp' => Pendaftaran::where('jalur_id', 1)->where('jenjang', 'SMP')->count(),
+            ],
+            'afirmasi' => [
+                'total' => Pendaftaran::where('jalur_id', 2)->count(),
+                'sd' => Pendaftaran::where('jalur_id', 2)->where('jenjang', 'SD')->count(),
+                'smp' => Pendaftaran::where('jalur_id', 2)->where('jenjang', 'SMP')->count(),
+            ],
+            'prestasi' => [
+                'total' => Pendaftaran::where('jalur_id', 3)->count(),
+                'smp' => Pendaftaran::where('jalur_id', 3)->where('jenjang', 'SMP')->count(),
+            ],
+            'mutasi' => [
+                'total' => Pendaftaran::where('jalur_id', 4)->count(),
+                'sd' => Pendaftaran::where('jalur_id', 4)->where('jenjang', 'SD')->count(),
+                'smp' => Pendaftaran::where('jalur_id', 4)->where('jenjang', 'SMP')->count(),
+            ],
+        ];
+
+        return view('backend.home', compact('stats'));
     })->name('dashboard');
 
     Route::prefix('wilayah')->group(function () {

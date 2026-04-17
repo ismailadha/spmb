@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PendaftaranController extends Controller
 {
@@ -615,7 +616,10 @@ class PendaftaranController extends Controller
             ->where('jenis_berkas', 'pasfoto')
             ->first();
 
-        return view('backend.pendaftaran.print_kartu', compact('pendaftaran', 'pasfoto'));
+        $qrCode = QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran);
+        $qrCodeBase64 = 'data:image/svg+xml;base64,'.base64_encode($qrCode);
+
+        return view('backend.pendaftaran.print_kartu', compact('pendaftaran', 'pasfoto', 'qrCodeBase64'));
     }
 
     public function getSekolahByJalur($jalur_id)
@@ -641,18 +645,7 @@ class PendaftaranController extends Controller
 
     private function generateNomorPendaftaran($jalur_id, $periode_id): string
     {
-        $jalur = [
-            1 => 'DOM',
-            2 => 'AFI',
-            3 => 'PRE',
-            4 => 'MUT',
-        ];
-
-        $kode_jalur = $jalur[$jalur_id] ?? 'XXX';
-
-        // Ambil tahun dari periode_pendaftaran (misal 2026/2027 -> 26)
-        $periode = DB::table('periode_pendaftaran')->where('id', $periode_id)->first();
-        $tahun = substr(explode('/', $periode->tahun_ajaran)[0], -2);
+        $kode_jalur = str_pad($jalur_id, 2, '0', STR_PAD_LEFT);
 
         // Hitung jumlah pendaftaran yang sudah memiliki nomor di periode ini
         $count = DB::table('pendaftaran')
@@ -662,9 +655,7 @@ class PendaftaranController extends Controller
 
         $sequence = str_pad($count + 1, 4, '0', STR_PAD_LEFT);
 
-        return "SPMB-{$kode_jalur}-{$tahun}{$sequence}";
-
-        return "SPMB-{$kode_jalur}-{$tahun}{$sequence}";
+        return "SPMB-{$kode_jalur}-{$sequence}";
     }
 
     private function uploadBerkas(Request $request, $pendaftaran_id): void
@@ -789,11 +780,15 @@ class PendaftaranController extends Controller
             $pasfotoBase64 = 'data:image/'.$pasfotoType.';base64,'.base64_encode($pasfotoData);
         }
 
+        $qrCode = QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran);
+        $qrCodeBase64 = 'data:image/svg+xml;base64,'.base64_encode($qrCode);
+
         $pdf = Pdf::loadView('backend.pendaftaran.print_kartu', [
             'pendaftaran' => $pendaftaran,
             'isPdf' => true,
             'logoBase64' => $logoBase64,
             'pasfotoBase64' => $pasfotoBase64,
+            'qrCodeBase64' => $qrCodeBase64,
         ]);
 
         // Set paper size to A4
