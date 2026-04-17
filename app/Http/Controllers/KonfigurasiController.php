@@ -17,7 +17,6 @@ class KonfigurasiController extends Controller
 
     public function update(Request $request)
     {
-        // Validasi data input
         $validated = $request->validate([
             'logo_path' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'favicon' => 'nullable|image|mimes:png,jpg,jpeg,ico|max:1024',
@@ -27,6 +26,16 @@ class KonfigurasiController extends Controller
             'telepon' => 'nullable|string|max:20',
             'alamat' => 'required|string|min:10',
             'footer_teks' => 'required|string|min:3|max:255',
+
+            // Koordinator SD
+            'nama_kor_sd' => 'nullable|string|max:255',
+            'email_kor_sd' => 'nullable|email|max:255',
+            'hp_kor_sd' => 'nullable|string|max:20',
+
+            // Koordinator SMP
+            'nama_kor_smp' => 'nullable|string|max:255',
+            'email_kor_smp' => 'nullable|email|max:255',
+            'hp_kor_smp' => 'nullable|string|max:20',
         ]);
 
         $data = $request->except(['_token', '_method']);

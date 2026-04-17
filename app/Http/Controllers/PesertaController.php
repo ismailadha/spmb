@@ -159,18 +159,25 @@ class PesertaController extends Controller
                     'peserta.nama_lengkap',
                     'jalur_pendaftaran.nama_jalur',
                     'pendaftaran.jenjang',
-                    'pendaftaran.status'
-                );
+                    'pendaftaran.status',
+                    'pendaftaran.tanggal_daftar'
+                )
+                ->orderByRaw("CASE WHEN pendaftaran.status = 'submit' THEN 0 WHEN pendaftaran.status = 'verifikasi' THEN 1 ELSE 2 END")
+                ->orderBy('pendaftaran.tanggal_daftar', 'asc');
 
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 'Selesai') {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
-                    } elseif ($row->status == 'Draft') {
-                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
+                    if ($row->status == 'verifikasi') {
+                        return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
+                    } elseif ($row->status == 'perbaikan') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan</span>';
+                    } elseif ($row->status == 'submit') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>';
+                    } elseif ($row->status == 'draft') {
+                        return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
                     } else {
-                        return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
+                        return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
                 })
                 ->addColumn('action', function ($row) {
@@ -322,18 +329,25 @@ class PesertaController extends Controller
                     'peserta.nama_lengkap',
                     'jalur_pendaftaran.nama_jalur',
                     'pendaftaran.jenjang',
-                    'pendaftaran.status'
-                );
+                    'pendaftaran.status',
+                    'pendaftaran.tanggal_daftar'
+                )
+                ->orderByRaw("CASE WHEN pendaftaran.status = 'submit' THEN 0 WHEN pendaftaran.status = 'verifikasi' THEN 1 ELSE 2 END")
+                ->orderBy('pendaftaran.tanggal_daftar', 'asc');
 
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 'Selesai') {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
-                    } elseif ($row->status == 'Draft') {
-                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
+                    if ($row->status == 'verifikasi') {
+                        return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
+                    } elseif ($row->status == 'perbaikan') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan</span>';
+                    } elseif ($row->status == 'submit') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>';
+                    } elseif ($row->status == 'draft') {
+                        return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
                     } else {
-                        return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
+                        return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
                 })
                 ->addColumn('action', function ($row) {

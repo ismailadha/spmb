@@ -28,6 +28,23 @@ class VerifikasiController extends Controller
                 'nilai_akhir' => 0,
             ];
 
+            // 1. Calculate Age Score (Skor Usia) - Common for all paths
+            $tanggalBatas = $pendaftaran->jenjang == 'SD'
+                ? ($periode->tanggal_batas_usia_sd ?? '2026-07-01')
+                : ($periode->tanggal_batas_usia_smp ?? '2026-07-01');
+
+            $birthDate = Carbon::parse($peserta->tanggal_lahir);
+            $limitDate = Carbon::parse($tanggalBatas);
+
+            // Age score in days (same as DATEDIFF in SQL)
+            $skorUsia = $birthDate->diffInDays($limitDate, false);
+            $nilaiData['skor_usia'] = $skorUsia;
+
+            // 2. Calculate Distance Score (Skor Jarak)
+            $nilaiData['skor_jarak'] = $this->calculateDistanceScore($pendaftaran->jarak_sekolah_1);
+            $nilaiData['skor_jarak_2'] = $this->calculateDistanceScore($pendaftaran->jarak_sekolah_2);
+
+            // 3. Path-specific logic
             if ($pendaftaran->jalur_id == 3) { // Prestasi
                 $nr = $request->input('rata_rapor', 0);
                 $nhtka = $request->input('nilai_tes_akademik', 0);
@@ -39,13 +56,18 @@ class VerifikasiController extends Controller
                 $nilaiData['nilai_tes_akademik'] = $nhtka;
                 $nilaiData['nilai_prestasi'] = $np;
                 $nilaiData['nilai_akhir'] = $na;
-
-                // Save or Update NilaiSeleksi only for Prestasi
-                NilaiSeleksi::updateOrCreate(
-                    ['pendaftaran_id' => $id],
-                    $nilaiData
-                );
+            } elseif ($pendaftaran->jalur_id == 1) { // Domisili
+                $nilaiData['nilai_akhir'] = $nilaiData['skor_jarak'] + $nilaiData['skor_usia'];
+            } else {
+                // Other paths might not have a combined "nilai_akhir" yet or use default
+                $nilaiData['nilai_akhir'] = 0;
             }
+
+            // Save or Update NilaiSeleksi
+            NilaiSeleksi::updateOrCreate(
+                ['pendaftaran_id' => $id],
+                $nilaiData
+            );
 
             DB::commit();
 
@@ -59,4 +81,28 @@ class VerifikasiController extends Controller
     }
 
     public function tolak_verifikasi($id) {}
+
+    /**
+     * Helper to calculate score based on distance.
+     */
+    private function calculateDistanceScore(?float $distance): int
+    {
+        if ($distance === null) {
+            return 100;
+        }
+
+        if ($distance <= 0.5) {
+            return 800;
+        } elseif ($distance <= 1.0) {
+            return 600;
+        } elseif ($distance <= 3.0) {
+            return 400;
+        } elseif ($distance <= 5.0) {
+            return 300;
+        } elseif ($distance <= 7.5) {
+            return 200;
+        }
+
+        return 100;
+    }
 }

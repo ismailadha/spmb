@@ -15,82 +15,139 @@
         </div>
 
         <div class="row">
-            <!-- Contact Info -->
-            <div class="col-lg-8 mx-auto mb-5 mb-lg-0">
-                <div class="contact_info h-100" style="background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-                    <!-- Decorative element -->
-                    <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: linear-gradient(to bottom, #3498db, #1abc9c);"></div>
-                    <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(52, 152, 219, 0.05); border-radius: 50%;"></div>
-                    
-                    <h3 style="font-size: 1.6rem; font-weight: 700; color: #1e2a4a; margin-bottom: 35px; position: relative;">Informasi Kontak</h3>
+            <!-- Office Contact Info -->
+            <div class="col-lg-4 mb-4">
+                <div class="contact_info h-100" style="background: #fff; padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; border-top: 4px solid #3498db;">
+                    <h4 style="font-size: 1.3rem; font-weight: 700; color: #1e2a4a; margin-bottom: 25px;">Informasi Kantor</h4>
                     
                     <div class="info_item d-flex align-items-start mb-4">
-                        <div class="icon" style="width: 50px; height: 50px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; flex-shrink: 0; transition: all 0.3s ease;">
-                            <i class="la la-map-marker" style="font-size: 1.6rem; color: #3498db;"></i>
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-map-marker" style="font-size: 1.3rem; color: #3498db;"></i>
                         </div>
-                        <div class="content pt-1">
-                            <h5 style="font-size: 1.05rem; font-weight: 700; color: #1e2a4a; margin-bottom: 8px;">Alamat Resmi</h5>
-                            <p style="color: #555; font-size: 0.95rem; line-height: 1.6; margin: 0;">
-                                <strong>Dinas Pendidikan dan Kebudayaan Kota Lhokseumawe</strong><br>
-                                Jalan H. Ramli Ridwan, Ds. Mon Geudong,<br> 
-                                Kecamatan Banda Sakti, Kota Lhokseumawe,<br>
-                                Provinsi Aceh. Kode Pos 24351
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Alamat</h6>
+                            <p style="color: #666; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                                <strong>{{ $appConfig['nama_instansi'] ?? 'Dinas Pendidikan' }}</strong><br>
+                                {!! nl2br(e($appConfig['alamat'] ?? 'Alamat belum diatur')) !!}
                             </p>
                         </div>
                     </div>
-
+ 
                     <div class="info_item d-flex align-items-start mb-4">
-                        <div class="icon" style="width: 50px; height: 50px; background: rgba(26, 188, 156, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; flex-shrink: 0; transition: all 0.3s ease;">
-                            <i class="la la-phone" style="font-size: 1.6rem; color: #1abc9c;"></i>
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(26, 188, 156, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-phone" style="font-size: 1.3rem; color: #1abc9c;"></i>
                         </div>
-                        <div class="content pt-1">
-                            <h5 style="font-size: 1.05rem; font-weight: 700; color: #1e2a4a; margin-bottom: 8px;">Telepon / Fax</h5>
-                            <p style="color: #555; font-size: 0.95rem; line-height: 1.6; margin: 0;">
-                                Telepon: (0645) 45234<br>
-                                Fax: (0645) 42335
-                            </p>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Telepon</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">{{ $appConfig['telepon'] ?? 'Belum diatur' }}</p>
                         </div>
                     </div>
-
+ 
                     <div class="info_item d-flex align-items-start">
-                        <div class="icon" style="width: 50px; height: 50px; background: rgba(231, 76, 60, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; flex-shrink: 0; transition: all 0.3s ease;">
-                            <i class="la la-envelope" style="font-size: 1.6rem; color: #e74c3c;"></i>
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(231, 76, 60, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-envelope" style="font-size: 1.3rem; color: #e74c3c;"></i>
                         </div>
-                        <div class="content pt-1">
-                            <h5 style="font-size: 1.05rem; font-weight: 700; color: #1e2a4a; margin-bottom: 8px;">Email Address</h5>
-                            <p style="color: #555; font-size: 0.95rem; line-height: 1.6; margin: 0;">
-                                <a href="mailto:disdikbud.lhokseumawe@gmail.com" style="color: #555; text-decoration: none;">disdikbud.lhokseumawe@gmail.com</a>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Email</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                                <a href="mailto:{{ $appConfig['email_resmi'] ?? '' }}" style="color: #666; text-decoration: none;">{{ $appConfig['email_resmi'] ?? 'Belum diatur' }}</a>
                             </p>
                         </div>
-                    </div>
-                    
-                    <div class="social_links mt-5 pt-4" style="border-top: 1px dashed #eee;">
-                        <h5 style="font-size: 0.9rem; font-weight: 600; color: #999; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">Ikuti Kami</h5>
-                        <div class="d-flex">
-                            <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #f4f6f9; color: #1e2a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; transition: all 0.3s ease; text-decoration: none;">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #f4f6f9; color: #1e2a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; transition: all 0.3s ease; text-decoration: none;">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #f4f6f9; color: #1e2a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; transition: all 0.3s ease; text-decoration: none;">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #f4f6f9; color: #1e2a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; text-decoration: none;">
-                                <i class="fab fa-youtube"></i>
-                            </a>
-                        </div>
-                        <style>
-                            .social-icon:hover {
-                                background: #3498db !important;
-                                color: #fff !important;
-                                transform: translateY(-3px);
-                            }
-                        </style>
                     </div>
                 </div>
             </div>
 
+            <!-- SD Coordinator Info -->
+            <div class="col-lg-4 mb-4">
+                <div class="contact_info h-100" style="background: #fff; padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; border-top: 4px solid #f39c12;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div style="width: 32px; height: 32px; background: #3498db; color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; margin-right: 12px;">SD</div>
+                        <h4 style="font-size: 1.3rem; font-weight: 700; color: #1e2a4a; margin: 0;">Koordinator SD</h4>
+                    </div>
+
+                    <div class="info_item d-flex align-items-start mb-4">
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-user" style="font-size: 1.3rem; color: #3498db;"></i>
+                        </div>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Nama Koordinator</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">{{ $appConfig['nama_kor_sd'] ?? 'Belum diatur' }}</p>
+                        </div>
+                    </div>
+
+                    @if(!empty($appConfig['email_kor_sd']))
+                    <div class="info_item d-flex align-items-start mb-4">
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(231, 76, 60, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-envelope" style="font-size: 1.3rem; color: #e74c3c;"></i>
+                        </div>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Email</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">{{ $appConfig['email_kor_sd'] }}</p>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if(!empty($appConfig['hp_kor_sd']))
+                    <div class="info_item d-flex align-items-start">
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(37, 211, 102, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-phone" style="font-size: 1.3rem; color: #25D366;"></i>
+                        </div>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Telepon</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                                {{ $appConfig['hp_kor_sd'] }}
+                            </p>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- SMP Coordinator Info -->
+            <div class="col-lg-4 mb-4">
+                <div class="contact_info h-100" style="background: #fff; padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; border-top: 4px solid #e74c3c;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div style="width: 32px; height: 32px; background: #e74c3c; color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; margin-right: 12px;">SMP</div>
+                        <h4 style="font-size: 1.3rem; font-weight: 700; color: #1e2a4a; margin: 0;">Koordinator SMP</h4>
+                    </div>
+
+                    <div class="info_item d-flex align-items-start mb-4">
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-user" style="font-size: 1.3rem; color: #3498db;"></i>
+                        </div>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Nama Koordinator</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">{{ $appConfig['nama_kor_smp'] ?? 'Belum diatur' }}</p>
+                        </div>
+                    </div>
+
+                    @if(!empty($appConfig['email_kor_smp']))
+                    <div class="info_item d-flex align-items-start mb-4">
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(231, 76, 60, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-envelope" style="font-size: 1.3rem; color: #e74c3c;"></i>
+                        </div>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Email</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">{{ $appConfig['email_kor_smp'] }}</p>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if(!empty($appConfig['hp_kor_smp']))
+                    <div class="info_item d-flex align-items-start">
+                        <div class="icon" style="width: 40px; height: 40px; background: rgba(37, 211, 102, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <i class="la la-phone" style="font-size: 1.3rem; color: #25D366;"></i>
+                        </div>
+                        <div class="content">
+                            <h6 style="font-size: 0.95rem; font-weight: 700; color: #1e2a4a; margin-bottom: 5px;">Telepon</h6>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                                {{ $appConfig['hp_kor_smp'] }}
+                            </p>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -45,9 +45,7 @@ Route::get('zonasi-sd', [FrontendController::class, 'zonasi_sd'])->name('zonasi-
 // zonasi smp
 Route::get('zonasi-smp', [FrontendController::class, 'zonasi_smp'])->name('zonasi-smp');
 
-Route::get('kontak', function () {
-    return view('frontend.kontak');
-})->name('kontak');
+Route::get('kontak', [FrontendController::class, 'kontak'])->name('kontak');
 
 Route::middleware('auth')->group(function () {
 

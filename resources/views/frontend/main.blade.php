@@ -1,6 +1,5 @@
 <!doctype html>
 @php
-    $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
     $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
 @endphp
 <html lang="en">

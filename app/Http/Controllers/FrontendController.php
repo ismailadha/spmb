@@ -114,4 +114,11 @@ class FrontendController extends Controller
 
         return view('frontend.zonasi_smp', compact('sekolah', 'desa'));
     }
+
+    public function kontak()
+    {
+        $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
+
+        return view('frontend.kontak', compact('appConfig'));
+    }
 }

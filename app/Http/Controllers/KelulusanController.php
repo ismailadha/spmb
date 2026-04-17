@@ -46,18 +46,8 @@ class KelulusanController extends Controller
 
         $pilihanKe = $request->get('pilihan_ke', '1');
         $distanceCol = ($pilihanKe == '2') ? 'jarak_sekolah_2' : 'jarak_sekolah_1';
+        $distanceScoreCol = ($pilihanKe == '2') ? 'nilai_seleksi.skor_jarak_2' : 'nilai_seleksi.skor_jarak';
         $tanggalBatas = $periode->tanggal_batas_usia_sd ?? '2026-07-01';
-
-        $skorJarakSql = "(CASE 
-            WHEN pendaftaran.$distanceCol <= 0.5 THEN 800 
-            WHEN pendaftaran.$distanceCol <= 1.0 THEN 600 
-            WHEN pendaftaran.$distanceCol <= 3.0 THEN 400 
-            WHEN pendaftaran.$distanceCol <= 5.0 THEN 300 
-            WHEN pendaftaran.$distanceCol <= 7.5 THEN 200 
-            ELSE 100 
-        END)";
-
-        $skorUsiaSql = "DATEDIFF('$tanggalBatas', peserta.tanggal_lahir)";
 
         $data = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -104,9 +94,9 @@ class KelulusanController extends Controller
         // Conditional Ranking & Scoring
         if ($jalurId == 1) {
             // Domisili: Use stored score or fallback
-            $data->selectRaw("COALESCE(nilai_seleksi.skor_jarak, $skorJarakSql) as skor_jarak")
-                ->selectRaw("COALESCE(nilai_seleksi.skor_usia, $skorUsiaSql) as skor_usia")
-                ->selectRaw("COALESCE(nilai_seleksi.nilai_akhir, ($skorJarakSql + $skorUsiaSql)) as total_skor")
+            $data->selectRaw("$distanceScoreCol as skor_jarak")
+                ->selectRaw('nilai_seleksi.skor_usia')
+                ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
                 ->orderBy('total_skor', 'desc');
         } elseif ($jalurId == 3) {
             // Prestasi: Must use stored score
@@ -215,18 +205,8 @@ class KelulusanController extends Controller
 
         $pilihanKe = $request->get('pilihan_ke', '1');
         $distanceCol = ($pilihanKe == '2') ? 'jarak_sekolah_2' : 'jarak_sekolah_1';
+        $distanceScoreCol = ($pilihanKe == '2') ? 'nilai_seleksi.skor_jarak_2' : 'nilai_seleksi.skor_jarak';
         $tanggalBatas = $periode->tanggal_batas_usia_smp ?? '2026-07-01';
-
-        $skorJarakSql = "(CASE 
-            WHEN pendaftaran.$distanceCol <= 0.5 THEN 800 
-            WHEN pendaftaran.$distanceCol <= 1.0 THEN 600 
-            WHEN pendaftaran.$distanceCol <= 3.0 THEN 400 
-            WHEN pendaftaran.$distanceCol <= 5.0 THEN 300 
-            WHEN pendaftaran.$distanceCol <= 7.5 THEN 200 
-            ELSE 100 
-        END)";
-
-        $skorUsiaSql = "DATEDIFF('$tanggalBatas', peserta.tanggal_lahir)";
 
         $data = DB::table('pendaftaran')
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
@@ -273,9 +253,9 @@ class KelulusanController extends Controller
         // Conditional Ranking & Scoring
         if ($jalurId == 1) {
             // Domisili: Use stored score or fallback
-            $data->selectRaw("COALESCE(nilai_seleksi.skor_jarak, $skorJarakSql) as skor_jarak")
-                ->selectRaw("COALESCE(nilai_seleksi.skor_usia, $skorUsiaSql) as skor_usia")
-                ->selectRaw("COALESCE(nilai_seleksi.nilai_akhir, ($skorJarakSql + $skorUsiaSql)) as total_skor")
+            $data->selectRaw("$distanceScoreCol as skor_jarak")
+                ->selectRaw('nilai_seleksi.skor_usia')
+                ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
                 ->orderBy('total_skor', 'desc');
         } elseif ($jalurId == 3) {
             // Prestasi: Must use stored score

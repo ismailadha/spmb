@@ -159,6 +159,90 @@
                     </div>
                 </div>
 
+                <div class="separator separator-dashed my-10"></div>
+
+                <div class="row mb-6">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-8">
+                        <h4 class="fw-bolder">Koordinator SD</h4>
+                    </div>
+                </div>
+
+                <!-- Nama Koordinator SD -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Nama Koordinator SD</label>
+                    <div class="col-lg-8 fv-row">
+                        <input type="text" name="nama_kor_sd" class="form-control form-control-lg form-control-solid @error('nama_kor_sd') is-invalid @enderror" placeholder="Nama Lengkap Koordinator SD" value="{{ $konfigurasi['nama_kor_sd'] ?? old('nama_kor_sd') }}" />
+                        @error('nama_kor_sd')
+                            <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Email Koordinator SD -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Email Koordinator SD</label>
+                    <div class="col-lg-8 fv-row">
+                        <input type="email" name="email_kor_sd" class="form-control form-control-lg form-control-solid @error('email_kor_sd') is-invalid @enderror" placeholder="email@sd.com" value="{{ $konfigurasi['email_kor_sd'] ?? old('email_kor_sd') }}" />
+                        @error('email_kor_sd')
+                            <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- HP Koordinator SD -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">No. HP Koordinator SD</label>
+                    <div class="col-lg-8 fv-row">
+                        <input type="text" name="hp_kor_sd" class="form-control form-control-lg form-control-solid @error('hp_kor_sd') is-invalid @enderror" placeholder="0812xxxxxxxx" value="{{ $konfigurasi['hp_kor_sd'] ?? old('hp_kor_sd') }}" />
+                        @error('hp_kor_sd')
+                            <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="separator separator-dashed my-10"></div>
+
+                <div class="row mb-6">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-8">
+                        <h4 class="fw-bolder">Koordinator SMP</h4>
+                    </div>
+                </div>
+
+                <!-- Nama Koordinator SMP -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Nama Koordinator SMP</label>
+                    <div class="col-lg-8 fv-row">
+                        <input type="text" name="nama_kor_smp" class="form-control form-control-lg form-control-solid @error('nama_kor_smp') is-invalid @enderror" placeholder="Nama Lengkap Koordinator SMP" value="{{ $konfigurasi['nama_kor_smp'] ?? old('nama_kor_smp') }}" />
+                        @error('nama_kor_smp')
+                            <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Email Koordinator SMP -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Email Koordinator SMP</label>
+                    <div class="col-lg-8 fv-row">
+                        <input type="email" name="email_kor_smp" class="form-control form-control-lg form-control-solid @error('email_kor_smp') is-invalid @enderror" placeholder="email@smp.com" value="{{ $konfigurasi['email_kor_smp'] ?? old('email_kor_smp') }}" />
+                        @error('email_kor_smp')
+                            <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- HP Koordinator SMP -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">No. HP Koordinator SMP</label>
+                    <div class="col-lg-8 fv-row">
+                        <input type="text" name="hp_kor_smp" class="form-control form-control-lg form-control-solid @error('hp_kor_smp') is-invalid @enderror" placeholder="0812xxxxxxxx" value="{{ $konfigurasi['hp_kor_smp'] ?? old('hp_kor_smp') }}" />
+                        @error('hp_kor_smp')
+                            <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
             </div>
 
             <div class="card-footer d-flex justify-content-end py-6 px-9">
