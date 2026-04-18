@@ -30,12 +30,15 @@ class PesertaExport extends DefaultValueBinder implements FromQuery, ShouldAutoS
 
     private $jenjang;
 
-    public function __construct($periodeId, $jalurId, $sekolahId, $jenjang = 'SD')
+    private $status;
+
+    public function __construct($periodeId, $jalurId, $sekolahId, $jenjang = 'SD', $status = null)
     {
         $this->periodeId = $periodeId;
         $this->jalurId = $jalurId;
         $this->sekolahId = $sekolahId;
         $this->jenjang = $jenjang;
+        $this->status = $status;
     }
 
     public function query()
@@ -55,6 +58,9 @@ class PesertaExport extends DefaultValueBinder implements FromQuery, ShouldAutoS
                     $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                         ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                 });
+            })
+            ->when($this->status, function ($query, $status) {
+                return $query->where('pendaftaran.status', $status);
             })
             ->select(
                 'pendaftaran.nomor_pendaftaran',

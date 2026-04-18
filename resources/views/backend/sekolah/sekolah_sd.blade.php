@@ -21,7 +21,16 @@
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
-                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                <div class="d-flex justify-content-end align-items-center" data-kt-user-table-toolbar="base">
+                    @if(auth()->user()->role == 'admin_dinas')
+                    <div class="me-3 w-200px">
+                        <select id="filter_kecamatan" class="form-select form-select-solid" data-control="select2" data-placeholder="Pilih Kecamatan" data-allow-clear="true">
+                            <option value="">Semua Kecamatan</option>
+                            @foreach($kecamatan as $k)
+                                <option value="{{ $k->id }}">{{ $k->nama_kecamatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <a href="{{ route('sekolah.create') }}" class="btn btn-primary">
                         <span class="svg-icon svg-icon-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -31,6 +40,7 @@
                         </span>
                         Add Sekolah
                     </a>
+                    @endif
                 </div>
                 <!--end::Toolbar-->
             </div>
@@ -79,11 +89,16 @@ $.ajaxSetup({
 });
 
 $(document).ready(function() {
-    $('#kt_table_users').DataTable({
+    var table = $('#kt_table_users').DataTable({
         processing: true,
         serverSide: true,
         scrollX: true,
-        ajax: "{{ route('sekolah.sd') }}",
+        ajax: {
+            url: "{{ route('sekolah.sd') }}",
+            data: function (d) {
+                d.id_kecamatan = $('#filter_kecamatan').val();
+            }
+        },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
             { data: 'sekolah_info', name: 'sekolah_info' },
@@ -92,6 +107,10 @@ $(document).ready(function() {
             { data: 'status_pilihan_1', name: 'status_pilihan_1', orderable: false, searchable: false },
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
         ]
+    });
+
+    $('#filter_kecamatan').on('change', function () {
+        table.draw();
     });
 
     // Delete confirmation

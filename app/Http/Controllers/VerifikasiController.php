@@ -28,7 +28,7 @@ class VerifikasiController extends Controller
                 'nilai_akhir' => 0,
             ];
 
-            // 1. Calculate Age Score (Skor Usia) - Common for all paths
+            // 2. Identify Age parameters
             $tanggalBatas = $pendaftaran->jenjang == 'SD'
                 ? ($periode->tanggal_batas_usia_sd ?? '2026-07-01')
                 : ($periode->tanggal_batas_usia_smp ?? '2026-07-01');
@@ -36,30 +36,31 @@ class VerifikasiController extends Controller
             $birthDate = Carbon::parse($peserta->tanggal_lahir);
             $limitDate = Carbon::parse($tanggalBatas);
 
-            // Age score in days (same as DATEDIFF in SQL)
-            $skorUsia = $birthDate->diffInDays($limitDate, false);
-            $nilaiData['skor_usia'] = $skorUsia;
-
-            // 2. Calculate Distance Score (Skor Jarak)
+            // 3. Calculated Scores (Always recorded, but used differently per path)
+            $nilaiData['skor_usia'] = $birthDate->diffInDays($limitDate, false);
             $nilaiData['skor_jarak'] = $this->calculateDistanceScore($pendaftaran->jarak_sekolah_1);
-            $nilaiData['skor_jarak_2'] = $this->calculateDistanceScore($pendaftaran->jarak_sekolah_2);
 
-            // 3. Path-specific logic
-            if ($pendaftaran->jalur_id == 3) { // Prestasi
+            // Prestasi, Afirmasi, and Mutasi only have 1 school choice, so skip choice 2
+            $nilaiData['skor_jarak_2'] = in_array($pendaftaran->jalur_id, [2, 3, 4]) ? 0 : $this->calculateDistanceScore($pendaftaran->jarak_sekolah_2);
+
+            // 4. Path-specific logic
+            if ($pendaftaran->jalur_id == 3) { // Jalur Prestasi
                 $nr = $request->input('rata_rapor', 0);
                 $nhtka = $request->input('nilai_tes_akademik', 0);
                 $np = $request->input('nilai_prestasi', 0);
 
+                // For Prestasi, score is strictly based on academic/achievement points
                 $na = ($nr * 0.4) + ($nhtka * 0.3) + ($np * 0.3);
 
                 $nilaiData['rata_rapor'] = $nr;
                 $nilaiData['nilai_tes_akademik'] = $nhtka;
                 $nilaiData['nilai_prestasi'] = $np;
-                $nilaiData['nilai_akhir'] = $na;
-            } elseif ($pendaftaran->jalur_id == 1) { // Domisili
+                $nilaiData['nilai_akhir'] = $na; // Distance/Age NOT included here
+            } elseif (in_array($pendaftaran->jalur_id, [1, 2, 4])) { // Domisili, Afirmasi, Mutasi
+                // For these paths, score is the sum of Distance + Age
                 $nilaiData['nilai_akhir'] = $nilaiData['skor_jarak'] + $nilaiData['skor_usia'];
             } else {
-                // Other paths might not have a combined "nilai_akhir" yet or use default
+                // Other paths recorded but no combined score by default
                 $nilaiData['nilai_akhir'] = 0;
             }
 

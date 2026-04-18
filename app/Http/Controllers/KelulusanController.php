@@ -98,21 +98,28 @@ class KelulusanController extends Controller
                 ->selectRaw('nilai_seleksi.skor_usia')
                 ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
                 ->orderBy('total_skor', 'desc');
+        } elseif (in_array($jalurId, [1, 2, 4])) {
+            // Domisili, Afirmasi, Mutasi: Use stored score (Distance + Age)
+            $data->selectRaw("$distanceScoreCol as skor_jarak")
+                ->selectRaw('nilai_seleksi.skor_usia')
+                ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
+                ->orderBy('total_skor', 'desc');
         } elseif ($jalurId == 3) {
             // Prestasi: Must use stored score
             $data->selectRaw('nilai_seleksi.rata_rapor')
                 ->selectRaw('nilai_seleksi.nilai_tes_akademik')
                 ->selectRaw('nilai_seleksi.nilai_prestasi')
+                ->selectRaw('nilai_seleksi.skor_jarak')
+                ->selectRaw('nilai_seleksi.skor_usia')
                 ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
-                ->orderBy('total_skor', 'desc');
-        } elseif (in_array($jalurId, [2, 4])) {
-            // Afirmasi (2) & Mutasi (4) SD: Age then Distance
-            $data->selectRaw('NULL as skor_jarak, NULL as skor_usia, NULL as total_skor')
-                ->orderBy('peserta.tanggal_lahir', 'asc')
-                ->orderBy('pendaftaran.jarak_sekolah_1', 'asc');
+                ->orderBy('total_skor', 'desc')
+                ->orderBy('nilai_seleksi.skor_usia', 'desc')
+                ->orderBy('nilai_seleksi.skor_jarak', 'desc');
         } else {
             // Standard: Distance then Age
-            $data->selectRaw('NULL as skor_jarak, NULL as skor_usia, NULL as total_skor')
+            $data->selectRaw('nilai_seleksi.skor_jarak')
+                ->selectRaw('nilai_seleksi.skor_usia')
+                ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
                 ->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
                 ->orderBy('peserta.tanggal_lahir', 'asc');
         }
@@ -251,8 +258,8 @@ class KelulusanController extends Controller
             );
 
         // Conditional Ranking & Scoring
-        if ($jalurId == 1) {
-            // Domisili: Use stored score or fallback
+        if (in_array($jalurId, [1, 2, 4])) {
+            // Domisili, Afirmasi, Mutasi: Use stored score (Distance + Age)
             $data->selectRaw("$distanceScoreCol as skor_jarak")
                 ->selectRaw('nilai_seleksi.skor_usia')
                 ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
@@ -262,11 +269,17 @@ class KelulusanController extends Controller
             $data->selectRaw('nilai_seleksi.rata_rapor')
                 ->selectRaw('nilai_seleksi.nilai_tes_akademik')
                 ->selectRaw('nilai_seleksi.nilai_prestasi')
+                ->selectRaw('nilai_seleksi.skor_jarak')
+                ->selectRaw('nilai_seleksi.skor_usia')
                 ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
-                ->orderBy('total_skor', 'desc');
+                ->orderBy('total_skor', 'desc')
+                ->orderBy('nilai_seleksi.skor_usia', 'desc')
+                ->orderBy('nilai_seleksi.skor_jarak', 'desc');
         } else {
             // All other SMP paths: Distance then Age
-            $data->selectRaw('NULL as skor_jarak, NULL as skor_usia, NULL as total_skor')
+            $data->selectRaw('nilai_seleksi.skor_jarak')
+                ->selectRaw('nilai_seleksi.skor_usia')
+                ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
                 ->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
                 ->orderBy('peserta.tanggal_lahir', 'asc');
         }

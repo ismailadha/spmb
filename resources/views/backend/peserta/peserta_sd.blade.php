@@ -17,64 +17,72 @@
             <div class="card-title">
                 <h3 class="card-label">Data Peserta SD</h3>
             </div>
-            <!--begin::Card title-->
+            <!--end::Card title-->
             <!--begin::Card toolbar-->
-            <div class="card-toolbar w-100">
-                <div class="d-flex flex-stack flex-wrap gap-2 w-100">
-                    <!--begin::Filters-->
-                    <div class="d-flex align-items-center flex-wrap gap-2 gap-md-5">
-                        <div class="d-flex align-items-center">
-                            <label for="filter_periode" class="me-2 fw-bold text-muted">Periode:</label>
-                            <select id="filter_periode" class="form-select form-select-sm form-select-solid w-125px">
-                                @foreach($semuaPeriode as $p)
-                                    <option value="{{ $p->id }}" {{ ($periode && $periode->id == $p->id) ? 'selected' : '' }}>
-                                        {{ $p->tahun_ajaran }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
-                            <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px">
-                                <option value="">Semua Jalur</option>
-                                @foreach($semuaJalur as $j)
-                                    <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
-                            <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
-                                @if(auth()->user()->role != 'admin_sekolah')
-                                    <option value="">Semua Sekolah</option>
-                                @endif
-                                @foreach($semuaSekolah as $s)
-                                    <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <!--end::Filters-->
-
-                    <!--begin::Export Buttons-->
-                    <div class="d-flex align-items-center gap-2">
-                        <button type="button" id="btn_export_excel" class="btn btn-sm btn-success d-flex align-items-center">
-                            <i class="fas fa-file-excel fs-4 me-2"></i> Excel
-                        </button>
-                        <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
-                            <i class="fas fa-file-pdf fs-4 me-2"></i> PDF
-                        </button>
-                    </div>
-                    <!--end::Export Buttons-->
+            <div class="card-toolbar">
+                <!--begin::Export Buttons-->
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" id="btn_export_excel" class="btn btn-sm btn-success d-flex align-items-center">
+                        <i class="fas fa-file-excel fs-4 me-2"></i> Excel
+                    </button>
+                    <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
+                        <i class="fas fa-file-pdf fs-4 me-2"></i> PDF
+                    </button>
                 </div>
+                <!--end::Export Buttons-->
             </div>
             <!--end::Card toolbar-->
         </div>
         <!--end::Card header-->
         <!--begin::Card body-->
-		<div class="card-body py-4">
+        <div class="card-body py-4">
+            <!--begin::Filters-->
+            <div class="d-flex flex-wrap align-items-center gap-2 gap-md-5 mb-5">
+                <div class="d-flex align-items-center">
+                    <label for="filter_periode" class="me-2 fw-bold text-muted">Periode:</label>
+                    <select id="filter_periode" class="form-select form-select-sm form-select-solid w-125px">
+                        @foreach($semuaPeriode as $p)
+                            <option value="{{ $p->id }}" {{ ($periode && $periode->id == $p->id) ? 'selected' : '' }}>
+                                {{ $p->tahun_ajaran }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <label for="filter_jalur" class="me-2 fw-bold text-muted">Jalur:</label>
+                    <select id="filter_jalur" class="form-select form-select-sm form-select-solid w-150px">
+                        <option value="">Semua Jalur</option>
+                        @foreach($semuaJalur as $j)
+                            <option value="{{ $j->id }}">{{ $j->nama_jalur }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
+                    <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
+                        @if(auth()->user()->role != 'admin_sekolah')
+                            <option value="">Semua Sekolah</option>
+                        @endif
+                        @foreach($semuaSekolah as $s)
+                            <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <label for="filter_status" class="me-2 fw-bold text-muted">Status:</label>
+                    <select id="filter_status" class="form-select form-select-sm form-select-solid w-150px">
+                        <option value="">Semua Status</option>
+                        <option value="submit">Proses Verifikasi</option>
+                        <option value="verifikasi">Terverifikasi</option>
+                        <option value="perbaikan">Perbaikan</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+            </div>
+            <!--end::Filters-->
             <!--begin::Table-->
             <div class="table-responsive">
             <table class="table align-middle table-row-dashed fs-6 gy-5 min-w-full" id="kt_table_peserta">
@@ -126,6 +134,7 @@ $(document).ready(function() {
                 d.periode_id = $('#filter_periode').val();
                 d.jalur_id = $('#filter_jalur').val();
                 d.sekolah_id = $('#filter_sekolah').val();
+                d.status = $('#filter_status').val();
             }
         },
         columns: [
@@ -206,7 +215,7 @@ $(document).ready(function() {
         });
     @endif
     
-    $('#filter_periode, #filter_jalur, #filter_sekolah').change(function() {
+    $('#filter_periode, #filter_jalur, #filter_sekolah, #filter_status').change(function() {
         $('#kt_table_peserta').DataTable().ajax.reload();
     });
 
@@ -216,6 +225,7 @@ $(document).ready(function() {
             periode_id: $('#filter_periode').val(),
             jalur_id: $('#filter_jalur').val(),
             sekolah_id: $('#filter_sekolah').val(),
+            status: $('#filter_status').val(),
         };
         let url = "{{ route('peserta.sd.export.excel') }}?" + $.param(params);
         window.location.href = url;
@@ -226,6 +236,7 @@ $(document).ready(function() {
             periode_id: $('#filter_periode').val(),
             jalur_id: $('#filter_jalur').val(),
             sekolah_id: $('#filter_sekolah').val(),
+            status: $('#filter_status').val(),
         };
         let url = "{{ route('peserta.sd.export.pdf') }}?" + $.param(params);
         window.location.href = url;

@@ -133,6 +133,7 @@ class PesertaController extends Controller
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
             $jalurId = $request->get('jalur_id');
             $sekolahId = $request->get('sekolah_id');
+            $status = $request->get('status');
 
             if (auth()->user()->role == 'admin_sekolah') {
                 $sekolahId = auth()->user()->sekolah_id;
@@ -151,6 +152,9 @@ class PesertaController extends Controller
                         $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                             ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                     });
+                })
+                ->when($status, function ($query, $status) {
+                    return $query->where('pendaftaran.status', $status);
                 })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
@@ -215,6 +219,7 @@ class PesertaController extends Controller
         $periodeId = $request->get('periode_id');
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -222,7 +227,7 @@ class PesertaController extends Controller
 
         $filename = 'data_peserta_sd_'.date('YmdHis').'.xlsx';
 
-        return (new PesertaExport($periodeId, $jalurId, $sekolahId, 'SD'))->download($filename);
+        return (new PesertaExport($periodeId, $jalurId, $sekolahId, 'SD', $status))->download($filename);
     }
 
     /**
@@ -233,6 +238,7 @@ class PesertaController extends Controller
         $periodeId = $request->get('periode_id');
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -253,6 +259,9 @@ class PesertaController extends Controller
                     $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                         ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                 });
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('pendaftaran.status', $status);
             })
             ->select(
                 'pendaftaran.nomor_pendaftaran',
@@ -303,6 +312,7 @@ class PesertaController extends Controller
             $periodeId = $request->get('periode_id') ?: ($periode->id ?? null);
             $jalurId = $request->get('jalur_id');
             $sekolahId = $request->get('sekolah_id');
+            $status = $request->get('status');
 
             if (auth()->user()->role == 'admin_sekolah') {
                 $sekolahId = auth()->user()->sekolah_id;
@@ -321,6 +331,9 @@ class PesertaController extends Controller
                         $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                             ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                     });
+                })
+                ->when($status, function ($query, $status) {
+                    return $query->where('pendaftaran.status', $status);
                 })
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
@@ -385,6 +398,7 @@ class PesertaController extends Controller
         $periodeId = $request->get('periode_id');
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -392,7 +406,7 @@ class PesertaController extends Controller
 
         $filename = 'data_peserta_smp_'.date('YmdHis').'.xlsx';
 
-        return (new PesertaExport($periodeId, $jalurId, $sekolahId, 'SMP'))->download($filename);
+        return (new PesertaExport($periodeId, $jalurId, $sekolahId, 'SMP', $status))->download($filename);
     }
 
     /**
@@ -403,6 +417,7 @@ class PesertaController extends Controller
         $periodeId = $request->get('periode_id');
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -423,6 +438,9 @@ class PesertaController extends Controller
                     $q->where('pendaftaran.sekolah_pilihan_1', $sekolahId)
                         ->orWhere('pendaftaran.sekolah_pilihan_2', $sekolahId);
                 });
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('pendaftaran.status', $status);
             })
             ->select(
                 'pendaftaran.nomor_pendaftaran',

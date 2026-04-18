@@ -24,6 +24,10 @@ class SekolahController extends Controller
                 $data->where('id', auth()->user()->sekolah_id);
             }
 
+            if ($request->id_kecamatan) {
+                $data->where('id_kecamatan', $request->id_kecamatan);
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('sekolah_info', function ($row) {
@@ -48,6 +52,16 @@ class SekolahController extends Controller
                 ->addColumn('total_daya_tampung', function ($row) {
                     return $row->total_daya_tampung;
                 })
+                ->filterColumn('sekolah_info', function ($query, $keyword) {
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('nama_sekolah', 'like', "%{$keyword}%")
+                            ->orWhere('npsn', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('total_daya_tampung', function ($query, $keyword) {
+                    $sql = '(COALESCE(daya_tampung_prestasi, 0) + COALESCE(daya_tampung_domisili, 0) + COALESCE(daya_tampung_afirmasi, 0) + COALESCE(daya_tampung_mutasi, 0)) like ?';
+                    $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
                 ->addColumn('status_pilihan_1', function ($row) {
                     if ($row->status_pilihan_1 == 1) {
                         return '<span class="badge badge-light-primary fw-bolder">Pilihan 1</span>';
@@ -58,30 +72,40 @@ class SekolahController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    return '
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.route('sekolah.show', $row->id).'">View</a></li>
-                                <li><a class="dropdown-item" href="'.route('sekolah.edit', $row->id).'">Edit</a></li>
-                                <li>
-                                    <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
-                                        '.csrf_field().'
-                                        '.method_field('DELETE').'
-                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->nama_sekolah.'">Delete</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    ';
+                    $btn = '<div class="d-flex justify-content-end">';
+
+                    // View button
+                    $btn .= '<a href="'.route('sekolah.show', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="View">
+                                <i class="bi bi-eye fs-3"></i>
+                            </a>';
+
+                    // Edit button
+                    $btn .= '<a href="'.route('sekolah.edit', $row->id).'" class="btn btn-icon btn-light-warning btn-sm me-1" title="Edit">
+                                <i class="bi bi-pencil-square fs-3"></i>
+                            </a>';
+
+                    // Delete button (admin_dinas only)
+                    if (auth()->user()->role == 'admin_dinas') {
+                        $btn .= '<form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="display: inline;">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                    <button type="button" class="btn btn-icon btn-light-danger btn-sm btn-delete" data-nama="'.$row->nama_sekolah.'" title="Delete">
+                                        <i class="bi bi-trash fs-3"></i>
+                                    </button>
+                                </form>';
+                    }
+
+                    $btn .= '</div>';
+
+                    return $btn;
                 })
                 ->rawColumns(['sekolah_info', 'status_pilihan_1', 'action'])
                 ->make(true);
         }
 
-        return view('backend.sekolah.index');
+        $kecamatan = Kecamatan::all();
+
+        return view('backend.sekolah.index', compact('kecamatan'));
     }
 
     public function sekolah_sd(Request $request)
@@ -90,6 +114,10 @@ class SekolahController extends Controller
             $data = Sekolah::where('jenjang', 'SD');
             if (auth()->user()->role == 'admin_sekolah') {
                 $data->where('id', auth()->user()->sekolah_id);
+            }
+
+            if ($request->id_kecamatan) {
+                $data->where('id_kecamatan', $request->id_kecamatan);
             }
 
             return DataTables::of($data)
@@ -108,6 +136,16 @@ class SekolahController extends Controller
                 ->addColumn('total_daya_tampung', function ($row) {
                     return $row->total_daya_tampung;
                 })
+                ->filterColumn('sekolah_info', function ($query, $keyword) {
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('nama_sekolah', 'like', "%{$keyword}%")
+                            ->orWhere('npsn', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('total_daya_tampung', function ($query, $keyword) {
+                    $sql = '(COALESCE(daya_tampung_prestasi, 0) + COALESCE(daya_tampung_domisili, 0) + COALESCE(daya_tampung_afirmasi, 0) + COALESCE(daya_tampung_mutasi, 0)) like ?';
+                    $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
                 ->addColumn('status_pilihan_1', function ($row) {
                     if ($row->status_pilihan_1 == 1) {
                         return '<span class="badge badge-light-primary fw-bolder">Pilihan 1</span>';
@@ -118,30 +156,40 @@ class SekolahController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    return '
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.route('sekolah.show', $row->id).'">View</a></li>
-                                <li><a class="dropdown-item" href="'.route('sekolah.edit', $row->id).'">Edit</a></li>
-                                <li>
-                                    <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
-                                        '.csrf_field().'
-                                        '.method_field('DELETE').'
-                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->nama_sekolah.'">Delete</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    ';
+                    $btn = '<div class="d-flex justify-content-end">';
+
+                    // View button
+                    $btn .= '<a href="'.route('sekolah.show', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="View">
+                                <i class="bi bi-eye fs-3"></i>
+                            </a>';
+
+                    // Edit button
+                    $btn .= '<a href="'.route('sekolah.edit', $row->id).'" class="btn btn-icon btn-light-warning btn-sm me-1" title="Edit">
+                                <i class="bi bi-pencil-square fs-3"></i>
+                            </a>';
+
+                    // Delete button (admin_dinas only)
+                    if (auth()->user()->role == 'admin_dinas') {
+                        $btn .= '<form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="display: inline;">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                    <button type="button" class="btn btn-icon btn-light-danger btn-sm btn-delete" data-nama="'.$row->nama_sekolah.'" title="Delete">
+                                        <i class="bi bi-trash fs-3"></i>
+                                    </button>
+                                </form>';
+                    }
+
+                    $btn .= '</div>';
+
+                    return $btn;
                 })
                 ->rawColumns(['sekolah_info', 'status_pilihan_1', 'action'])
                 ->make(true);
         }
 
-        return view('backend.sekolah.sekolah_sd');
+        $kecamatan = Kecamatan::all();
+
+        return view('backend.sekolah.sekolah_sd', compact('kecamatan'));
     }
 
     public function sekolah_smp(Request $request)
@@ -150,6 +198,10 @@ class SekolahController extends Controller
             $data = Sekolah::where('jenjang', 'SMP');
             if (auth()->user()->role == 'admin_sekolah') {
                 $data->where('id', auth()->user()->sekolah_id);
+            }
+
+            if ($request->id_kecamatan) {
+                $data->where('id_kecamatan', $request->id_kecamatan);
             }
 
             return DataTables::of($data)
@@ -168,6 +220,16 @@ class SekolahController extends Controller
                 ->addColumn('total_daya_tampung', function ($row) {
                     return $row->total_daya_tampung;
                 })
+                ->filterColumn('sekolah_info', function ($query, $keyword) {
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('nama_sekolah', 'like', "%{$keyword}%")
+                            ->orWhere('npsn', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('total_daya_tampung', function ($query, $keyword) {
+                    $sql = '(COALESCE(daya_tampung_prestasi, 0) + COALESCE(daya_tampung_domisili, 0) + COALESCE(daya_tampung_afirmasi, 0) + COALESCE(daya_tampung_mutasi, 0)) like ?';
+                    $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
                 ->addColumn('status_pilihan_1', function ($row) {
                     if ($row->status_pilihan_1 == 1) {
                         return '<span class="badge badge-light-primary fw-bolder">Pilihan 1</span>';
@@ -178,30 +240,40 @@ class SekolahController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    return '
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.route('sekolah.show', $row->id).'">View</a></li>
-                                <li><a class="dropdown-item" href="'.route('sekolah.edit', $row->id).'">Edit</a></li>
-                                <li>
-                                    <form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="margin: 0;">
-                                        '.csrf_field().'
-                                        '.method_field('DELETE').'
-                                        <button type="button" class="dropdown-item text-danger btn-delete" data-nama="'.$row->nama_sekolah.'">Delete</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    ';
+                    $btn = '<div class="d-flex justify-content-end">';
+
+                    // View button
+                    $btn .= '<a href="'.route('sekolah.show', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="View">
+                                <i class="bi bi-eye fs-3"></i>
+                            </a>';
+
+                    // Edit button
+                    $btn .= '<a href="'.route('sekolah.edit', $row->id).'" class="btn btn-icon btn-light-warning btn-sm me-1" title="Edit">
+                                <i class="bi bi-pencil-square fs-3"></i>
+                            </a>';
+
+                    // Delete button (admin_dinas only)
+                    if (auth()->user()->role == 'admin_dinas') {
+                        $btn .= '<form action="'.route('sekolah.destroy', $row->id).'" method="POST" style="display: inline;">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                    <button type="button" class="btn btn-icon btn-light-danger btn-sm btn-delete" data-nama="'.$row->nama_sekolah.'" title="Delete">
+                                        <i class="bi bi-trash fs-3"></i>
+                                    </button>
+                                </form>';
+                    }
+
+                    $btn .= '</div>';
+
+                    return $btn;
                 })
                 ->rawColumns(['sekolah_info', 'status_pilihan_1', 'action'])
                 ->make(true);
         }
 
-        return view('backend.sekolah.sekolah_smp');
+        $kecamatan = Kecamatan::all();
+
+        return view('backend.sekolah.sekolah_smp', compact('kecamatan'));
     }
 
     /**
