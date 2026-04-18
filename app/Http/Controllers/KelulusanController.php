@@ -333,4 +333,69 @@ class KelulusanController extends Controller
             ->rawColumns(['status', 'action', 'hasil'])
             ->make(true);
     }
+
+    /**
+     * Set graduation status for selected participants.
+     */
+    public function setLulus(Request $request)
+    {
+        $request->validate([
+            'pendaftaran_ids' => 'required|array',
+            'pendaftaran_ids.*' => 'exists:pendaftaran,id',
+            'sekolah_id' => 'required|exists:sekolah,id',
+        ]);
+
+        $pendaftaranIds = $request->pendaftaran_ids;
+        $sekolahId = $request->sekolah_id;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($pendaftaranIds as $id) {
+                $pendaftaran = DB::table('pendaftaran')->where('id', $id)->first();
+
+                if (! $pendaftaran) {
+                    continue;
+                }
+
+                // Determine which choice this school is
+                $pilihan = 1;
+                if ($pendaftaran->sekolah_pilihan_2 == $sekolahId) {
+                    $pilihan = 2;
+                }
+
+                // 1. Update status pendaftaran
+                DB::table('pendaftaran')
+                    ->where('id', $id)
+                    ->update([
+                        'status' => 'Lulus',
+                        'sekolah_diterima_id' => $sekolahId,
+                        'updated_at' => now(),
+                    ]);
+
+                // 2. Insert or Update HasilSeleksi
+                DB::table('hasil_seleksi')->updateOrInsert(
+                    ['pendaftaran_id' => $id],
+                    [
+                        'status' => 'Lulus',
+                        'keterangan' => "Selamat, Anda diterima di pilihan $pilihan.",
+                    ]
+                );
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => count($pendaftaranIds).' peserta berhasil diluluskan.',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal meluluskan peserta: '.$e->getMessage(),
+            ], 500);
+        }
+    }
 }

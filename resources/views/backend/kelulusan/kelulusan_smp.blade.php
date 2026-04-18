@@ -301,80 +301,64 @@ $(document).ready(function() {
         updateBulkButton();
     });
 
-    $('#bulk-luluskan').on('click', function() {
-        var selectedIds = $('.row-checkbox:checked').map(function() {
-            return $(this).data('id');
-        }).get();
-
-        if (selectedIds.length === 0) {
-            return;
-        }
-
-        Swal.fire({
-            title: 'Luluskan peserta terpilih?',
-            text: 'Anda akan meluluskan ' + selectedIds.length + ' peserta.',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Luluskan!',
-            cancelButtonText: 'Batal',
-            customClass: {
-                confirmButton: 'btn fw-bold btn-primary',
-                cancelButton: 'btn fw-bold btn-active-light-primary'
-            }
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('Bulk luluskan peserta:', selectedIds);
-                // Future implementation: kirim selectedIds ke server untuk diproses
-            }
-        });
-    });
-
-    function updateBulkButton() {
-        var selectedCount = $('.row-checkbox:checked').length;
-        $('#bulk-luluskan').prop('disabled', selectedCount === 0);
-    }
-
-    $('#select_all').on('change', function() {
-        var checked = $(this).is(':checked');
-        $('.row-checkbox').prop('checked', checked);
-        updateBulkButton();
-    });
-
-    $(document).on('change', '.row-checkbox', function() {
-        var totalRows = $('.row-checkbox').length;
-        var checkedRows = $('.row-checkbox:checked').length;
-        $('#select_all').prop('checked', totalRows > 0 && totalRows === checkedRows);
-        updateBulkButton();
-    });
-
-    $('#bulk-luluskan').on('click', function() {
-        var selectedIds = $('.row-checkbox:checked').map(function() {
-            return $(this).data('id');
-        }).get();
-
-        if (selectedIds.length === 0) {
-            return;
-        }
-
-        Swal.fire({
-            title: 'Luluskan peserta terpilih?',
-            text: 'Anda akan meluluskan ' + selectedIds.length + ' peserta.',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Luluskan!',
-            cancelButtonText: 'Batal',
-            customClass: {
-                confirmButton: 'btn fw-bold btn-primary',
-                cancelButton: 'btn fw-bold btn-active-light-primary'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('Bulk luluskan peserta:', selectedIds);
-                // Future implementation: kirim selectedIds ke server untuk diproses
+                var sekolahId = $('#filter_sekolah').val();
+                
+                $.ajax({
+                    url: "{{ route('kelulusan.luluskan') }}",
+                    type: "POST",
+                    data: {
+                        pendaftaran_ids: selectedIds,
+                        sekolah_id: sekolahId
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses kelulusan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
             }
         });
     });
@@ -419,8 +403,62 @@ $(document).ready(function() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Future implementation for graduation logic
-                console.log('Luluskan peserta ID: ' + id);
+                var sekolahId = $('#filter_sekolah').val();
+                
+                $.ajax({
+                    url: "{{ route('kelulusan.luluskan') }}",
+                    type: "POST",
+                    data: {
+                        pendaftaran_ids: [id],
+                        sekolah_id: sekolahId
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses kelulusan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
             }
         });
     });

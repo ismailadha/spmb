@@ -325,8 +325,62 @@ $(document).ready(function() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('Bulk luluskan peserta:', selectedIds);
-                // Future implementation: kirim selectedIds ke server untuk diproses
+                var sekolahId = $('#filter_sekolah').val();
+                
+                $.ajax({
+                    url: "{{ route('kelulusan.luluskan') }}",
+                    type: "POST",
+                    data: {
+                        pendaftaran_ids: selectedIds,
+                        sekolah_id: sekolahId
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses kelulusan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
             }
         });
     });
@@ -372,8 +426,62 @@ $(document).ready(function() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Future implementation for graduation logic
-                console.log('Luluskan peserta ID: ' + id);
+                var sekolahId = $('#filter_sekolah').val();
+                
+                $.ajax({
+                    url: "{{ route('kelulusan.luluskan') }}",
+                    type: "POST",
+                    data: {
+                        pendaftaran_ids: [id],
+                        sekolah_id: sekolahId
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses kelulusan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
             }
         });
     });

@@ -17,6 +17,7 @@ class Pendaftaran extends Model
         'tanggal_daftar',
         'sekolah_pilihan_1',
         'sekolah_pilihan_2',
+        'sekolah_diterima_id',
         'jarak_sekolah_1',
         'jarak_sekolah_2',
         'status',

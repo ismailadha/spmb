@@ -39,6 +39,8 @@ Route::get('hasil-seleksi', function () {
     return view('frontend.hasil_seleksi');
 })->name('hasil-seleksi');
 
+Route::post('cek-hasil-seleksi', [FrontendController::class, 'cekHasilSeleksi'])->name('cek.hasil.seleksi');
+
 // zonasi sd
 Route::get('zonasi-sd', [FrontendController::class, 'zonasi_sd'])->name('zonasi-sd');
 
@@ -108,6 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::get('kelulusan/smp', [KelulusanController::class, 'kelulusan_smp'])->name('kelulusan.smp');
         Route::get('kelulusan/smp/data', [KelulusanController::class, 'data_smp'])->name('kelulusan.smp.data');
         Route::post('kelulusan/smp/sahkan', [KelulusanController::class, 'sahkan_smp'])->name('kelulusan.smp.sahkan');
+        Route::post('kelulusan/luluskan', [KelulusanController::class, 'setLulus'])->name('kelulusan.luluskan');
     });
 
     // Route berkas bisa diakses oleh admin dan peserta

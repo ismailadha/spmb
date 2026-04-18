@@ -71,13 +71,13 @@
                     <form action="#" method="POST" id="form-cek-seleksi">
                         <div class="form-group mb-4">
                             <label for="no_pendaftaran" class="form-label">Nomor Pendaftaran</label>
-                            <input type="text" class="form-control form-control-lg bg-light" id="no_pendaftaran" placeholder="Masukkan 10 digit nomor pendaftaran..." value="REG-2023-08912">
+                            <input type="text" class="form-control form-control-lg bg-light" id="no_pendaftaran" placeholder="Masukkan nomor pendaftaran Anda..." value="">
                         </div>
                         <div class="form-group mb-4">
                             <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control form-control-lg bg-light" id="tgl_lahir" value="2008-05-15">
+                            <input type="date" class="form-control form-control-lg bg-light" id="tgl_lahir" value="">
                         </div>
-                        <button type="button" class="btn btn-primary btn-lg btn-block rounded font-weight-bold mt-2" onclick="showResult()">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded font-weight-bold mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="mr-2 mb-1" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                             </svg>
@@ -96,13 +96,10 @@
             
             <div class="card border-0 shadow rounded-xl result-card overflow-hidden">
                 <div class="card-header bg-white border-bottom-0 pt-4 pb-0 text-center">
-                    <span class="badge badge-success status-badge justify-content-center align-items-center d-inline-flex mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="mr-2" viewBox="0 0 16 16">
-                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-                        </svg>
-                        &nbsp;SELAMAT! ANDA DINYATAKAN LULUS
+                    <span id="res_status_badge" class="badge badge-success status-badge justify-content-center align-items-center d-inline-flex mb-3">
+                        &nbsp;<span id="res_status_text">SELAMAT! ANDA DINYATAKAN LULUS</span>
                     </span>
-                    <h5 class="text-secondary mb-0">Seleksi Penerimaan Peserta Didik Baru Tahap 1</h5>
+                    <h5 class="text-secondary mb-0">Seleksi Penerimaan Peserta Didik Baru</h5>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     <div class="row">
@@ -112,23 +109,19 @@
                                 <tbody>
                                     <tr>
                                         <th>No. Pendaftaran</th>
-                                        <td>: REG-2023-08912</td>
+                                        <td id="res_no_reg">: -</td>
                                     </tr>
                                     <tr>
                                         <th>Nama Lengkap</th>
-                                        <td>: Ahmad Fauzi R.</td>
+                                        <td id="res_nama">: -</td>
                                     </tr>
                                     <tr>
                                         <th>NISN</th>
-                                        <td>: 0081234567</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Asal Sekolah</th>
-                                        <td>: SD Negeri 1 Banda Sakti</td>
+                                        <td id="res_nisn">: -</td>
                                     </tr>
                                     <tr>
                                         <th>Jalur Pendaftaran</th>
-                                        <td>: Zonasi</td>
+                                        <td id="res_jalur">: -</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -136,13 +129,13 @@
                         <div class="col-md-6 border-md-left">
                             <h5 class="font-weight-bold mb-3 border-bottom pb-2 pl-md-3">Informasi Penerimaan</h5>
                             <div class="pl-md-3">
-                                <p class="text-muted mb-1 font-weight-bold">Diterima di Sekolah:</p>
-                                <h4 class="font-weight-bold text-primary mb-3">SMP Negeri 1 Lhokseumawe</h4>
+                                <p id="res_label_penerimaan" class="text-muted mb-1 font-weight-bold">Diterima di Sekolah:</p>
+                                <h4 id="res_sekolah" class="font-weight-bold text-primary mb-3">-</h4>
                                 
-                                <p class="text-muted mb-1 font-weight-bold">Program Keahlian / Jurusan:</p>
-                                <h5 class="font-weight-bold text-dark mb-4">MIPA (Matematika dan Ilmu Pengetahuan Alam)</h5>
+                                <p class="text-muted mb-1 font-weight-bold">Keterangan:</p>
+                                <h5 id="res_keterangan" class="font-weight-bold text-dark mb-4">-</h5>
 
-                                <div class="alert alert-warning mb-0 shadow-sm" style="border-radius: 0.75rem;" role="alert">
+                                <div id="alert-perhatian" class="alert alert-warning mb-0 shadow-sm" style="border-radius: 0.75rem;" role="alert">
                                     <strong class="d-flex align-items-center mb-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -173,33 +166,122 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
-    function showResult() {
-        var btn = document.querySelector('button[onclick="showResult()"]');
-        var originalText = btn.innerHTML;
-        
-        // Loading status
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Mencari data...';
-        btn.disabled = true;
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-        setTimeout(function() {
-            // Restore button
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-
-            // Show result section
-            var resultSection = document.getElementById('result-section');
-            resultSection.classList.remove('d-none');
+        $('#form-cek-seleksi').on('submit', function(e) {
+            e.preventDefault();
             
-            // Scroll to result smoothly
-            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 800);
-    }
-    
+            var btn = $(this).find('button[type="submit"]');
+            var originalText = btn.html();
+            
+            // Loading status
+            btn.html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Mencari data...');
+            btn.prop('disabled', true);
+
+            var no_pendaftaran = $('#no_pendaftaran').val();
+            var tgl_lahir = $('#tgl_lahir').val();
+
+            $.ajax({
+                url: "{{ route('cek.hasil.seleksi') }}",
+                type: "POST",
+                data: {
+                    no_pendaftaran: no_pendaftaran,
+                    tgl_lahir: tgl_lahir
+                },
+                success: function(response) {
+                    btn.html(originalText);
+                    btn.prop('disabled', false);
+
+                    if (response.success) {
+                        var data = response.data;
+                        
+                        // Map Data
+                        $('#res_no_reg').text(': ' + data.nomor_pendaftaran);
+                        $('#res_nama').text(': ' + data.nama_lengkap);
+                        $('#res_nisn').text(': ' + (data.nisn || '-'));
+                        $('#res_jalur').text(': ' + (data.nama_jalur || '-'));
+
+                        // Status & Theme logic
+                        var status = (data.seleksi_status || data.pendaftaran_status || '').toLowerCase();
+                        var badge = $('#res_status_badge');
+                        var text = $('#res_status_text');
+                        var sekolah = $('#res_sekolah');
+                        var keterangan = $('#res_keterangan');
+                        var card = $('.result-card');
+
+                        badge.removeClass('badge-success badge-danger badge-info badge-warning');
+                        card.removeClass('rejected');
+                        
+                        if (status === 'lulus') {
+                            badge.addClass('badge-success');
+                            text.text('SELAMAT! ANDA DINYATAKAN LULUS');
+                            $('#res_label_penerimaan').text('Diterima di Sekolah:');
+                            sekolah.text(data.sekolah_diterima || '-');
+                            sekolah.addClass('text-primary').removeClass('text-danger text-muted');
+                            keterangan.text(data.keterangan || 'Silakan lakukan daftar ulang sesuai jadwal.');
+                            $('#alert-perhatian').show();
+                        } else if (status === 'tidak lulus') {
+                            badge.addClass('badge-danger');
+                            card.addClass('rejected');
+                            text.text('MOHON MAAF, ANDA BELUM BERHASIL');
+                            $('#res_label_penerimaan').text('Status Penerimaan:');
+                            sekolah.text('TIDAK DITERIMA');
+                            sekolah.addClass('text-danger').removeClass('text-primary text-muted');
+                            keterangan.text('Tetap semangat dan coba lagi di kesempatan berikutnya.');
+                            $('#alert-perhatian').hide();
+                        } else {
+                            badge.addClass('badge-info');
+                            text.text('STATUS: DALAM PROSES / VERIFIKASI');
+                            $('#res_label_penerimaan').text('Status Penerimaan:');
+                            sekolah.text('BELUM DIUMUMKAN');
+                            sekolah.addClass('text-muted').removeClass('text-primary text-danger');
+                            keterangan.text('Hasil seleksi belum diputuskan atau masih dalam tahap verifikasi.');
+                            $('#alert-perhatian').hide();
+                        }
+
+                        // Show result section
+                        $('#result-section').removeClass('d-none');
+                        $('html, body').animate({
+                            scrollTop: $("#result-section").offset().top - 100
+                        }, 800);
+                    }
+                },
+                error: function(xhr) {
+                    btn.html(originalText);
+                    btn.prop('disabled', false);
+                    $('#result-section').addClass('d-none');
+
+                    var msg = "Terjadi kesalahan sistem.";
+                    if (xhr.status === 404) {
+                        msg = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        text: msg,
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, mengerti!",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-primary"
+                        }
+                    });
+                }
+            });
+        });
+    });
+
     function hideResult() {
-        var resultSection = document.getElementById('result-section');
-        resultSection.classList.add('d-none');
+        $('#result-section').addClass('d-none');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 </script>
+@endpush
+
 @endsection

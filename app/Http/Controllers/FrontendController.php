@@ -162,4 +162,47 @@ class FrontendController extends Controller
 
         return view('frontend.kontak', compact('appConfig'));
     }
+
+    /**
+     * Check selection result for a participant.
+     */
+    public function cekHasilSeleksi(Request $request)
+    {
+        $request->validate([
+            'no_pendaftaran' => 'required|string',
+            'tgl_lahir' => 'required|date',
+        ]);
+
+        $result = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->leftJoin('hasil_seleksi', 'pendaftaran.id', '=', 'hasil_seleksi.pendaftaran_id')
+            ->leftJoin('sekolah', 'pendaftaran.sekolah_diterima_id', '=', 'sekolah.id')
+            ->leftJoin('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->select(
+                'pendaftaran.nomor_pendaftaran',
+                'pendaftaran.status as pendaftaran_status',
+                'peserta.nama_lengkap',
+                'peserta.nisn',
+                'peserta.tanggal_lahir',
+                'jalur_pendaftaran.nama_jalur',
+                'sekolah.nama_sekolah as sekolah_diterima',
+                'hasil_seleksi.status as seleksi_status',
+                'hasil_seleksi.keterangan'
+            )
+            ->where('pendaftaran.nomor_pendaftaran', $request->no_pendaftaran)
+            ->where('peserta.tanggal_lahir', $request->tgl_lahir)
+            ->first();
+
+        if (! $result) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan. Pastikan Nomor Pendaftaran dan Tanggal Lahir sudah benar.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+        ]);
+    }
 }
