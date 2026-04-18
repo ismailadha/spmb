@@ -2,9 +2,10 @@
 @php
     $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
     $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
+	$logoDaerahUrl = !empty($appConfig['logo_daerah']) ? asset($appConfig['logo_daerah']) : asset('images/logo-lsm.png');
 
     // Fetch user photo if the user is a participant
-    $userPhoto = asset('images/logo-lsm.png');
+    $userPhoto = $logoDaerahUrl;
     if (auth()->check() && auth()->user()->role == 'peserta') {
         $peserta = \DB::table('peserta')->where('user_id', auth()->id())->first();
         if ($peserta) {

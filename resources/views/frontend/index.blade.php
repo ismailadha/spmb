@@ -69,7 +69,7 @@
                     <div style="position:relative;">
                         <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80" alt="SD"
                              style="width:100%;height:200px;object-fit:cover;">
-                        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(39,174,96,.2),rgba(39,174,96,.85));"></div>
+                        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(231,76,60,.2),rgba(231,76,60,.85));"></div>
                         <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);text-align:center;">
                             <i class="la la-graduation-cap" style="font-size:2.5rem;color:#fff;"></i>
                             <h4 style="color:#fff;font-weight:700;margin:4px 0 0;">Sekolah Dasar (SD)</h4>
@@ -80,15 +80,15 @@
                         <ul style="list-style:none;padding:0;margin:0 0 20px;">
                             @foreach(['Jalur Domisili / Zonasi','Jalur Afirmasi','Jalur Mutasi Orang Tua'] as $jalur)
                             <li style="padding:8px 0;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px;">
-                                <span style="width:24px;height:24px;background:#27ae60;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="width:24px;height:24px;background:#e74c3c;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                     <i class="la la-check" style="color:#fff;font-size:.9rem;"></i>
                                 </span>
                                 <span style="font-size:.9rem;color:#333;">{{ $jalur }}</span>
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('register-peserta') }}" class="btn btn-success btn-block"
-                           style="border-radius:8px;font-weight:600;">Daftar Sekarang</a>
+                        <a href="{{ route('register-peserta') }}" class="btn btn-danger btn-block"
+                           style="border-radius:8px;font-weight:600;background:#e74c3c;border-color:#e74c3c;">Daftar Sekarang</a>
                     </div>
                 </div>
             </div>
@@ -158,6 +158,11 @@
     </div>
 </section>
 
+@php
+    $jadwalPenting = $activePeriode ? $activePeriode->getFormattedSchedule() : [];
+@endphp
+
+@if(count($jadwalPenting) > 0)
 {{-- ===================== JADWAL PENTING ===================== --}}
 <section style="padding:80px 0;background:#1e2a4a;">
     <div class="container">
@@ -169,50 +174,8 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            @php
-            $jadwal = [];
-            if ($activePeriode) {
-                $jadwal = [
-                    [
-                        'icon' => 'la-edit',
-                        'warna' => '#3498db',
-                        'kegiatan' => 'Pendaftaran Online',
-                        'mulai' => \Carbon\Carbon::parse($activePeriode->peserta_daftar_mulai)->translatedFormat('d F Y'),
-                        'selesai' => \Carbon\Carbon::parse($activePeriode->peserta_daftar_selesai)->translatedFormat('d F Y'),
-                    ],
-                    [
-                        'icon' => 'la-file-text',
-                        'warna' => '#27ae60',
-                        'kegiatan' => 'Verifikasi Berkas',
-                        'mulai' => \Carbon\Carbon::parse($activePeriode->verifikasi_mulai)->translatedFormat('d F Y'),
-                        'selesai' => \Carbon\Carbon::parse($activePeriode->verifikasi_selesai)->translatedFormat('d F Y'),
-                    ],
-                    [
-                        'icon' => 'la-list-ol',
-                        'warna' => '#e74c3c',
-                        'kegiatan' => 'Pengumuman Seleksi',
-                        'mulai' => \Carbon\Carbon::parse($activePeriode->tanggal_pengumuman_seleksi)->translatedFormat('d F Y'),
-                        'selesai' => \Carbon\Carbon::parse($activePeriode->tanggal_pengumuman_seleksi)->translatedFormat('d F Y'),
-                    ],
-                    [
-                        'icon' => 'la-check-square',
-                        'warna' => '#f39c12',
-                        'kegiatan' => 'Daftar Ulang',
-                        'mulai' => \Carbon\Carbon::parse($activePeriode->daftar_ulang_mulai)->translatedFormat('d F Y'),
-                        'selesai' => \Carbon\Carbon::parse($activePeriode->daftar_ulang_selesai)->translatedFormat('d F Y'),
-                    ],
-                    [
-                        'icon' => 'la-graduation-cap',
-                        'warna' => '#9b59b6',
-                        'kegiatan' => 'Hari Pertama Masuk Sekolah',
-                        'mulai' => \Carbon\Carbon::parse($activePeriode->tanggal_masuk_sekolah)->translatedFormat('d F Y'),
-                        'selesai' => \Carbon\Carbon::parse($activePeriode->tanggal_masuk_sekolah)->translatedFormat('d F Y'),
-                    ],
-                ];
-            }
-            @endphp
             <div class="col-lg-10">
-                @foreach($jadwal as $i => $j)
+                @foreach($jadwalPenting as $i => $j)
                 <div style="display:flex;align-items:center;gap:20px;margin-bottom:{{ $loop->last ? '0' : '8px' }};">
                     {{-- Icon --}}
                     <div style="flex-shrink:0;width:52px;height:52px;border-radius:50%;background:{{ $j['warna'] }};display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.12);">
@@ -240,6 +203,8 @@
         </div>
     </div>
 </section>
+@endif
+
 
 {{-- ===================== CTA REGISTRASI ===================== --}}
 <section style="padding:80px 0;background:linear-gradient(135deg,#1abc9c 0%,#3498db 100%);">
@@ -260,14 +225,56 @@
                 <i class="la la-book"></i> Petunjuk Teknis
             </a>
         </div>
-        <div style="margin-top:36px;display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
-            @foreach([['la-users','2.400+','Pendaftar Tahun Lalu'],['la-school','120','Sekolah Mitra'],['la-map-marker','15','Kecamatan']] as $s)
-            <div style="text-align:center;">
-                <i class="la {{ $s[0] }}" style="font-size:2rem;color:rgba(255,255,255,.8);"></i>
-                <p style="color:#fff;font-size:1.8rem;font-weight:700;margin:4px 0 2px;">{{ $s[1] }}</p>
-                <p style="color:rgba(255,255,255,.75);font-size:.85rem;margin:0;">{{ $s[2] }}</p>
+        <div style="margin-top:48px;">
+            {{-- Baris 1: Statistik Jalur (4 Kolom) --}}
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;margin-bottom:48px;">
+                @foreach($stats['jalur'] as $j)
+                <div style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:24px;text-align:center;transition:all 0.3s ease-in-out;box-shadow:0 10px 30px rgba(0,0,0,0.1);" 
+                     onmouseover="this.style.transform='translateY(-8px)';this.style.background='rgba(255,255,255,0.12)';" 
+                     onmouseout="this.style.transform='translateY(0)';this.style.background='rgba(255,255,255,0.08)';">
+                    <div style="width:56px;height:56px;background:linear-gradient(135deg,rgba(255,255,255,0.3),rgba(255,255,255,0.1));border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+                        <i class="la {{ $j['icon'] }}" style="font-size:2rem;color:#fff;"></i>
+                    </div>
+                    <h5 style="color:#fff;font-weight:700;margin-bottom:16px;font-size:1.15rem;letter-spacing:0.5px;">{{ $j['nama'] }}</h5>
+                    <div style="display:flex;justify-content:center;gap:20px;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+                        <div>
+                            <span style="display:block;color:rgba(255,255,255,0.65);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">SD</span>
+                            <span style="color:#fff;font-weight:800;font-size:1.2rem;">{{ number_format($j['sd'], 0, ',', '.') }}</span>
+                        </div>
+                        <div style="width:1px;background:rgba(255,255,255,0.2);height:30px;align-self:center;"></div>
+                        <div>
+                            <span style="display:block;color:rgba(255,255,255,0.65);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">SMP</span>
+                            <span style="color:#fff;font-weight:800;font-size:1.2rem;">{{ number_format($j['smp'], 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             </div>
-            @endforeach
+
+            {{-- Baris 2: Statistik Umum (Pendaftar, Sekolah & Kecamatan) --}}
+            <div style="display:flex;justify-content:center;gap:60px 80px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.2);padding-top:40px;margin-top:20px;">
+                <div style="text-align:center;min-width:180px;">
+                    <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:rgba(255,255,255,0.15);border-radius:50%;margin-bottom:12px;">
+                        <i class="la la-users" style="font-size:2.2rem;color:#fff;"></i>
+                    </div>
+                    <p style="color:#fff;font-size:2.8rem;font-weight:800;margin:0;line-height:1;">{{ number_format($stats['total_pendaftar'], 0, ',', '.') }}</p>
+                    <p style="color:rgba(255,255,255,0.85);font-size:1.1rem;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:1px;">Peserta Terdaftar</p>
+                </div>
+                <div style="text-align:center;min-width:180px;">
+                    <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:rgba(255,255,255,0.15);border-radius:50%;margin-bottom:12px;">
+                        <i class="la la-school" style="font-size:2.2rem;color:#fff;"></i>
+                    </div>
+                    <p style="color:#fff;font-size:2.8rem;font-weight:800;margin:0;line-height:1;">{{ number_format($stats['total_sekolah'], 0, ',', '.') }}</p>
+                    <p style="color:rgba(255,255,255,0.85);font-size:1.1rem;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:1px;">Sekolah</p>
+                </div>
+                <div style="text-align:center;min-width:180px;">
+                    <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:rgba(255,255,255,0.15);border-radius:50%;margin-bottom:12px;">
+                        <i class="la la-map-pin" style="font-size:2.2rem;color:#fff;"></i>
+                    </div>
+                    <p style="color:#fff;font-size:2.8rem;font-weight:800;margin:0;line-height:1;">{{ number_format($stats['total_kecamatan'], 0, ',', '.') }}</p>
+                    <p style="color:rgba(255,255,255,0.85);font-size:1.1rem;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:1px;">Kecamatan</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>

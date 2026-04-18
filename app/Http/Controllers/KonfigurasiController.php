@@ -20,6 +20,8 @@ class KonfigurasiController extends Controller
         $validated = $request->validate([
             'logo_path' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'favicon' => 'nullable|image|mimes:png,jpg,jpeg,ico|max:1024',
+            'logo_daerah' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'logo_surat' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'nama_sistem' => 'required|string|min:3|max:255',
             'nama_instansi' => 'required|string|min:3|max:255',
             'email_resmi' => 'required|email',
@@ -84,6 +86,52 @@ class KonfigurasiController extends Controller
             $data['favicon'] = 'images/logo/'.$filename;
         } else {
             unset($data['favicon']);
+        }
+
+        // Handle logo daerah file upload
+        if ($request->hasFile('logo_daerah')) {
+            // Hapus logo daerah yang lama jika ada
+            $oldLogoDaerah = Konfigurasi::where('kunci', 'logo_daerah')->value('nilai');
+            if ($oldLogoDaerah && file_exists(public_path($oldLogoDaerah))) {
+                unlink(public_path($oldLogoDaerah));
+            }
+
+            // Buat directory jika belum ada
+            $logoDir = public_path('images/logo');
+            if (! file_exists($logoDir)) {
+                mkdir($logoDir, 0755, true);
+            }
+
+            // Upload file baru
+            $file = $request->file('logo_daerah');
+            $filename = 'logo_daerah_'.time().'_'.$file->getClientOriginalName();
+            $file->move($logoDir, $filename);
+            $data['logo_daerah'] = 'images/logo/'.$filename;
+        } else {
+            unset($data['logo_daerah']);
+        }
+
+        // Handle logo surat file upload
+        if ($request->hasFile('logo_surat')) {
+            // Hapus logo surat yang lama jika ada
+            $oldLogoSurat = Konfigurasi::where('kunci', 'logo_surat')->value('nilai');
+            if ($oldLogoSurat && file_exists(public_path($oldLogoSurat))) {
+                unlink(public_path($oldLogoSurat));
+            }
+
+            // Buat directory jika belum ada
+            $logoDir = public_path('images/logo');
+            if (! file_exists($logoDir)) {
+                mkdir($logoDir, 0755, true);
+            }
+
+            // Upload file baru
+            $file = $request->file('logo_surat');
+            $filename = 'logo_surat_'.time().'_'.$file->getClientOriginalName();
+            $file->move($logoDir, $filename);
+            $data['logo_surat'] = 'images/logo/'.$filename;
+        } else {
+            unset($data['logo_surat']);
         }
 
         // Update konfigurasi menggunakan query builder

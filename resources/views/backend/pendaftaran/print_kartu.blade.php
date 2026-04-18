@@ -1,11 +1,15 @@
 @php
     $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
     
-    // Handle logo source (use base64 if PDF, otherwise use asset URL)
-    if (isset($isPdf) && $isPdf && isset($logoBase64)) {
-        $logoUrl = $logoBase64;
+    // Handle logo sources (use base64 if PDF, otherwise use asset URL)
+    if (isset($isPdf) && $isPdf) {
+        $logoUrl = $logoBase64 ?? asset('images/spmb-logo.png');
+        $logoDaerah = $logoDaerahBase64 ?? asset('images/spmb-logo.png');
+        $logoSurat = $logoSuratBase64 ?? asset('images/spmb-logo.png');
     } else {
         $logoUrl = !empty($appConfig['logo_path']) ? asset($appConfig['logo_path']) : asset('images/spmb-logo.png');
+        $logoDaerah = !empty($appConfig['logo_daerah']) ? asset($appConfig['logo_daerah']) : asset('images/spmb-logo.png');
+        $logoSurat = !empty($appConfig['logo_surat']) ? asset($appConfig['logo_surat']) : asset('images/spmb-logo.png');
     }
 
     // QR Code source is now handled by the controller via $qrCodeBase64
@@ -37,6 +41,14 @@
             position: relative;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .card-outer-container {
+            padding: 15px;
+            max-width: 800px;
+            width: 95%;
+            margin: 0 auto 10px auto;
+            position: relative;
+            background-color: #fff;
         }
         .card-copy-label {
             text-align: right;
@@ -76,8 +88,8 @@
         .header-table {
             width: 100%;
             border-bottom: 3px double #000;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-collapse: collapse;
         }
         .header-table td {
@@ -93,7 +105,7 @@
         }
         .header-text {
             text-align: center;
-            padding-right: 50px;
+            /* padding-right: 50px; */
         }
         .header h1 {
             margin: 0 0 3px 0;
@@ -124,7 +136,7 @@
         .registration-number div {
             font-size: 16px;
             font-weight: bold;
-            padding: 6px 12px;
+            /* padding: 6px 12px; */
             border: 2px dashed #000;
             display: inline-block;
             margin-top: 5px;
@@ -159,6 +171,68 @@
         }
         .signature-space {
             height: 40px;
+        }
+        .notes-table {
+            width: 100%;
+            margin-top: 15px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            border-collapse: collapse;
+        }
+        .notes-table td {
+            font-size: 8px;
+            vertical-align: top;
+            color: #555;
+            line-height: 1.4;
+        }
+        .notes-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+            color: #333;
+        }
+        .registration-time {
+            text-align: right;
+            font-style: italic;
+        }
+        .notes-table {
+            width: 100%;
+            margin-top: 15px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            border-collapse: collapse;
+        }
+        .notes-table td {
+            font-size: 8px;
+            vertical-align: top;
+            color: #555;
+            line-height: 1.4;
+        }
+        .notes-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+            color: #333;
+        }
+        .registration-time {
+            text-align: right;
+            font-style: italic;
+        }
+        .checkbox-item {
+            margin-bottom: 2px;
+        }
+        .checkbox-box {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border: 1px solid #000;
+            vertical-align: middle;
+            margin-right: 3px;
+            background: #fff;
+        }
+        .checkbox-label {
+            font-size: 8px;
+            vertical-align: middle;
         }
         
         /* Actions Bar */
@@ -264,6 +338,11 @@
         .signature { font-size: 10px; width: 160px; }
         .photo-container { width: 70px; height: 95px; }
         .header-logo img { max-height: 100px; }
+        .registration-number { margin-bottom: 5px !important; }
+        .content { margin-top: 5px !important; }
+        .signature-space { height: 25px !important; }
+        .notes-table { margin-top: 5px !important; }
+        .footer-table { margin-top: 0 !important; }
         @endif
 
         @media (max-width: 600px) {
@@ -294,21 +373,165 @@
 
 
     <div class="print-wrapper" style="padding-top: 10px;">
-        @foreach(['PESERTA', 'PANITIA'] as $copy)
+        {{-- KARTU PESERTA --}}
+        <div class="card-outer-container">
             <div class="card-container">
-                <div class="card-copy-label">Kartu Pendaftaran - Salinan Untuk {{ $copy }}</div>
                 <table class="header-table">
                     <tr>
                         <td class="header-logo">
-                            <img src="{{ $logoUrl }}" alt="Logo">
+                            <img src="{{ $logoDaerah }}" style="width: 50px; height: 50px;" alt="Logo">
                         </td>
                         <td class="header-text">
                             <div class="header">
-                                <h1>{{ strtoupper($appConfig['nama_sistem'] ?? 'Sistem Penerimaan Murid Baru') }}</h1>
+                                <h1>{{ strtoupper('Pemerintah Kota Lhokseumawe') }}</h1>
                                 <h2>{{ strtoupper($appConfig['nama_instansi'] ?? 'Dinas Pendidikan') }}</h2>
                                 <p>{{ $appConfig['alamat'] ?? '' }}</p>
                                 <p>Telp: {{ $appConfig['telepon'] ?? '-' }} | Email: {{ $appConfig['email_resmi'] ?? '-' }}</p>
                             </div>
+                        </td>
+                        <td class="header-logo">
+                            <img src="{{ $logoSurat }}" style="width: 2000px; height: 50px;" alt="Logo">
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="content">
+                    <div class="registration-number" style="text-align: center; margin-bottom: 10px;">
+                        <h3 style="font-size: 10px; margin-bottom: 3px;">NOMOR PENDAFTARAN</h3>
+                        <div>{{ $pendaftaran->nomor_pendaftaran }}</div>
+                    </div>
+
+                    <table class="content-wrapper" style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="vertical-align: top; padding-right: 5px;">
+                                <table class="data-table" style="text-transform: uppercase;">
+                                    <tr>
+                                        <td class="label">Nama Lengkap</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ $pendaftaran->nama_lengkap }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">NISN</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ $pendaftaran->nisn }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Tempat Lahir</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ $pendaftaran->tempat_lahir }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Tanggal Lahir</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->locale('id_ID')->isoFormat('D MMMM YYYY') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Jenis Kelamin</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ $pendaftaran->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Jalur</td>
+                                        <td class="separator">:</td>
+                                        <td style="font-weight: bold;">{{ strtoupper($pendaftaran->nama_jalur) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Pilihan 1</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label">Pilihan 2</td>
+                                        <td class="separator">:</td>
+                                        <td>{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="photo-col" style="width: 100px; vertical-align: center; text-align: center;">
+                                <div class="photo-container" style="margin-right: 0;">
+                                    @if(isset($isPdf))
+                                        @if(isset($pasfotoBase64))
+                                            <img src="{{ $pasfotoBase64 }}" alt="Pasfoto">
+                                        @else
+                                            <div class="photo-placeholder">PASFOTO<br>3x4</div>
+                                        @endif
+                                    @else
+                                        @if(isset($pasfoto) && $pasfoto)
+                                            <img src="{{ route('pendaftaran.berkas.show', $pasfoto->id) }}" alt="Pasfoto">
+                                        @else
+                                            <div class="photo-placeholder">PASFOTO<br>3x4</div>
+                                        @endif
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="footer-table">
+                        <tr>
+                            <td style="vertical-align: bottom; width: 110px;">
+                                @if(isset($qrCodeBase64))
+                                    <img src="{{ $qrCodeBase64 }}" alt="QR Code" style="width: 90px; height: 90px;">
+                                @else
+                                    <img src="data:image/svg+xml;base64,{{ base64_encode(QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran)) }}" alt="QR Code" style="width: 90px; height: 90px;">
+                                @endif
+                            </td>
+                            <td class="signature">
+                                <p>&nbsp;</p>
+                                <p>Peserta,</p>
+                                <div class="signature-space"></div>
+                                <p><strong>{{strtoupper($pendaftaran->nama_lengkap) }}</strong></p>
+                            </td>
+                            <td class="signature">
+                                <p>Lhokseumawe, ...................... </p>
+                                <p>Panitia Sekolah,</p>
+                                <div class ="signature-space"></div>
+                                <p><strong>..................................... </strong></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="notes-table">
+                        <tr>
+                            <td style="width: 70%;">
+                                <span class="notes-title">Saat Verifikasi Berkas wajib melampirkan:</span>
+                                • Fotocopy NISN &nbsp; 
+                                • Fotocopy Akta Kelahiran &nbsp; 
+                                • Fotocopy KK & KTP Orang Tua <br>
+                                • Jalur Non-Domisili wajib melampirkan Fotocopy dokumen persyaratan (tunjukkan Asli).
+                            </td>
+                            <td class="registration-time">
+                                <strong>Waktu Pendaftaran:</strong>
+                                {{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="cut-separator">
+            <span>Gunting di sini</span>
+        </div>
+
+        {{-- KARTU PANITIA --}}
+        <div class="card-outer-container">
+            <div class="card-copy-label">Lembar Bagi PANITIA SEKOLAH</div>
+            <div class="card-container">
+                <table class="header-table">
+                    <tr>
+                        <td class="header-logo">
+                            <img src="{{ $logoDaerah }}" style="width: 50px; height: 50px;" alt="Logo">
+                        </td>
+                        <td class="header-text">
+                            <div class="header">
+                                <h1>{{ strtoupper('Pemerintah Kota Lhokseumawe') }}</h1>
+                                <h2>{{ strtoupper($appConfig['nama_instansi'] ?? 'Dinas Pendidikan') }}</h2>
+                                <p>{{ $appConfig['alamat'] ?? '' }}</p>
+                                <p>Telp: {{ $appConfig['telepon'] ?? '-' }} | Email: {{ $appConfig['email_resmi'] ?? '-' }}</p>
+                            </div>
+                        </td>
+                        <td class="header-logo">
+                            <img src="{{ $logoSurat }}" style="width: 2000px; height: 50px;" alt="Logo">
                         </td>
                     </tr>
                 </table>
@@ -322,7 +545,7 @@
                     <table class="content-wrapper" style="width: 100%; border-collapse: collapse;">
                         <tr>
                             <td style="vertical-align: top; padding-right: 5px;">
-                                <table class="data-table">
+                                <table class="data-table" style="text-transform: uppercase;">
                                     <tr>
                                         <td class="label">Nama Lengkap</td>
                                         <td class="separator">:</td>
@@ -366,11 +589,11 @@
                                     <tr>
                                         <td class="label">Waktu Daftar</td>
                                         <td class="separator">:</td>
-                                        <td style="font-size: 8px;">{{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->locale('id_ID')->isoFormat('D MMMM YYYY HH:mm') }}</td>
                                     </tr>
                                 </table>
                             </td>
-                            <td class="photo-col" style="width: 100px; vertical-align: top; text-align: right;">
+                            <td class="photo-col" style="width: 100px; vertical-align: center; text-align: center;">
                                 <div class="photo-container" style="margin-right: 0;">
                                     @if(isset($isPdf))
                                         @if(isset($pasfotoBase64))
@@ -392,18 +615,20 @@
 
                     <table class="footer-table">
                         <tr>
-                            <td style="vertical-align: bottom; width: 110px;">
+                            <td style="vertical-align: center; width: 110px;">
                                 @if(isset($qrCodeBase64))
                                     <img src="{{ $qrCodeBase64 }}" alt="QR Code" style="width: 90px; height: 90px;">
                                 @else
                                     <img src="data:image/svg+xml;base64,{{ base64_encode(QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran)) }}" alt="QR Code" style="width: 90px; height: 90px;">
                                 @endif
                             </td>
-                            <td class="signature">
-                                <p>&nbsp;</p>
-                                <p>Peserta,</p>
-                                <div class="signature-space"></div>
-                                <p><strong>{{ $pendaftaran->nama_lengkap }}</strong></p>
+                            <td style="font-size: 8px; vertical-align: top;">
+                                <div style="font-weight: bold; margin-bottom: 5px;">Kelengkapan Dokumen:</div>
+                                <div class="checkbox-item"><span class="checkbox-box"></span> <span class="checkbox-label">Fotocopy NISN</span></div>
+                                <div class="checkbox-item"><span class="checkbox-box"></span> <span class="checkbox-label">Fotocopy Akta Kelahiran</span></div>
+                                <div class="checkbox-item"><span class="checkbox-box"></span> <span class="checkbox-label">Fotocopy KK & KTP Orang Tua</span></div>
+                                <div class="checkbox-item"><span class="checkbox-box"></span> <span class="checkbox-label">Lainnya: .................................................</span></div>
+                                <div class="checkbox-item"><span class="checkbox-box"></span> <span class="checkbox-label">..................................................................</span></div>
                             </td>
                             <td class="signature">
                                 <p>Lhokseumawe, ...................... </p>
@@ -415,13 +640,7 @@
                     </table>
                 </div>
             </div>
-
-            @if($loop->first)
-                <div class="cut-separator">
-                    <span>Gunting di sini</span>
-                </div>
-            @endif
-        @endforeach
+        </div>
     </div>
 </body>
 </html>

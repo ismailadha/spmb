@@ -91,6 +91,62 @@
                     </div>
                 </div>
 
+                <!-- Logo Daerah -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Logo Daerah</label>
+                    <div class="col-lg-8">
+
+                        <!-- Upload area -->
+                        <div id="logo-daerah-upload-container">
+                            <div id="logo-daerah-preview-container" class="mb-4 d-none">
+                                <img id="logo-daerah-preview" src="" alt="Preview Logo Daerah" style="max-height: 150px; max-width: 100%; object-fit: contain;">
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-sm btn-danger" id="remove-logo-daerah-btn">
+                                        <i class="ki-duotone ki-trash fs-4">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        Hapus Logo Daerah
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="logo-daerah-upload-prompt">
+                                <input type="file" name="logo_daerah" id="logo-daerah-input" class="form-control form-control-lg" accept=".png, .jpg, .jpeg" />
+                                <div class="form-text mt-2">Format: PNG, JPG, JPEG • Maksimal 2MB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logo Surat -->
+                <div class="row mb-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Logo Surat</label>
+                    <div class="col-lg-8">
+
+                        <!-- Upload area -->
+                        <div id="logo-surat-upload-container">
+                            <div id="logo-surat-preview-container" class="mb-4 d-none">
+                                <img id="logo-surat-preview" src="" alt="Preview Logo Surat" style="max-height: 150px; max-width: 100%; object-fit: contain;">
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-sm btn-danger" id="remove-logo-surat-btn">
+                                        <i class="ki-duotone ki-trash fs-4">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                        Hapus Logo Surat
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="logo-surat-upload-prompt">
+                                <input type="file" name="logo_surat" id="logo-surat-input" class="form-control form-control-lg" accept=".png, .jpg, .jpeg" />
+                                <div class="form-text mt-2">Format: PNG, JPG, JPEG • Maksimal 2MB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Nama Sistem -->
                 <div class="row mb-6">
                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Nama Sistem</label>
@@ -269,6 +325,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const faviconPreview = document.getElementById('favicon-preview');
     const removeFaviconBtn = document.getElementById('remove-favicon-btn');
 
+    // Logo Daerah variables
+    const logoDaerahInput = document.getElementById('logo-daerah-input');
+    const logoDaerahPreviewContainer = document.getElementById('logo-daerah-preview-container');
+    const logoDaerahUploadPrompt = document.getElementById('logo-daerah-upload-prompt');
+    const logoDaerahPreview = document.getElementById('logo-daerah-preview');
+    const removeLogoDaerahBtn = document.getElementById('remove-logo-daerah-btn');
+
+    // Logo Surat variables
+    const logoSuratInput = document.getElementById('logo-surat-input');
+    const logoSuratPreviewContainer = document.getElementById('logo-surat-preview-container');
+    const logoSuratUploadPrompt = document.getElementById('logo-surat-upload-prompt');
+    const logoSuratPreview = document.getElementById('logo-surat-preview');
+    const removeLogoSuratBtn = document.getElementById('remove-logo-surat-btn');
+
     const form = document.getElementById('kt_konfigurasi_form');
     const resetBtn = document.getElementById('btn-reset');
 
@@ -279,6 +349,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Favicon state
     let hasExistingFavicon = false;
     let existingFaviconUrl = '';
+
+    // Logo Daerah state
+    let hasExistingLogoDaerah = false;
+    let existingLogoDaerahUrl = '';
+
+    // Logo Surat state
+    let hasExistingLogoSurat = false;
+    let existingLogoSuratUrl = '';
 
     // Check if logo already exists
     @if (!empty($konfigurasi['logo_path']))
@@ -298,11 +376,35 @@ document.addEventListener('DOMContentLoaded', function() {
         faviconUploadPrompt.classList.add('d-none');
     @endif
 
+    // Check if logo daerah already exists
+    @if (!empty($konfigurasi['logo_daerah']))
+        hasExistingLogoDaerah = true;
+        existingLogoDaerahUrl = '{{ asset($konfigurasi['logo_daerah']) }}';
+        logoDaerahPreview.src = existingLogoDaerahUrl;
+        logoDaerahPreviewContainer.classList.remove('d-none');
+        logoDaerahUploadPrompt.classList.add('d-none');
+    @endif
+
+    // Check if logo surat already exists
+    @if (!empty($konfigurasi['logo_surat']))
+        hasExistingLogoSurat = true;
+        existingLogoSuratUrl = '{{ asset($konfigurasi['logo_surat']) }}';
+        logoSuratPreview.src = existingLogoSuratUrl;
+        logoSuratPreviewContainer.classList.remove('d-none');
+        logoSuratUploadPrompt.classList.add('d-none');
+    @endif
+
     // Logo input change
     fileInput.addEventListener('change', () => handleFileSelect(fileInput, logoPreview, previewContainer, uploadPrompt, 'image/png', 'image/jpeg', 'image/jpg'));
 
     // Favicon input change
     faviconInput.addEventListener('change', () => handleFileSelect(faviconInput, faviconPreview, faviconPreviewContainer, faviconUploadPrompt, 'image/png', 'image/jpeg', 'image/jpg', 'image/x-icon', 'image/vnd.microsoft.icon'));
+
+    // Logo Daerah input change
+    logoDaerahInput.addEventListener('change', () => handleFileSelect(logoDaerahInput, logoDaerahPreview, logoDaerahPreviewContainer, logoDaerahUploadPrompt, 'image/png', 'image/jpeg', 'image/jpg'));
+
+    // Logo Surat input change
+    logoSuratInput.addEventListener('change', () => handleFileSelect(logoSuratInput, logoSuratPreview, logoSuratPreviewContainer, logoSuratUploadPrompt, 'image/png', 'image/jpeg', 'image/jpg'));
 
     function handleFileSelect(input, preview, container, prompt, ...allowedTypes) {
         if (input.files.length > 0) {
@@ -352,6 +454,24 @@ document.addEventListener('DOMContentLoaded', function() {
         faviconPreview.src = '';
     });
 
+    // Remove logo daerah
+    removeLogoDaerahBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoDaerahInput.value = '';
+        logoDaerahPreviewContainer.classList.add('d-none');
+        logoDaerahUploadPrompt.classList.remove('d-none');
+        logoDaerahPreview.src = '';
+    });
+
+    // Remove logo surat
+    removeLogoSuratBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoSuratInput.value = '';
+        logoSuratPreviewContainer.classList.add('d-none');
+        logoSuratUploadPrompt.classList.remove('d-none');
+        logoSuratPreview.src = '';
+    });
+
     // Reset button - clear form
     resetBtn.addEventListener('click', function() {
         form.reset();
@@ -378,6 +498,28 @@ document.addEventListener('DOMContentLoaded', function() {
             faviconPreviewContainer.classList.add('d-none');
             faviconUploadPrompt.classList.remove('d-none');
             faviconPreview.src = '';
+        }
+
+        // Reset logo daerah display
+        if (hasExistingLogoDaerah) {
+            logoDaerahPreview.src = existingLogoDaerahUrl;
+            logoDaerahPreviewContainer.classList.remove('d-none');
+            logoDaerahUploadPrompt.classList.add('d-none');
+        } else {
+            logoDaerahPreviewContainer.classList.add('d-none');
+            logoDaerahUploadPrompt.classList.remove('d-none');
+            logoDaerahPreview.src = '';
+        }
+
+        // Reset logo surat display
+        if (hasExistingLogoSurat) {
+            logoSuratPreview.src = existingLogoSuratUrl;
+            logoSuratPreviewContainer.classList.remove('d-none');
+            logoSuratUploadPrompt.classList.add('d-none');
+        } else {
+            logoSuratPreviewContainer.classList.add('d-none');
+            logoSuratUploadPrompt.classList.remove('d-none');
+            logoSuratPreview.src = '';
         }
 
         form.classList.remove('was-validated');

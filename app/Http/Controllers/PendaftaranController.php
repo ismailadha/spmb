@@ -645,6 +645,9 @@ class PendaftaranController extends Controller
 
     private function generateNomorPendaftaran($jalur_id, $periode_id): string
     {
+        $periode = DB::table('periode_pendaftaran')->where('id', $periode_id)->first();
+        $tahun_ajaran = substr($periode->tahun_ajaran, 0, 4);
+
         $kode_jalur = str_pad($jalur_id, 2, '0', STR_PAD_LEFT);
 
         // Hitung jumlah pendaftaran yang sudah memiliki nomor di periode ini
@@ -655,7 +658,7 @@ class PendaftaranController extends Controller
 
         $sequence = str_pad($count + 1, 4, '0', STR_PAD_LEFT);
 
-        return "SPMB-{$kode_jalur}-{$sequence}";
+        return "SPMB-{$tahun_ajaran}-{$kode_jalur}-{$sequence}";
     }
 
     private function uploadBerkas(Request $request, $pendaftaran_id): void
@@ -759,12 +762,26 @@ class PendaftaranController extends Controller
 
         $appConfig = Konfigurasi::pluck('nilai', 'kunci')->toArray();
 
-        // Convert logo to base64 for PDF compatibility
+        // Convert logos to base64 for PDF compatibility
         $logoBase64 = null;
         if (! empty($appConfig['logo_path']) && File::exists(public_path($appConfig['logo_path']))) {
             $logoData = File::get(public_path($appConfig['logo_path']));
             $logoType = File::extension(public_path($appConfig['logo_path']));
             $logoBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
+        }
+
+        $logoDaerahBase64 = null;
+        if (! empty($appConfig['logo_daerah']) && File::exists(public_path($appConfig['logo_daerah']))) {
+            $logoData = File::get(public_path($appConfig['logo_daerah']));
+            $logoType = File::extension(public_path($appConfig['logo_daerah']));
+            $logoDaerahBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
+        }
+
+        $logoSuratBase64 = null;
+        if (! empty($appConfig['logo_surat']) && File::exists(public_path($appConfig['logo_surat']))) {
+            $logoData = File::get(public_path($appConfig['logo_surat']));
+            $logoType = File::extension(public_path($appConfig['logo_surat']));
+            $logoSuratBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
         }
 
         // Fetch pasfoto and convert to base64 for PDF compatibility
@@ -787,6 +804,8 @@ class PendaftaranController extends Controller
             'pendaftaran' => $pendaftaran,
             'isPdf' => true,
             'logoBase64' => $logoBase64,
+            'logoDaerahBase64' => $logoDaerahBase64,
+            'logoSuratBase64' => $logoSuratBase64,
             'pasfotoBase64' => $pasfotoBase64,
             'qrCodeBase64' => $qrCodeBase64,
         ]);

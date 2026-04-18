@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JalurDaftar;
 use App\Models\Kecamatan;
+use App\Models\Konfigurasi;
+use App\Models\Pendaftaran;
 use App\Models\PeriodeDaftar;
 use App\Models\Post;
 use App\Models\Sambutan;
@@ -20,7 +23,45 @@ class FrontendController extends Controller
         $posts = Post::whereIn('status', ['Publish', 'Published'])->orderBy('tanggal', 'desc')->take(3)->get();
         $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
 
-        return view('frontend.index', compact('sliders', 'sambutans', 'posts', 'activePeriode'));
+        // Get Statistics
+        $stats = [
+            'total_sekolah' => Sekolah::count(),
+            'total_kecamatan' => Kecamatan::count(),
+            'total_pendaftar' => 0,
+            'jalur' => [],
+        ];
+
+        if ($activePeriode) {
+            $stats['total_pendaftar'] = Pendaftaran::where('periode_id', $activePeriode->id)->count();
+
+            // Map Jalur Stats: 1: Domisili, 2: Afirmasi, 3: Prestasi, 4: Mutasi
+            $jalurIds = [1, 2, 4, 3]; // Order requested in view: Zonasi, Afirmasi, Mutasi, Prestasi
+            foreach ($jalurIds as $id) {
+                $jalur = JalurDaftar::find($id);
+                if ($jalur) {
+                    $stats['jalur'][$id] = [
+                        'nama' => ($id == 4) ? 'Jalur Mutasi' : (($id == 1) ? 'Jalur Zonasi' : $jalur->nama_jalur),
+                        'sd' => Pendaftaran::where('periode_id', $activePeriode->id)
+                            ->where('jalur_id', $id)
+                            ->where('jenjang', 'SD')
+                            ->count(),
+                        'smp' => Pendaftaran::where('periode_id', $activePeriode->id)
+                            ->where('jalur_id', $id)
+                            ->where('jenjang', 'SMP')
+                            ->count(),
+                        'icon' => match ($id) {
+                            1 => 'la-map-marked-alt',
+                            2 => 'la-hand-holding-heart',
+                            3 => 'la-star',
+                            4 => 'la-exchange-alt',
+                            default => 'la-info-circle'
+                        },
+                    ];
+                }
+            }
+        }
+
+        return view('frontend.index', compact('sliders', 'sambutans', 'posts', 'activePeriode', 'stats'));
     }
 
     public function sekolah_sd(Request $request)
@@ -117,7 +158,7 @@ class FrontendController extends Controller
 
     public function kontak()
     {
-        $appConfig = \App\Models\Konfigurasi::pluck('nilai', 'kunci')->toArray();
+        $appConfig = Konfigurasi::pluck('nilai', 'kunci')->toArray();
 
         return view('frontend.kontak', compact('appConfig'));
     }
