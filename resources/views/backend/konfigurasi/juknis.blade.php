@@ -73,6 +73,9 @@
             menubar: true,
             image_title: true,
             automatic_uploads: true,
+            relative_urls: true,
+            remove_script_host: true,
+            document_base_url: '/',
             file_picker_types: 'image file',
             file_picker_callback: function (cb, value, meta) {
                 var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
