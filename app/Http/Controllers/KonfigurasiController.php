@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Juknis;
 use App\Models\Konfigurasi;
+use App\Models\Persyaratan;
 use Illuminate\Http\Request;
 
 class KonfigurasiController extends Controller
@@ -167,5 +168,24 @@ class KonfigurasiController extends Controller
         $juknis = Juknis::where('kunci', 'juknis')->first();
 
         return view('backend.konfigurasi.juknis', compact('juknis'));
+    }
+
+    public function konfig_persyaratan(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'nilai' => 'required',
+            ]);
+
+            Persyaratan::where('kunci', 'persyaratan')->update([
+                'nilai' => $request->nilai,
+            ]);
+
+            return redirect()->back()->with('success', 'Persyaratan berhasil diperbarui.');
+        }
+
+        $persyaratan = Persyaratan::where('kunci', 'persyaratan')->first();
+
+        return view('backend.konfigurasi.persyaratan', compact('persyaratan'));
     }
 }

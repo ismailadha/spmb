@@ -8,6 +8,7 @@ use App\Models\Kecamatan;
 use App\Models\Konfigurasi;
 use App\Models\Pendaftaran;
 use App\Models\PeriodeDaftar;
+use App\Models\Persyaratan;
 use App\Models\Post;
 use App\Models\Sambutan;
 use App\Models\Sekolah;
@@ -366,5 +367,12 @@ class FrontendController extends Controller
         $juknis = Juknis::where('kunci', 'juknis')->first();
 
         return view('frontend.juknis', compact('juknis'));
+    }
+
+    public function persyaratan()
+    {
+        $persyaratan = Persyaratan::where('kunci', 'persyaratan')->first();
+
+        return view('frontend.persyaratan', compact('persyaratan'));
     }
 }

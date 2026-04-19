@@ -22,9 +22,7 @@ Route::get('/', [FrontendController::class, 'index'])->name('home');
 
 Route::get('juknis', [FrontendController::class, 'juknis'])->name('juknis');
 
-Route::get('persyaratan', function () {
-    return view('frontend.persyaratan');
-})->name('persyaratan');
+Route::get('persyaratan', [FrontendController::class, 'persyaratan'])->name('persyaratan');
 
 // Data Sekolah
 Route::get('sekolah-sd', [FrontendController::class, 'sekolah_sd'])->name('sekolah-sd');
@@ -149,6 +147,8 @@ Route::middleware('auth')->group(function () {
         Route::put('konfigurasi', [KonfigurasiController::class, 'update'])->name('konfigurasi.update');
         Route::get('konfigurasi/juknis', [KonfigurasiController::class, 'konfig_juknis'])->name('konfigurasi.juknis');
         Route::post('konfigurasi/juknis', [KonfigurasiController::class, 'konfig_juknis'])->name('konfigurasi.juknis.update');
+        Route::get('konfigurasi/persyaratan', [KonfigurasiController::class, 'konfig_persyaratan'])->name('konfigurasi.persyaratan');
+        Route::post('konfigurasi/persyaratan', [KonfigurasiController::class, 'konfig_persyaratan'])->name('konfigurasi.persyaratan.update');
 
         // resource periode
         Route::resource('periode', PeriodeDaftarController::class);
