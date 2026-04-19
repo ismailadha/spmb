@@ -47,9 +47,9 @@
                                     @elseif ($pendaftaran->status == 'perbaikan')
                                         <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Perbaikan Berkas</span>
                                     @elseif ($pendaftaran->status == 'lulus')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Lulus</span>
+                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">LULUS / DITERIMA</span>
                                     @elseif ($pendaftaran->status == 'tidak_lulus')
-                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">Tidak Lulus</span>
+                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">TIDAK LULUS</span>
                                     @endif
                                 </div>
                                 <!--end::Name-->
@@ -151,6 +151,72 @@
             </div>
         </div>
         <!--end::Navbar-->
+
+        <!--begin::Hasil Seleksi Section-->
+        @if ($pendaftaran->status == 'lulus' || $pendaftaran->sekolah_diterima)
+        <div class="card mb-5 mb-xl-10">
+            <div class="card-header border-0 cursor-pointer" role="button">
+                <div class="card-title m-0">
+                    <h3 class="fw-bolder m-0 text-success"><i class="bi bi-patch-check-fill text-success fs-2 me-2"></i>Hasil Seleksi</h3>
+                </div>
+            </div>
+            <div class="card-body border-top p-9">
+                <div class="row mb-7">
+                    <label class="col-lg-4 fw-bold text-muted">Status Akhir</label>
+                    <div class="col-lg-8">
+                        <span class="badge badge-success fw-bolder fs-6 px-4 py-2">DITERIMA / LULUS</span>
+                    </div>
+                </div>
+                <div class="row mb-7">
+                    <label class="col-lg-4 fw-bold text-muted">Sekolah Penempatan</label>
+                    <div class="col-lg-8">
+                        <span class="fw-bolder fs-4 text-gray-800">{{ $pendaftaran->sekolah_diterima ?? '-' }}</span>
+                    </div>
+                </div>
+                <div class="row mb-7">
+                    <label class="col-lg-4 fw-bold text-muted">Jalur Seleksi</label>
+                    <div class="col-lg-8">
+                        <span class="fw-bold fs-6 text-gray-800">{{ $pendaftaran->nama_jalur }}</span>
+                    </div>
+                </div>
+                <div class="row mb-0">
+                    <label class="col-lg-4 fw-bold text-muted">Detail Skor / Jarak</label>
+                    <div class="col-lg-8">
+                        <div class="d-flex flex-wrap gap-3 mb-5">
+                            @if($pendaftaran->skor_jarak)
+                                <div class="border border-gray-300 border-dashed rounded py-3 px-4">
+                                    <div class="fw-bold text-muted fs-7">Jarak (Zonasi)</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->skor_jarak, 0, ',', '.') }} Meter</div>
+                                </div>
+                            @endif
+                            @if($pendaftaran->nilai_akhir)
+                                <div class="border border-gray-300 border-dashed rounded py-3 px-4">
+                                    <div class="fw-bold text-muted fs-7">Nilai Akhir</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ $pendaftaran->nilai_akhir }}</div>
+                                </div>
+                            @endif
+                            @if($pendaftaran->nilai_prestasi)
+                                <div class="border border-gray-300 border-dashed rounded py-3 px-4">
+                                    <div class="fw-bold text-muted fs-7">Nilai Prestasi</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ $pendaftaran->nilai_prestasi }}</div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <a href="#" class="btn btn-danger btn-sm">
+                                <i class="bi bi-file-earmark-pdf fs-4 me-2"></i>Download
+                            </a>
+                            <a href="#" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-printer fs-4 me-2"></i>Cetak
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        <!--end::Hasil Seleksi Section-->
 
         <!--begin::Row-->
         <div class="row g-5 g-xl-10 mb-5 mb-xl-10">

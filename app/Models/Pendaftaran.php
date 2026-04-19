@@ -53,6 +53,11 @@ class Pendaftaran extends Model
         return $this->hasOne(NilaiSeleksi::class);
     }
 
+    public function sekolahDiterima()
+    {
+        return $this->belongsTo(Sekolah::class, 'sekolah_diterima_id');
+    }
+
     public function berkas()
     {
         return $this->hasMany(BerkasPendaftaran::class);

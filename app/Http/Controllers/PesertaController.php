@@ -497,6 +497,8 @@ class PesertaController extends Controller
             ->leftJoin('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
             ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
+            ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
+            ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->leftJoin('orang_tua_wali', 'orang_tua_wali.peserta_id', '=', 'peserta.id')
             ->where('pendaftaran.id', $id)
             ->select(
@@ -509,6 +511,14 @@ class PesertaController extends Controller
                 'jalur_pendaftaran.nama_jalur',
                 'sek1.nama_sekolah as pilihan_1',
                 'sek2.nama_sekolah as pilihan_2',
+                'sek_diterima.nama_sekolah as sekolah_diterima',
+                'nilai_seleksi.skor_jarak',
+                'nilai_seleksi.skor_jarak_2',
+                'nilai_seleksi.skor_usia',
+                'nilai_seleksi.rata_rapor',
+                'nilai_seleksi.nilai_tes_akademik',
+                'nilai_seleksi.nilai_prestasi',
+                'nilai_seleksi.nilai_akhir',
                 'orang_tua_wali.nama_wali',
                 'orang_tua_wali.alamat_wali',
                 'orang_tua_wali.pekerjaan_wali',
@@ -524,7 +534,7 @@ class PesertaController extends Controller
             ->where('pendaftaran_id', $id)
             ->get();
 
-        return view('backend.pendaftaran.detail', compact('pendaftaran', 'berkas'));
+        return view('backend.peserta.detail', compact('pendaftaran', 'berkas'));
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\HasilSeleksiController;
 use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PendaftaranController;
@@ -111,6 +112,12 @@ Route::middleware('auth')->group(function () {
         Route::get('kelulusan/smp/data', [KelulusanController::class, 'data_smp'])->name('kelulusan.smp.data');
         Route::post('kelulusan/smp/sahkan', [KelulusanController::class, 'sahkan_smp'])->name('kelulusan.smp.sahkan');
         Route::post('kelulusan/luluskan', [KelulusanController::class, 'setLulus'])->name('kelulusan.luluskan');
+
+        // hasil seleksi
+        Route::get('hasil-seleksi/sd', [HasilSeleksiController::class, 'hasil_seleksi_sd'])->name('hasil-seleksi.sd');
+        Route::get('hasil-seleksi/sd/export/excel', [HasilSeleksiController::class, 'exportExcel_sd'])->name('hasil-seleksi.sd.export.excel');
+        Route::get('hasil-seleksi/sd/export/pdf', [HasilSeleksiController::class, 'exportPdf_sd'])->name('hasil-seleksi.sd.export.pdf');
+        Route::get('hasil-seleksi/smp', [HasilSeleksiController::class, 'hasil_seleksi_smp'])->name('hasil-seleksi.smp');
     });
 
     // Route berkas bisa diakses oleh admin dan peserta
