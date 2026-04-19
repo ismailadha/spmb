@@ -118,6 +118,8 @@ Route::middleware('auth')->group(function () {
         Route::get('hasil-seleksi/sd/export/excel', [HasilSeleksiController::class, 'exportExcel_sd'])->name('hasil-seleksi.sd.export.excel');
         Route::get('hasil-seleksi/sd/export/pdf', [HasilSeleksiController::class, 'exportPdf_sd'])->name('hasil-seleksi.sd.export.pdf');
         Route::get('hasil-seleksi/smp', [HasilSeleksiController::class, 'hasil_seleksi_smp'])->name('hasil-seleksi.smp');
+        Route::get('hasil-seleksi/smp/export/excel', [HasilSeleksiController::class, 'exportExcel_smp'])->name('hasil-seleksi.smp.export.excel');
+        Route::get('hasil-seleksi/smp/export/pdf', [HasilSeleksiController::class, 'exportPdf_smp'])->name('hasil-seleksi.smp.export.pdf');
     });
 
     // Route berkas bisa diakses oleh admin dan peserta
