@@ -99,19 +99,19 @@
                 <div class="row mb-6">
                     <div class="col-md-3">
                         <label for="daya_tampung_prestasi" class="form-label">Quota Prestasi</label>
-                        <input type="number" class="form-control" id="daya_tampung_prestasi" name="daya_tampung_prestasi" value="{{ $sekolah->daya_tampung_prestasi ?? 0 }}" required min="0">
+                        <input type="number" class="form-control" id="daya_tampung_prestasi" name="daya_tampung_prestasi" value="{{ $sekolah->daya_tampung_prestasi ?? 0 }}" required min="0" @if(auth()->user()->role == 'admin_sekolah') readonly @endif>
                     </div>
                     <div class="col-md-3">
                         <label for="daya_tampung_domisili" class="form-label">Quota Domisili</label>
-                        <input type="number" class="form-control" id="daya_tampung_domisili" name="daya_tampung_domisili" value="{{ $sekolah->daya_tampung_domisili ?? 0 }}" required min="0">
+                        <input type="number" class="form-control" id="daya_tampung_domisili" name="daya_tampung_domisili" value="{{ $sekolah->daya_tampung_domisili ?? 0 }}" required min="0" @if(auth()->user()->role == 'admin_sekolah') readonly @endif>
                     </div>
                     <div class="col-md-3">
                         <label for="daya_tampung_afirmasi" class="form-label">Quota Afirmasi</label>
-                        <input type="number" class="form-control" id="daya_tampung_afirmasi" name="daya_tampung_afirmasi" value="{{ $sekolah->daya_tampung_afirmasi ?? 0 }}" required min="0">
+                        <input type="number" class="form-control" id="daya_tampung_afirmasi" name="daya_tampung_afirmasi" value="{{ $sekolah->daya_tampung_afirmasi ?? 0 }}" required min="0" @if(auth()->user()->role == 'admin_sekolah') readonly @endif>
                     </div>
                     <div class="col-md-3">
                         <label for="daya_tampung_mutasi" class="form-label">Quota Mutasi</label>
-                        <input type="number" class="form-control" id="daya_tampung_mutasi" name="daya_tampung_mutasi" value="{{ $sekolah->daya_tampung_mutasi ?? 0 }}" required min="0">
+                        <input type="number" class="form-control" id="daya_tampung_mutasi" name="daya_tampung_mutasi" value="{{ $sekolah->daya_tampung_mutasi ?? 0 }}" required min="0" @if(auth()->user()->role == 'admin_sekolah') readonly @endif>
                     </div>
                 </div>
 
