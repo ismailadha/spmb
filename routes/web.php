@@ -41,6 +41,8 @@ Route::get('hasil-seleksi', function () {
 })->name('hasil-seleksi');
 
 Route::post('cek-hasil-seleksi', [FrontendController::class, 'cekHasilSeleksi'])->name('cek.hasil.seleksi');
+Route::get('hasil-seleksi/cetak/{id}', [FrontendController::class, 'printLulusPublic'])->name('hasil-seleksi.cetak');
+Route::get('hasil-seleksi/download/{id}', [FrontendController::class, 'downloadLulusPublic'])->name('hasil-seleksi.download');
 
 // zonasi sd
 Route::get('zonasi-sd', [FrontendController::class, 'zonasi_sd'])->name('zonasi-sd');

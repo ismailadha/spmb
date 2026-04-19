@@ -153,9 +153,9 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->editColumn('status', function ($row) use (&$counter, $quota) {
+            ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
-                if ($quota > 0 && $counter <= $quota) {
+                if ($remainingQuota > 0 && $counter <= $remainingQuota) {
                     return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
                 }
 
@@ -314,9 +314,9 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->editColumn('status', function ($row) use (&$counter, $quota) {
+            ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
-                if ($quota > 0 && $counter <= $quota) {
+                if ($remainingQuota > 0 && $counter <= $remainingQuota) {
                     return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
                 }
 

@@ -73,10 +73,6 @@
                             <label for="no_pendaftaran" class="form-label">Nomor Pendaftaran</label>
                             <input type="text" class="form-control form-control-lg bg-light" id="no_pendaftaran" placeholder="Masukkan nomor pendaftaran Anda..." value="">
                         </div>
-                        <div class="form-group mb-4">
-                            <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control form-control-lg bg-light" id="tgl_lahir" value="">
-                        </div>
                         <button type="submit" class="btn btn-primary btn-lg btn-block rounded font-weight-bold mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="mr-2 mb-1" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -153,7 +149,7 @@
                     <button class="btn btn-outline-secondary mr-2 mb-2 mb-md-0 font-weight-bold px-4 rounded" onclick="hideResult()">
                         Kembali
                     </button>
-                    <button class="btn btn-success font-weight-bold d-inline-flex align-items-center mb-2 mb-md-0 px-4 rounded shadow-sm">
+                    <button id="btn-cetak" class="btn btn-success font-weight-bold d-inline-flex align-items-center mb-2 mb-md-0 px-4 rounded shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="mr-2" viewBox="0 0 16 16">
                             <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
                             <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
@@ -186,14 +182,12 @@
             btn.prop('disabled', true);
 
             var no_pendaftaran = $('#no_pendaftaran').val();
-            var tgl_lahir = $('#tgl_lahir').val();
 
             $.ajax({
                 url: "{{ route('cek.hasil.seleksi') }}",
                 type: "POST",
                 data: {
-                    no_pendaftaran: no_pendaftaran,
-                    tgl_lahir: tgl_lahir
+                    no_pendaftaran: no_pendaftaran
                 },
                 success: function(response) {
                     btn.html(originalText);
@@ -227,6 +221,7 @@
                             sekolah.addClass('text-primary').removeClass('text-danger text-muted');
                             keterangan.text(data.keterangan || 'Silakan lakukan daftar ulang sesuai jadwal.');
                             $('#alert-perhatian').show();
+                            $('#btn-cetak').show().attr('onclick', "window.open('{{ url('hasil-seleksi/cetak') }}/" + data.id + "', '_blank')");
                         } else if (status === 'tidak lulus') {
                             badge.addClass('badge-danger');
                             card.addClass('rejected');
@@ -236,6 +231,7 @@
                             sekolah.addClass('text-danger').removeClass('text-primary text-muted');
                             keterangan.text('Tetap semangat dan coba lagi di kesempatan berikutnya.');
                             $('#alert-perhatian').hide();
+                            $('#btn-cetak').hide();
                         } else {
                             badge.addClass('badge-info');
                             text.text('STATUS: DALAM PROSES / VERIFIKASI');
@@ -244,6 +240,7 @@
                             sekolah.addClass('text-muted').removeClass('text-primary text-danger');
                             keterangan.text('Hasil seleksi belum diputuskan atau masih dalam tahap verifikasi.');
                             $('#alert-perhatian').hide();
+                            $('#btn-cetak').hide();
                         }
 
                         // Show result section

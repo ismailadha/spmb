@@ -249,9 +249,15 @@
 <body>
     @if(!isset($isPdf))
     <div class="actions-btn">
-        <a href="{{ route('pendaftaran.lulus.download', $pendaftaran->id) }}" class="btn btn-download">
-             Download Kartu Lulus (PDF)
-        </a>
+        @if(isset($isPublic) && $isPublic)
+            <a href="{{ route('hasil-seleksi.download', $pendaftaran->id) }}" class="btn btn-download">
+                 Download Kartu Lulus (PDF)
+            </a>
+        @else
+            <a href="{{ route('pendaftaran.lulus.download', $pendaftaran->id) }}" class="btn btn-download">
+                 Download Kartu Lulus (PDF)
+            </a>
+        @endif
         <button class="btn btn-print" onclick="window.print()">Cetak Kartu Lulus</button>
     </div>
     @endif

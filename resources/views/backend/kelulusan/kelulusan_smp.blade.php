@@ -221,7 +221,7 @@ $(document).ready(function() {
 
     $('#select_all').on('change', function() {
         var checked = $(this).is(':checked');
-        $('.row-checkbox').prop('checked', checked);
+        $('.row-checkbox:enabled').prop('checked', checked);
         updateBulkButton();
     });
 
