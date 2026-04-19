@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Juknis;
 use App\Models\Konfigurasi;
 use Illuminate\Http\Request;
 
@@ -147,5 +148,24 @@ class KonfigurasiController extends Controller
         }
 
         return redirect()->route('konfigurasi.index')->with('success', 'Konfigurasi sistem berhasil diperbarui.');
+    }
+
+    public function konfig_juknis(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'nilai' => 'required',
+            ]);
+
+            Juknis::where('kunci', 'juknis')->update([
+                'nilai' => $request->nilai,
+            ]);
+
+            return redirect()->back()->with('success', 'Petunjuk Teknis berhasil diperbarui.');
+        }
+
+        $juknis = Juknis::where('kunci', 'juknis')->first();
+
+        return view('backend.konfigurasi.juknis', compact('juknis'));
     }
 }

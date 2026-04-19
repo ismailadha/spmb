@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JalurDaftar;
+use App\Models\Juknis;
 use App\Models\Kecamatan;
 use App\Models\Konfigurasi;
 use App\Models\Pendaftaran;
@@ -358,5 +359,12 @@ class FrontendController extends Controller
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf->download('Kartu-Kelulusan-'.$pendaftaran->nomor_pendaftaran.'.pdf');
+    }
+
+    public function juknis()
+    {
+        $juknis = Juknis::where('kunci', 'juknis')->first();
+
+        return view('frontend.juknis', compact('juknis'));
     }
 }

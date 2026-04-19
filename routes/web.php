@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 
-Route::get('juknis', function () {
-    return view('frontend.juknis');
-})->name('juknis');
+Route::get('juknis', [FrontendController::class, 'juknis'])->name('juknis');
 
 Route::get('persyaratan', function () {
     return view('frontend.persyaratan');
@@ -149,6 +147,8 @@ Route::middleware('auth')->group(function () {
         // konfigurasi
         Route::get('konfigurasi', [KonfigurasiController::class, 'index'])->name('konfigurasi.index');
         Route::put('konfigurasi', [KonfigurasiController::class, 'update'])->name('konfigurasi.update');
+        Route::get('konfigurasi/juknis', [KonfigurasiController::class, 'konfig_juknis'])->name('konfigurasi.juknis');
+        Route::post('konfigurasi/juknis', [KonfigurasiController::class, 'konfig_juknis'])->name('konfigurasi.juknis.update');
 
         // resource periode
         Route::resource('periode', PeriodeDaftarController::class);

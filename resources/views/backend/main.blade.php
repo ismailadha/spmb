@@ -363,6 +363,14 @@
 												<span class="menu-title">Berita</span>
 											</a>
 										</div>
+										<div class="menu-item">
+											<a class="menu-link @yield('juknis-menu-active')" href="{{ route('konfigurasi.juknis') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Petunjuk Teknis</span>
+											</a>
+										</div>
 									</div>
 								</div>
 								<div class="menu-item">
