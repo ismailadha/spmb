@@ -59,49 +59,7 @@
         <!--end::Card header-->
         <!--begin::Card body-->
 		<div class="card-body py-4">
-            <!--begin::Information-->
-            <div id="scoring_info_container" class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5 mb-5" style="display: none;">
-                <!--begin::Icon-->
-                <span class="svg-icon svg-icon-2hx svg-icon-info me-4 mb-5 mb-sm-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"></rect>
-                        <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"></rect>
-                        <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"></rect>
-                    </svg>
-                </span>
-                <!--end::Icon-->
-                <!--begin::Wrapper-->
-                <div class="d-flex flex-column pe-0 pe-sm-10">
-                    <!--begin::Title-->
-                    <h5 class="mb-1 text-info">Informasi Perhitungan Skor</h5>
-                    <!--end::Title-->
-                    <!--begin::Content-->
-                    <div class="fs-7">
-                        Urutan peringkat ditentukan oleh <strong>Total Skor</strong> yang merupakan penjumlahan dari <strong>Skor Jarak + Usia (Hari)</strong>.<br>
-                        <strong>Detail Skor Jarak:</strong> 
-                        <span class="badge badge-light-primary">0-500m: 800</span>
-                        <span class="badge badge-light-primary">501m-1km: 600</span>
-                        <span class="badge badge-light-primary">1-3km: 400</span>
-                        <span class="badge badge-light-primary">3-5km: 300</span>
-                        <span class="badge badge-light-primary">5-7.5km: 200</span>
-                        <span class="badge badge-light-primary">> 7.5km: 100</span><br>
-                        <strong>Skor Usia:</strong> Dihitung dalam satuan hari berdasarkan selisih antara tanggal lahir dengan batas usia minimal ({{ \Carbon\Carbon::parse($periode->tanggal_batas_usia_sd)->format('d F Y') }}).
-                    </div>
-                    <!--end::Content-->
-                </div>
-                <!--end::Wrapper-->
-                <!--begin::Close-->
-                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" onclick="$('#scoring_info_container').attr('style', 'display: none !important;')">
-                    <span class="svg-icon svg-icon-1 svg-icon-info">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                        </svg>
-                    </span>
-                </button>
-                <!--end::Close-->
-            </div>
-            <!--end::Information-->
+
 
             <!--begin::Quota Info-->
             <div id="quota_info_container" class="alert alert-dismissible bg-light-primary d-flex flex-column flex-sm-row p-5 mb-5" style="display: none !important;">
@@ -124,14 +82,11 @@
                         <th class="w-10px pe-2">No</th>
                         <th class="min-w-125px">No. Pendaftaran</th>
                         <th class="min-w-150px">Nama Lengkap</th>
-                        <th class="min-w-100px text-center">Skor Jarak</th>
-                        <th class="min-w-100px text-center">Usia (Hari)</th>
-                        <th class="min-w-100px text-center">Total Skor</th>
+                        <th class="min-w-150px">Jalur</th>
                         <th class="min-w-100px text-center">Hasil</th>
-                        <th class="min-w-150px">Pilihan 1</th>
-                        <th class="min-w-100px">Jarak 1 (km)</th>
-                        <th class="min-w-150px col-pilihan2">Pilihan 2</th>
-                        <th class="min-w-100px col-jarak2">Jarak 2 (km)</th>
+                        <th class="min-w-100px text-center">Skor Jarak</th>
+                        <th class="min-w-100px text-center">Skor Usia</th>
+                        <th class="min-w-100px text-center">Total Skor</th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
@@ -196,14 +151,11 @@ $(document).ready(function() {
                 }
             },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
-            { data: 'skor_jarak', name: 'skor_jarak', className: 'text-center' },
-            { data: 'skor_usia', name: 'skor_usia', className: 'text-center' },
-            { data: 'total_skor', name: 'total_skor', className: 'text-center' },
-            { data: 'hasil', name: 'hasil', className: 'text-center' },
-            { data: 'pilihan_1', name: 'pilihan_1' },
-            { data: 'jarak_sekolah_1', name: 'jarak_sekolah_1' },
-            { data: 'pilihan_2', name: 'pilihan_2' },
-            { data: 'jarak_sekolah_2', name: 'jarak_sekolah_2' }
+            { data: 'nama_jalur', name: 'nama_jalur' },
+            { data: 'status', name: 'status', className: 'text-center', visible: $('#filter_jalur').val() !== '' },
+            { data: 'skor_jarak', name: 'skor_jarak', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3') },
+            { data: 'skor_usia', name: 'skor_usia', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3') },
+            { data: 'nilai_akhir', name: 'nilai_akhir', className: 'text-center', visible: $('#filter_jalur').val() !== '' }
         ],
         language: {
             "emptyTable": "Tidak ada data yang tersedia",
@@ -223,7 +175,6 @@ $(document).ready(function() {
             }
         },
         drawCallback: function(settings) {
-            adjustColumnsVisibility();
             $('#select_all').prop('checked', false);
             updateBulkButton();
 
@@ -231,19 +182,15 @@ $(document).ready(function() {
             var json = table.ajax.json();
             if (json && json.quota > 0) {
                 $('#quota_text').text('Daya Tampung: ' + json.quota);
-                $('#applicants_text').text('Total Pendaftar: ' + json.recordsFiltered);
+                $('#applicants_text').text('Sisa Kuota: ' + json.remaining_quota + ' / Total Pendaftar: ' + json.recordsFiltered);
                 $('#quota_info_container').attr('style', 'display: flex !important;');
+                window.remainingQuota = json.remaining_quota;
             } else {
                 $('#quota_info_container').attr('style', 'display: none !important;');
+                window.remainingQuota = 0;
             }
 
-            // Update Scoring Info Visibility
-            var jalurId = $('#filter_jalur').val();
-            if (jalurId == '1') {
-                $('#scoring_info_container').attr('style', 'display: flex !important;');
-            } else {
-                $('#scoring_info_container').attr('style', 'display: none !important;');
-            }
+
  
             // Hide bulk button if no data
             if (json && json.recordsFiltered === 0) {
@@ -254,23 +201,7 @@ $(document).ready(function() {
         }
     });
 
-    function adjustColumnsVisibility() {
-        var jalurId = $('#filter_jalur').val();
-        var pilihanKe = $('#filter_pilihan').val();
 
-        // Scoring columns (4, 5, 6) are ONLY visible if Jalur Domisili (1)
-        var isDomisili = (jalurId == '1');
-        table.column(4).visible(isDomisili);
-        table.column(5).visible(isDomisili);
-        table.column(6).visible(isDomisili);
-
-        // Pilihan 2 columns are only visible if:
-        // 1. Path is Domisili (1) AND Choice filter is Pilihan 2
-        var showPilihan2 = (jalurId == '1' && pilihanKe == '2');
-
-        table.column(10).visible(showPilihan2);
-        table.column(11).visible(showPilihan2);
-    }
 
     function updateBulkButton() {
         var jalurId = $('#filter_jalur').val();
@@ -307,6 +238,20 @@ $(document).ready(function() {
         }).get();
 
         if (selectedIds.length === 0) {
+            return;
+        }
+
+        if (selectedIds.length > window.remainingQuota) {
+            Swal.fire({
+                title: 'Kuota tidak mencukupi',
+                text: 'Jumlah peserta yang dipilih (' + selectedIds.length + ') melebihi sisa kuota (' + window.remainingQuota + '). Silakan kurangi pilihan Anda.',
+                icon: 'warning',
+                buttonsStyling: false,
+                confirmButtonText: "Ok, mengerti!",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-primary"
+                }
+            });
             return;
         }
 
@@ -394,6 +339,18 @@ $(document).ready(function() {
             $('#container_filter_pilihan').fadeOut();
             $('#filter_pilihan').val("1"); // Reset to Pilihan 1 if hidden
         }
+
+        // Toggle column visibility
+        if (typeof table !== 'undefined') {
+            if (jalurId === '') {
+                table.columns([5, 6, 7, 8]).visible(false);
+            } else if (jalurId == '3') {
+                table.columns([5, 8]).visible(true);
+                table.columns([6, 7]).visible(false);
+            } else {
+                table.columns([5, 6, 7, 8]).visible(true);
+            }
+        }
     }
 
     // Initial visibility check
@@ -410,6 +367,20 @@ $(document).ready(function() {
     $(document).on('click', '.btn-luluskan', function(e) {
         e.preventDefault();
         var id = $(this).data('id');
+
+        if (window.remainingQuota < 1) {
+            Swal.fire({
+                title: 'Kuota sudah penuh',
+                text: 'Daya tampung untuk jalur ini sudah terpenuhi.',
+                icon: 'warning',
+                buttonsStyling: false,
+                confirmButtonText: "Ok, mengerti!",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-primary"
+                }
+            });
+            return;
+        }
 
         Swal.fire({
             title: 'Apakah hasil ini sudah benar?',

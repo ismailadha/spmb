@@ -9,6 +9,56 @@
                 {{ session('info') }}
             </div>
         @endif
+
+        @if ($pendaftaran && $pendaftaran->status != 'draft')
+            @php
+                $status_config = [
+                    'submit' => [
+                        'class' => 'primary',
+                        'icon' => 'bi-send-check',
+                        'title' => 'Berkas Terkirim',
+                        'message' => 'Berkas pendaftaran Anda sudah terkirim dan saat ini sedang dalam proses verifikasi oleh panitia.',
+                    ],
+                    'verifikasi' => [
+                        'class' => 'success',
+                        'icon' => 'bi-patch-check',
+                        'title' => 'Data Terverifikasi',
+                        'message' => 'Data pendaftaran Anda sudah terverifikasi. Saat ini pendaftaran Anda sedang dalam proses seleksi.',
+                    ],
+                    'perbaikan' => [
+                        'class' => 'warning',
+                        'icon' => 'bi-exclamation-triangle',
+                        'title' => 'Perbaikan Berkas',
+                        'message' => 'Berkas pendaftaran Anda memerlukan perbaikan. Silakan hubungi dan konfirmasi ke admin untuk informasi lebih lanjut.',
+                    ],
+                    'lulus' => [
+                        'class' => 'success',
+                        'icon' => 'bi-trophy',
+                        'title' => 'Selamat, Anda Lulus!',
+                        'message' => 'Selamat! Anda dinyatakan Lulus di <strong>' . ($pendaftaran->sekolah_diterima_nama ?? 'Sekolah Tujuan') . '</strong>. Silakan lakukan proses pendaftaran ulang sesuai jadwal yang ditentukan.',
+                    ],
+                    'tidak_lulus' => [
+                        'class' => 'danger',
+                        'icon' => 'bi-x-circle',
+                        'title' => 'Mohon Maaf',
+                        'message' => 'Mohon maaf, Anda dinyatakan Tidak Lulus seleksi pada periode ini. Tetap semangat dan jangan menyerah!',
+                    ],
+                ];
+                $current_status = $status_config[$pendaftaran->status] ?? null;
+            @endphp
+
+            @if ($current_status)
+                <div class="notice d-flex bg-light-{{ $current_status['class'] }} rounded border-{{ $current_status['class'] }} border border-dashed p-6 mb-5">
+                    <i class="bi {{ $current_status['icon'] }} fs-2tx text-{{ $current_status['class'] }} me-4"></i>
+                    <div class="d-flex flex-stack flex-grow-1">
+                        <div class="fw-bold">
+                            <h4 class="text-gray-900 fw-bolder">{{ $current_status['title'] }}</h4>
+                            <div class="fs-6 text-gray-700">{!! $current_status['message'] !!}</div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endif
     </div>
 
     @if ($pendaftaran && $pendaftaran->status != 'draft')
@@ -43,11 +93,11 @@
                                     <span class="text-gray-900 fs-2 fw-bolder me-1">{{ $pendaftaran->nama_lengkap }}</span>
                                     {{-- Jika status pendaftaran adalah submit, maka tampilkan badge --}}
                                     @if ($pendaftaran->status == 'submit')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Proses Verifikasi</span>
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3">Proses Verifikasi</span>
                                     @elseif ($pendaftaran->status == 'verifikasi')
-                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">Terverifikasi</span>
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3">Terverifikasi</span>
                                     @elseif ($pendaftaran->status == 'perbaikan')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Perbaikan Berkas</span>
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3">Perbaikan Berkas</span>
                                     @elseif ($pendaftaran->status == 'lulus')
                                         <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Lulus</span>
                                     @elseif ($pendaftaran->status == 'tidak_lulus')
@@ -78,6 +128,15 @@
                                 <a href="{{ route('pendaftaran.print', $pendaftaran->id) }}" target="_blank" class="btn btn-sm btn-primary me-2">
                                     <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu
                                 </a>
+
+                                @if($pendaftaran->status == 'lulus')
+                                    <a href="{{ route('pendaftaran.lulus.download', $pendaftaran->id) }}" class="btn btn-sm btn-success me-2">
+                                        <i class="bi bi-file-earmark-pdf fs-4 me-1"></i>Download Kartu Lulus
+                                    </a>
+                                    <a href="{{ route('pendaftaran.lulus.print', $pendaftaran->id) }}" target="_blank" class="btn btn-sm btn-primary me-2">
+                                        <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu Lulus
+                                    </a>
+                                @endif
                             </div>
                             <!--end::Actions-->
                         </div>

@@ -72,6 +72,7 @@ class PendaftaranController extends Controller
                     ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
                     ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
                     ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+                    ->leftJoin('sekolah as sekolah_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sekolah_diterima.id')
                     ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
                     ->where('peserta.user_id', Auth::id())
                     ->where('pendaftaran.id', $pendaftaran->id)
@@ -84,6 +85,7 @@ class PendaftaranController extends Controller
                         'pendaftaran.jenjang',
                         'pendaftaran.sekolah_pilihan_1',
                         'pendaftaran.sekolah_pilihan_2',
+                        'pendaftaran.sekolah_diterima_id',
                         'pendaftaran.jarak_sekolah_1',
                         'pendaftaran.jarak_sekolah_2',
                         'peserta.id as peserta_id',
@@ -125,6 +127,7 @@ class PendaftaranController extends Controller
                         'sekolah2.id as sekolah_pilihan_2_id',
                         'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
                         'sekolah2.jenjang as sekolah_pilihan_2_jenjang',
+                        'sekolah_diterima.nama_sekolah as sekolah_diterima_nama',
                         'orang_tua_wali.id as orang_tua_wali_id',
                         'orang_tua_wali.nama_wali',
                         'orang_tua_wali.pekerjaan_wali',
@@ -814,5 +817,147 @@ class PendaftaranController extends Controller
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf->download('Kartu-Pendaftaran-'.$pendaftaran->nomor_pendaftaran.'.pdf');
+    }
+
+    public function printLulus($id)
+    {
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+            ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+            ->leftJoin('sekolah as sekolah_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sekolah_diterima.id')
+            ->where('pendaftaran.id', $id)
+            ->where('pendaftaran.status', 'lulus')
+            ->select(
+                'pendaftaran.id',
+                'pendaftaran.nomor_pendaftaran',
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.jalur_id',
+                'pendaftaran.jenjang',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'pendaftaran.sekolah_diterima_id',
+                'peserta.nisn',
+                'peserta.nama_lengkap',
+                'peserta.tempat_lahir',
+                'peserta.tanggal_lahir',
+                'peserta.jenis_kelamin',
+                'periode_pendaftaran.id as periode_id',
+                'periode_pendaftaran.tahun_ajaran',
+                'jalur_pendaftaran.id as jalur_id',
+                'jalur_pendaftaran.nama_jalur',
+                'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
+                'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
+                'sekolah_diterima.nama_sekolah as sekolah_diterima_nama',
+            )
+            ->first();
+
+        if (! $pendaftaran) {
+            abort(404);
+        }
+
+        $pasfoto = DB::table('berkas_pendaftaran')
+            ->where('pendaftaran_id', $id)
+            ->where('jenis_berkas', 'pasfoto')
+            ->first();
+
+        $qrCode = QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran);
+        $qrCodeBase64 = 'data:image/svg+xml;base64,'.base64_encode($qrCode);
+
+        return view('backend.kelulusan.kartu_lulus', compact('pendaftaran', 'pasfoto', 'qrCodeBase64'));
+    }
+
+    public function downloadLulusPdf($id)
+    {
+        $pendaftaran = DB::table('pendaftaran')
+            ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
+            ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
+            ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+            ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
+            ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
+            ->leftJoin('sekolah as sekolah_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sekolah_diterima.id')
+            ->where('pendaftaran.id', $id)
+            ->where('pendaftaran.status', 'lulus')
+            ->select(
+                'pendaftaran.id',
+                'pendaftaran.nomor_pendaftaran',
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.jalur_id',
+                'pendaftaran.jenjang',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'pendaftaran.sekolah_diterima_id',
+                'peserta.nisn',
+                'peserta.nama_lengkap',
+                'peserta.tempat_lahir',
+                'peserta.tanggal_lahir',
+                'peserta.jenis_kelamin',
+                'periode_pendaftaran.id as periode_id',
+                'periode_pendaftaran.tahun_ajaran',
+                'jalur_pendaftaran.id as jalur_id',
+                'jalur_pendaftaran.nama_jalur',
+                'sekolah1.nama_sekolah as sekolah_pilihan_1_nama',
+                'sekolah2.nama_sekolah as sekolah_pilihan_2_nama',
+                'sekolah_diterima.nama_sekolah as sekolah_diterima_nama',
+            )
+            ->first();
+
+        if (! $pendaftaran) {
+            abort(404);
+        }
+
+        $appConfig = Konfigurasi::pluck('nilai', 'kunci')->toArray();
+
+        $logoBase64 = null;
+        if (! empty($appConfig['logo_path']) && File::exists(public_path($appConfig['logo_path']))) {
+            $logoData = File::get(public_path($appConfig['logo_path']));
+            $logoType = File::extension(public_path($appConfig['logo_path']));
+            $logoBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
+        }
+
+        $logoDaerahBase64 = null;
+        if (! empty($appConfig['logo_daerah']) && File::exists(public_path($appConfig['logo_daerah']))) {
+            $logoData = File::get(public_path($appConfig['logo_daerah']));
+            $logoType = File::extension(public_path($appConfig['logo_daerah']));
+            $logoDaerahBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
+        }
+
+        $logoSuratBase64 = null;
+        if (! empty($appConfig['logo_surat']) && File::exists(public_path($appConfig['logo_surat']))) {
+            $logoData = File::get(public_path($appConfig['logo_surat']));
+            $logoType = File::extension(public_path($appConfig['logo_surat']));
+            $logoSuratBase64 = 'data:image/'.$logoType.';base64,'.base64_encode($logoData);
+        }
+
+        $pasfotoBase64 = null;
+        $pasfoto = DB::table('berkas_pendaftaran')
+            ->where('pendaftaran_id', $id)
+            ->where('jenis_berkas', 'pasfoto')
+            ->first();
+
+        if ($pasfoto && File::exists(storage_path('app/'.$pasfoto->file_path))) {
+            $pasfotoData = File::get(storage_path('app/'.$pasfoto->file_path));
+            $pasfotoType = File::extension(storage_path('app/'.$pasfoto->file_path));
+            $pasfotoBase64 = 'data:image/'.$pasfotoType.';base64,'.base64_encode($pasfotoData);
+        }
+
+        $qrCode = QrCode::size(100)->margin(1)->generate($pendaftaran->nomor_pendaftaran);
+        $qrCodeBase64 = 'data:image/svg+xml;base64,'.base64_encode($qrCode);
+
+        $pdf = Pdf::loadView('backend.kelulusan.kartu_lulus', [
+            'pendaftaran' => $pendaftaran,
+            'isPdf' => true,
+            'logoBase64' => $logoBase64,
+            'logoDaerahBase64' => $logoDaerahBase64,
+            'logoSuratBase64' => $logoSuratBase64,
+            'pasfotoBase64' => $pasfotoBase64,
+            'qrCodeBase64' => $qrCodeBase64,
+        ]);
+
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download('Kartu-Kelulusan-'.$pendaftaran->nomor_pendaftaran.'.pdf');
     }
 }

@@ -42,6 +42,8 @@ class KelulusanController extends Controller
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
+        } elseif (auth()->user()->role == 'admin_dinas' && empty($sekolahId)) {
+            $sekolahId = null;
         }
 
         $pilihanKe = $request->get('pilihan_ke', '1');
@@ -74,57 +76,54 @@ class KelulusanController extends Controller
                 }
 
                 return $query;
-            })
-            ->select(
-                'pendaftaran.id as pendaftaran_id',
-                'peserta.id as id',
-                'pendaftaran.nomor_pendaftaran',
-                'peserta.nama_lengkap',
-                'peserta.tanggal_lahir',
-                'jalur_pendaftaran.id as jalur_id',
-                'jalur_pendaftaran.nama_jalur',
-                'pendaftaran.jenjang',
-                'pendaftaran.status',
-                'sek1.nama_sekolah as pilihan_1',
-                'pendaftaran.jarak_sekolah_1',
-                'sek2.nama_sekolah as pilihan_2',
-                'pendaftaran.jarak_sekolah_2'
-            );
+            });
 
-        // Conditional Ranking & Scoring
-        if ($jalurId == 1) {
-            // Domisili: Use stored score or fallback
-            $data->selectRaw("$distanceScoreCol as skor_jarak")
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
-                ->orderBy('total_skor', 'desc');
-        } elseif (in_array($jalurId, [1, 2, 4])) {
-            // Domisili, Afirmasi, Mutasi: Use stored score (Distance + Age)
-            $data->selectRaw("$distanceScoreCol as skor_jarak")
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
-                ->orderBy('total_skor', 'desc');
-        } elseif ($jalurId == 3) {
-            // Prestasi: Must use stored score
-            $data->selectRaw('nilai_seleksi.rata_rapor')
-                ->selectRaw('nilai_seleksi.nilai_tes_akademik')
-                ->selectRaw('nilai_seleksi.nilai_prestasi')
-                ->selectRaw('nilai_seleksi.skor_jarak')
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
-                ->orderBy('total_skor', 'desc')
-                ->orderBy('nilai_seleksi.skor_usia', 'desc')
-                ->orderBy('nilai_seleksi.skor_jarak', 'desc');
-        } else {
-            // Standard: Distance then Age
-            $data->selectRaw('nilai_seleksi.skor_jarak')
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
-                ->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+        $data->select(
+            'pendaftaran.id as pendaftaran_id',
+            'peserta.id as id',
+            'pendaftaran.nomor_pendaftaran',
+            'peserta.nama_lengkap',
+            'peserta.tanggal_lahir',
+            'jalur_pendaftaran.id as jalur_id',
+            'jalur_pendaftaran.nama_jalur',
+            'pendaftaran.jenjang',
+            'pendaftaran.status',
+            'sek1.nama_sekolah as pilihan_1',
+            'pendaftaran.jarak_sekolah_1',
+            'sek2.nama_sekolah as pilihan_2',
+            'pendaftaran.jarak_sekolah_2',
+            'nilai_seleksi.skor_usia',
+            DB::raw("$distanceScoreCol as skor_jarak"),
+            DB::raw("CASE 
+                WHEN pendaftaran.jalur_id = 3 THEN nilai_seleksi.nilai_akhir 
+                ELSE (nilai_seleksi.skor_usia + $distanceScoreCol) 
+            END as nilai_akhir")
+        );
+
+        $data->when($jalurId, function ($query, $jalurId) use ($distanceScoreCol) {
+            if ($jalurId == 1) {
+                // Domisili: Total Skor (usia + jarak) DESC, Skor Jarak DESC
+                $totalExpr = DB::raw("(nilai_seleksi.skor_usia + $distanceScoreCol)");
+
+                return $query->orderBy($totalExpr, 'desc')
+                    ->orderBy($distanceScoreCol, 'desc');
+            } elseif ($jalurId == 3) {
+                // Prestasi: Nilai Akhir DESC, Skor Jarak DESC
+                return $query->orderBy('nilai_seleksi.nilai_akhir', 'desc')
+                    ->orderBy($distanceScoreCol, 'desc');
+            } elseif ($jalurId == 2 || $jalurId == 4) {
+                // Afirmasi or Mutasi: Skor Usia DESC, Skor Jarak DESC
+                return $query->orderBy('nilai_seleksi.skor_usia', 'desc')
+                    ->orderBy($distanceScoreCol, 'desc');
+            }
+        }, function ($query) use ($distanceCol) {
+            // Default sorting if no jalur selected
+            return $query->orderBy($distanceCol, 'asc')
                 ->orderBy('peserta.tanggal_lahir', 'asc');
-        }
+        });
 
         $quota = 0;
+        $remainingQuota = 0;
         if ($sekolahId && $jalurId) {
             $sekolah = DB::table('sekolah')->where('id', $sekolahId)->first();
             if ($sekolah) {
@@ -138,6 +137,15 @@ class KelulusanController extends Controller
                     case 4: $quota = $sekolah->daya_tampung_mutasi;
                         break;
                 }
+
+                // Calculate remaining quota
+                $existingCount = DB::table('pendaftaran')
+                    ->where('sekolah_diterima_id', $sekolahId)
+                    ->where('jalur_id', $jalurId)
+                    ->where('status', 'Lulus')
+                    ->count();
+
+                $remainingQuota = max(0, $quota - $existingCount);
             }
         }
 
@@ -145,32 +153,20 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('hasil', function ($row) use (&$counter, $quota) {
+            ->editColumn('status', function ($row) use (&$counter, $quota) {
                 $counter++;
-                if ($quota > 0) {
-                    if ($counter <= $quota) {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
-                    } else {
-                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Cadangan</span>';
-                    }
+                if ($quota > 0 && $counter <= $quota) {
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
                 }
 
-                return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">-</span>';
-            })
-            ->editColumn('status', function ($row) {
-                if ($row->status == 'Selesai') {
-                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
-                } elseif ($row->status == 'Draft') {
-                    return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
-                } else {
-                    return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
-                }
+                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
             })
             ->addColumn('action', function ($row) {
                 return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
             })
             ->with('quota', $quota)
-            ->rawColumns(['status', 'action', 'hasil'])
+            ->with('remaining_quota', $remainingQuota)
+            ->rawColumns(['status', 'action'])
             ->make(true);
     }
 
@@ -208,6 +204,8 @@ class KelulusanController extends Controller
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
+        } elseif (auth()->user()->role == 'admin_dinas' && empty($sekolahId)) {
+            $sekolahId = null;
         }
 
         $pilihanKe = $request->get('pilihan_ke', '1');
@@ -254,37 +252,39 @@ class KelulusanController extends Controller
                 'sek1.nama_sekolah as pilihan_1',
                 'pendaftaran.jarak_sekolah_1',
                 'sek2.nama_sekolah as pilihan_2',
-                'pendaftaran.jarak_sekolah_2'
+                'pendaftaran.jarak_sekolah_2',
+                'nilai_seleksi.skor_usia',
+                DB::raw("$distanceScoreCol as skor_jarak"),
+                DB::raw("CASE 
+                    WHEN pendaftaran.jalur_id = 3 THEN nilai_seleksi.nilai_akhir 
+                    ELSE (nilai_seleksi.skor_usia + $distanceScoreCol) 
+                END as nilai_akhir")
             );
 
-        // Conditional Ranking & Scoring
-        if (in_array($jalurId, [1, 2, 4])) {
-            // Domisili, Afirmasi, Mutasi: Use stored score (Distance + Age)
-            $data->selectRaw("$distanceScoreCol as skor_jarak")
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw("($distanceScoreCol + nilai_seleksi.skor_usia) as total_skor")
-                ->orderBy('total_skor', 'desc');
-        } elseif ($jalurId == 3) {
-            // Prestasi: Must use stored score
-            $data->selectRaw('nilai_seleksi.rata_rapor')
-                ->selectRaw('nilai_seleksi.nilai_tes_akademik')
-                ->selectRaw('nilai_seleksi.nilai_prestasi')
-                ->selectRaw('nilai_seleksi.skor_jarak')
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
-                ->orderBy('total_skor', 'desc')
-                ->orderBy('nilai_seleksi.skor_usia', 'desc')
-                ->orderBy('nilai_seleksi.skor_jarak', 'desc');
-        } else {
-            // All other SMP paths: Distance then Age
-            $data->selectRaw('nilai_seleksi.skor_jarak')
-                ->selectRaw('nilai_seleksi.skor_usia')
-                ->selectRaw('COALESCE(nilai_seleksi.nilai_akhir, 0) as total_skor')
-                ->orderBy('pendaftaran.jarak_sekolah_1', 'asc')
+        $data->when($jalurId, function ($query, $jalurId) use ($distanceScoreCol) {
+            if ($jalurId == 1) {
+                // Domisili: Total Skor (usia + jarak) DESC, Skor Jarak DESC
+                $totalExpr = DB::raw("(nilai_seleksi.skor_usia + $distanceScoreCol)");
+
+                return $query->orderBy($totalExpr, 'desc')
+                    ->orderBy($distanceScoreCol, 'desc');
+            } elseif ($jalurId == 3) {
+                // Prestasi: Nilai Akhir DESC, Skor Jarak DESC
+                return $query->orderBy('nilai_seleksi.nilai_akhir', 'desc')
+                    ->orderBy($distanceScoreCol, 'desc');
+            } elseif ($jalurId == 2 || $jalurId == 4) {
+                // Afirmasi or Mutasi: Skor Usia DESC, Skor Jarak DESC
+                return $query->orderBy('nilai_seleksi.skor_usia', 'desc')
+                    ->orderBy($distanceScoreCol, 'desc');
+            }
+        }, function ($query) use ($distanceCol) {
+            // Default sorting if no jalur selected
+            return $query->orderBy($distanceCol, 'asc')
                 ->orderBy('peserta.tanggal_lahir', 'asc');
-        }
+        });
 
         $quota = 0;
+        $remainingQuota = 0;
         if ($sekolahId && $jalurId) {
             $sekolah = DB::table('sekolah')->where('id', $sekolahId)->first();
             if ($sekolah) {
@@ -298,6 +298,15 @@ class KelulusanController extends Controller
                     case 4: $quota = $sekolah->daya_tampung_mutasi;
                         break;
                 }
+
+                // Calculate remaining quota
+                $existingCount = DB::table('pendaftaran')
+                    ->where('sekolah_diterima_id', $sekolahId)
+                    ->where('jalur_id', $jalurId)
+                    ->where('status', 'Lulus')
+                    ->count();
+
+                $remainingQuota = max(0, $quota - $existingCount);
             }
         }
 
@@ -305,32 +314,20 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('hasil', function ($row) use (&$counter, $quota) {
+            ->editColumn('status', function ($row) use (&$counter, $quota) {
                 $counter++;
-                if ($quota > 0) {
-                    if ($counter <= $quota) {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
-                    } else {
-                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Cadangan</span>';
-                    }
+                if ($quota > 0 && $counter <= $quota) {
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
                 }
 
-                return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">-</span>';
-            })
-            ->editColumn('status', function ($row) {
-                if ($row->status == 'Selesai') {
-                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
-                } elseif ($row->status == 'Draft') {
-                    return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
-                } else {
-                    return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
-                }
+                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
             })
             ->addColumn('action', function ($row) {
                 return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
             })
             ->with('quota', $quota)
-            ->rawColumns(['status', 'action', 'hasil'])
+            ->with('remaining_quota', $remainingQuota)
+            ->rawColumns(['status', 'action'])
             ->make(true);
     }
 
@@ -351,13 +348,52 @@ class KelulusanController extends Controller
         try {
             DB::beginTransaction();
 
-            foreach ($pendaftaranIds as $id) {
-                $pendaftaran = DB::table('pendaftaran')->where('id', $id)->first();
+            // 1. Group candidates by Jalur ID and validate quota
+            $pendaftarans = DB::table('pendaftaran')
+                ->whereIn('id', $pendaftaranIds)
+                ->get();
 
-                if (! $pendaftaran) {
-                    continue;
+            $pendaftaranByJalur = $pendaftarans->groupBy('jalur_id');
+            $sekolah = DB::table('sekolah')->where('id', $sekolahId)->first();
+
+            foreach ($pendaftaranByJalur as $jalurId => $group) {
+                $newCount = count($group);
+
+                // Get quota definition
+                $quota = 0;
+                $jalurNama = DB::table('jalur_pendaftaran')->where('id', $jalurId)->value('nama_jalur');
+
+                switch ($jalurId) {
+                    case 1: $quota = $sekolah->daya_tampung_domisili;
+                        break;
+                    case 2: $quota = $sekolah->daya_tampung_afirmasi;
+                        break;
+                    case 3: $quota = $sekolah->daya_tampung_prestasi;
+                        break;
+                    case 4: $quota = $sekolah->daya_tampung_mutasi;
+                        break;
                 }
 
+                // Count existing graduated for this path and school
+                $existingCount = DB::table('pendaftaran')
+                    ->where('sekolah_diterima_id', $sekolahId)
+                    ->where('jalur_id', $jalurId)
+                    ->where('status', 'Lulus')
+                    ->count();
+
+                $available = $quota - $existingCount;
+
+                if ($newCount > $available) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Gagal: Kuota untuk Jalur $jalurNama tidak mencukupi. Sisa kuota: $available, jumlah yang dipilih: $newCount.",
+                    ], 422);
+                }
+            }
+
+            // 2. Process graduation
+            foreach ($pendaftarans as $pendaftaran) {
+                $id = $pendaftaran->id;
                 // Determine which choice this school is
                 $pilihan = 1;
                 if ($pendaftaran->sekolah_pilihan_2 == $sekolahId) {
