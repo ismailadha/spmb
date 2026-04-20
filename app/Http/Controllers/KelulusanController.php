@@ -156,7 +156,7 @@ class KelulusanController extends Controller
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
-                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Calon Lulus</span>';
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Calon Lulus</span>';
                 }
 
                 return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Calon Tidak Lulus</span>';
@@ -317,7 +317,7 @@ class KelulusanController extends Controller
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
-                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Calon Lulus</span>';
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Calon Lulus</span>';
                 }
 
                 return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Calon Tidak Lulus</span>';

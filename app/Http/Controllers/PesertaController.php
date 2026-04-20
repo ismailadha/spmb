@@ -74,12 +74,18 @@ class PesertaController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 'Selesai') {
-                        return '<span class="badge badge-light-success fw-bolder px-4 py-3">Selesai</span>';
-                    } elseif ($row->status == 'Draft') {
-                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Draft</span>';
+                    if ($row->status == 'verifikasi') {
+                        return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
+                    } elseif ($row->status == 'lulus') {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Lulus</span>';
+                    } elseif ($row->status == 'perbaikan') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan</span>';
+                    } elseif ($row->status == 'submit') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>';
+                    } elseif ($row->status == 'draft') {
+                        return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
                     } else {
-                        return '<span class="badge badge-light-info fw-bolder px-4 py-3">'.$row->status.'</span>';
+                        return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
                 })
                 ->addColumn('action', function ($row) {

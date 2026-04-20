@@ -41,14 +41,14 @@
                                     <span class="text-gray-900 fs-2 fw-bolder me-1">{{ $pendaftaran->nama_lengkap }}</span>
                                     {{-- Jika status pendaftaran adalah submit, maka tampilkan badge --}}
                                     @if ($pendaftaran->status == 'submit')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Proses Verifikasi</span>
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3">Proses Verifikasi</span>
                                     @elseif ($pendaftaran->status == 'verifikasi')
-                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">Terverifikasi</span>
+                                        <span class="badge badge-light-info fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>
                                     @elseif ($pendaftaran->status == 'perbaikan')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">Perbaikan Berkas</span>
-                                    @elseif ($pendaftaran->status == 'lulus')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3">LULUS / DITERIMA</span>
-                                    @elseif ($pendaftaran->status == 'tidak_lulus')
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan Berkas</span>
+                                    @elseif ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima')
+                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #e8fff3; color: #50cd89;">{{ ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima') ? 'LULUS / DITERIMA' : 'TIDAK LULUS' }}</span>
+                                    @elseif ($pendaftaran->status == 'tidak_lulus' || $pendaftaran->status == 'ditolak')
                                         <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">TIDAK LULUS</span>
                                     @endif
                                 </div>
