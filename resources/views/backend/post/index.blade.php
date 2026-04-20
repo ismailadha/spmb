@@ -82,10 +82,10 @@
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('posts.show', $post->slug) }}" class="btn btn-info btn-sm">View</a>
                                         <a href="{{ route('posts.edit', $post->slug) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('posts.destroy', $post->slug) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        <form action="{{ route('posts.destroy', $post->slug) }}" method="POST" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Delete</button>
+                                            <button type="button" class="btn btn-danger btn-sm delete-post" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Delete</button>
                                         </form>
                                     </div>
                                 </td>
@@ -103,13 +103,31 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 <script>
 $(document).ready(function() {
     $('#kt_table_posts').DataTable({
         responsive: true
+    });
+
+    $(document).on('click', '.delete-post', function(e) {
+        e.preventDefault();
+        const form = $(this).closest('form');
+        Swal.fire({
+            text: "Apakah anda yakin ingin menghapus berita ini?",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batalkan",
+            customClass: {
+                confirmButton: "btn btn-danger",
+                cancelButton: "btn btn-active-light"
+            }
+        }).then(function(result) {
+            if (result.value) {
+                form.submit();
+            }
+        });
     });
 });
 </script>

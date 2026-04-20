@@ -87,8 +87,10 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('register-peserta') }}" class="btn btn-danger btn-block"
-                           style="border-radius:8px;font-weight:600;background:#e74c3c;border-color:#e74c3c;">Daftar Sekarang</a>
+                        @if($activePeriode)
+                            <a href="{{ route('register-peserta') }}" class="btn btn-danger btn-block"
+                               style="border-radius:8px;font-weight:600;background:#e74c3c;border-color:#e74c3c;">Daftar Sekarang</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -116,8 +118,10 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('register-peserta') }}" class="btn btn-primary btn-block"
-                           style="border-radius:8px;font-weight:600;">Daftar Sekarang</a>
+                        @if($activePeriode)
+                            <a href="{{ route('register-peserta') }}" class="btn btn-primary btn-block"
+                               style="border-radius:8px;font-weight:600;">Daftar Sekarang</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -214,11 +218,13 @@
             Jangan lewatkan kesempatan mendaftar ke sekolah favorit. Pendaftaran dibuka hingga <strong style="color:#fff;">{{ $activePeriode ? \Carbon\Carbon::parse($activePeriode->peserta_daftar_selesai)->translatedFormat('d F Y') : '-' }}</strong>.
         </p>
         <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
-            <a href="{{ route('register-peserta') }}"
-               style="background:#fff;color:#1abc9c;padding:14px 36px;border-radius:50px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:transform .2s;"
-               onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                <i class="la la-pencil-square"></i> Segera Daftar
-            </a>
+            @if($activePeriode)
+                <a href="{{ route('register-peserta') }}"
+                   style="background:#fff;color:#1abc9c;padding:14px 36px;border-radius:50px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:transform .2s;"
+                   onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <i class="la la-pencil-square"></i> Segera Daftar
+                </a>
+            @endif
             <a href="{{ route('juknis') }}"
                style="background:transparent;color:#fff;padding:14px 36px;border-radius:50px;font-weight:700;font-size:1rem;text-decoration:none;border:2px solid rgba(255,255,255,.7);transition:transform .2s;"
                onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">

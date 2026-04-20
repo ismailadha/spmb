@@ -579,10 +579,39 @@
 		<script>var hostUrl = "assets/";</script>
 		<!--begin::Global Javascript Bundle(used by all pages)-->
 		<script src="{{  asset('back/plugins/global/plugins.bundle.js') }}"></script>
+		<script src="{{ asset('back/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 		<script src="{{  asset('back/js/scripts.bundle.js') }}"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->
 		<script src="{{  asset('back/js/custom/utilities/modals/users-search.js') }}"></script>
+		@if(session('success'))
+		<script>
+			Swal.fire({
+				text: "{{ session('success') }}",
+				icon: "success",
+				buttonsStyling: false,
+				confirmButtonText: "Ok, got it!",
+				customClass: {
+					confirmButton: "btn btn-primary"
+				}
+			});
+		</script>
+		@endif
+
+		@if(session('error'))
+		<script>
+			Swal.fire({
+				text: "{{ session('error') }}",
+				icon: "error",
+				buttonsStyling: false,
+				confirmButtonText: "Ok, got it!",
+				customClass: {
+					confirmButton: "btn btn-primary"
+				}
+			});
+		</script>
+		@endif
+
 		@yield('scripts')
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->

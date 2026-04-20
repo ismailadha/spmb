@@ -131,14 +131,16 @@
                                 </form>
                             </div>
                         @else
-                            <div class="d-flex align-items-center auth-buttons">
-                                <a href="{{ route('login-peserta') }}" class="btn-login-top mr-2" style="color: #ffffff; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 6px 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; display: inline-flex; align-items: center; transition: all 0.3s ease;">
-                                    <i class="la la-sign-in mr-1" style="font-size: 1.1rem;"></i> LOGIN
-                                </a>
-                                <a href="{{ route('register-peserta') }}" class="btn-register-top" style="color: #ffffff; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 7px 20px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-radius: 30px; display: inline-flex; align-items: center; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); transition: all 0.3s ease; border: none;">
-                                    <i class="la la-user-plus mr-1" style="font-size: 1.1rem;"></i> REGISTRASI
-                                </a>
-                            </div>
+                            @if($activePeriode)
+                                <div class="d-flex align-items-center auth-buttons">
+                                    <a href="{{ route('login-peserta') }}" class="btn-login-top mr-2" style="color: #ffffff; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 6px 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; display: inline-flex; align-items: center; transition: all 0.3s ease;">
+                                        <i class="la la-sign-in mr-1" style="font-size: 1.1rem;"></i> LOGIN
+                                    </a>
+                                    <a href="{{ route('register-peserta') }}" class="btn-register-top" style="color: #ffffff; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 7px 20px; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-radius: 30px; display: inline-flex; align-items: center; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); transition: all 0.3s ease; border: none;">
+                                        <i class="la la-user-plus mr-1" style="font-size: 1.1rem;"></i> REGISTRASI
+                                    </a>
+                                </div>
+                            @endif
                         @endauth
                     </div>
                 </div>
