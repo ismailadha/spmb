@@ -81,6 +81,21 @@ class VerifikasiController extends Controller
         }
     }
 
+    public function minta_perbaikan(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_perbaikan' => 'required',
+        ]);
+
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->update([
+            'status' => 'perbaikan',
+            'catatan_perbaikan' => $request->catatan_perbaikan,
+        ]);
+
+        return redirect()->back()->with('success', 'Permintaan perbaikan pendaftaran berhasil dikirim ke pendaftar.');
+    }
+
     public function tolak_verifikasi($id) {}
 
     /**

@@ -21,6 +21,7 @@ class Pendaftaran extends Model
         'jarak_sekolah_1',
         'jarak_sekolah_2',
         'status',
+        'catatan_perbaikan',
     ];
 
     public function peserta()

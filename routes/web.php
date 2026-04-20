@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::get('peserta/smp/export/pdf', [PesertaController::class, 'exportPdf_smp'])->name('peserta.smp.export.pdf');
         Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
         Route::post('peserta/{id}/setuju-verifikasi', [VerifikasiController::class, 'setuju_verifikasi'])->name('peserta.verifikasi.setuju');
+        Route::post('peserta/{id}/minta-perbaikan', [VerifikasiController::class, 'minta_perbaikan'])->name('peserta.verifikasi.perbaikan');
         Route::get('peserta/detail/{id}', [PesertaController::class, 'show'])->name('peserta.detail');
         Route::resource('peserta', PesertaController::class);
 

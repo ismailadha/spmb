@@ -29,7 +29,7 @@
                         'class' => 'warning',
                         'icon' => 'bi-exclamation-triangle',
                         'title' => 'Perbaikan Berkas',
-                        'message' => 'Berkas pendaftaran Anda memerlukan perbaikan. Silakan hubungi dan konfirmasi ke admin untuk informasi lebih lanjut.',
+                        'message' => 'Berkas pendaftaran Anda memerlukan perbaikan. <br><strong>Catatan Admin:</strong> <i>' . ($pendaftaran->catatan_perbaikan ?? 'Silakan hubungi admin untuk informasi lebih lanjut.') . '</i>',
                     ],
                     'lulus' => [
                         'class' => 'success',
@@ -122,6 +122,11 @@
                             <!--end::User-->
                             <!--begin::Actions-->
                             <div class="d-flex my-4">
+                                @if($pendaftaran->status == 'perbaikan')
+                                    <a href="{{ route('pendaftaran.edit', $pendaftaran->id) }}" class="btn btn-sm btn-warning me-2">
+                                        <i class="bi bi-pencil-square fs-4 me-1"></i>Perbaiki Data
+                                    </a>
+                                @endif
                                 <a href="{{ route('pendaftaran.download', $pendaftaran->id) }}" class="btn btn-sm btn-success me-2">
                                     <i class="bi bi-file-earmark-pdf fs-4 me-1"></i>Download PDF
                                 </a>

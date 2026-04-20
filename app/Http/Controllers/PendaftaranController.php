@@ -88,6 +88,7 @@ class PendaftaranController extends Controller
                         'pendaftaran.sekolah_diterima_id',
                         'pendaftaran.jarak_sekolah_1',
                         'pendaftaran.jarak_sekolah_2',
+                        'pendaftaran.catatan_perbaikan',
                         'peserta.id as peserta_id',
                         'peserta.user_id',
                         'peserta.nik',
@@ -444,7 +445,8 @@ class PendaftaranController extends Controller
             'kabupaten' => $kabupaten,
             'kecamatan' => $kecamatan,
             'desa' => $desa,
-            'berkas' => $berkas, // Terkirim ke view
+            'berkas' => $berkas,
+            'isPerbaikan' => $pendaftaran->status == 'perbaikan',
         ]);
     }
 
@@ -540,6 +542,7 @@ class PendaftaranController extends Controller
                 'jarak_sekolah_1' => $request->jarak_sekolah_1,
                 'jarak_sekolah_2' => ($request->jalur == 1) ? $request->jarak_sekolah_2 : null,
                 'status' => $request->status,
+                'catatan_perbaikan' => ($request->status == 'submit' && $pendaftaran->status == 'perbaikan') ? null : $pendaftaran->catatan_perbaikan,
             ];
 
             // Generate nomor pendaftaran jika belum ada dan status adalah submit
