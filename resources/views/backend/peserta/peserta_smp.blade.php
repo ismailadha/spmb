@@ -77,6 +77,7 @@
                         <option value="">Semua Status</option>
                         <option value="submit">Proses Verifikasi</option>
                         <option value="verifikasi">Terverifikasi</option>
+                        <option value="lulus">Lulus</option>
                         <option value="perbaikan">Perbaikan</option>
                         <option value="draft">Draft</option>
                     </select>

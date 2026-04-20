@@ -174,6 +174,8 @@ class PesertaController extends Controller
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'verifikasi') {
                         return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
+                    } elseif ($row->status == 'lulus') {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Lulus</span>';
                     } elseif ($row->status == 'perbaikan') {
                         return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan</span>';
                     } elseif ($row->status == 'submit') {
@@ -186,21 +188,18 @@ class PesertaController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     return '
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
-                                <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
-                                <li>
-                                    <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" style="margin: 0;">
-                                        '.csrf_field().'
-                                        '.method_field('DELETE').'
-                                        <button type="button" class="dropdown-item text-danger btn-delete" data-id="'.$row->id.'">Delete</button>
-                                    </form>
-                                </li>
-                            </ul>
+                        <div class="btn-group" role="group">
+                            '.(in_array($row->status, ['submit', 'verifikasi', 'perbaikan']) ? '
+                            <a href="'.route('peserta.verifikasi', $row->id).'" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Verifikasi">
+                                <i class="bi bi-check-circle fs-3"></i>
+                            </a>' : '').'
+                            <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" class="d-inline">
+                                '.csrf_field().'
+                                '.method_field('DELETE').'
+                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm btn-delete" data-id="'.$row->id.'" title="Hapus">
+                                    <i class="bi bi-trash fs-3"></i>
+                                </button>
+                            </form>
                         </div>
                     ';
                 })
@@ -353,6 +352,8 @@ class PesertaController extends Controller
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'verifikasi') {
                         return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
+                    } elseif ($row->status == 'lulus') {
+                        return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Lulus</span>';
                     } elseif ($row->status == 'perbaikan') {
                         return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan</span>';
                     } elseif ($row->status == 'submit') {
@@ -365,21 +366,18 @@ class PesertaController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     return '
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Action
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
-                                <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
-                                <li>
-                                    <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" style="margin: 0;">
-                                        '.csrf_field().'
-                                        '.method_field('DELETE').'
-                                        <button type="button" class="dropdown-item text-danger btn-delete" data-id="'.$row->id.'">Delete</button>
-                                    </form>
-                                </li>
-                            </ul>
+                        <div class="btn-group" role="group">
+                            '.(in_array($row->status, ['submit', 'verifikasi', 'perbaikan']) ? '
+                            <a href="'.route('peserta.verifikasi', $row->id).'" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Verifikasi">
+                                <i class="bi bi-check-circle fs-3"></i>
+                            </a>' : '').'
+                            <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" class="d-inline">
+                                '.csrf_field().'
+                                '.method_field('DELETE').'
+                                <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm btn-delete" data-id="'.$row->id.'" title="Hapus">
+                                    <i class="bi bi-trash fs-3"></i>
+                                </button>
+                            </form>
                         </div>
                     ';
                 })

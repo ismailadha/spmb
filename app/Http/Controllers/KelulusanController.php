@@ -156,10 +156,10 @@ class KelulusanController extends Controller
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
-                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Calon Lulus</span>';
                 }
 
-                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
+                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Calon Tidak Lulus</span>';
             })
             ->addColumn('action', function ($row) {
                 return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
@@ -317,10 +317,10 @@ class KelulusanController extends Controller
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
-                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Lulus</span>';
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3">Calon Lulus</span>';
                 }
 
-                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
+                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Calon Tidak Lulus</span>';
             })
             ->addColumn('action', function ($row) {
                 return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
