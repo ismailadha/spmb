@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules;
 use Yajra\DataTables\DataTables;
 
 class PesertaController extends Controller
@@ -610,7 +609,7 @@ class PesertaController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'min:16', 'unique:users,username', 'numeric'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'min:6', 'confirmed'],
             'terms' => ['accepted'],
         ]);
 

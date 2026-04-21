@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\JalurDaftar;
 use App\Models\PeriodeDaftar;
 use App\Models\PeriodeJalur;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class PeriodeDaftarController extends Controller
 {
@@ -156,7 +156,7 @@ class PeriodeDaftarController extends Controller
             }
 
             // Other database errors
-            return redirect()->route('periode.index')->with('error', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
+            return redirect()->route('periode.index')->with('error', 'Terjadi kesalahan saat menghapus data: '.$e->getMessage());
         } catch (\Exception $e) {
             return redirect()->route('periode.index')->with('error', 'Terjadi kesalahan yang tidak terduga.');
         }
