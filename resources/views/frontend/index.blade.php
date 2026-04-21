@@ -180,28 +180,42 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 @foreach($jadwalPenting as $i => $j)
-                <div style="display:flex;align-items:center;gap:20px;margin-bottom:{{ $loop->last ? '0' : '8px' }};">
-                    {{-- Icon --}}
-                    <div style="flex-shrink:0;width:52px;height:52px;border-radius:50%;background:{{ $j['warna'] }};display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.12);">
-                        <i class="la {{ $j['icon'] }}" style="font-size:1.4rem;color:#fff;"></i>
-                    </div>
-                    {{-- Line connector --}}
-                    <div style="flex:1;background:rgba(255,255,255,.1);border-radius:12px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-                        <div>
-                            <p style="margin:0;color:#fff;font-weight:600;font-size:.95rem;">{{ $j['kegiatan'] }}</p>
+                <div style="margin-bottom:{{ $loop->last ? '0' : '20px' }};">
+                    <div style="display:flex;align-items:center;gap:20px;margin-bottom:12px;">
+                        {{-- Icon --}}
+                        <div style="flex-shrink:0;width:52px;height:52px;border-radius:50%;background:{{ $j['warna'] }};display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.12);">
+                            <i class="la {{ $j['icon'] }}" style="font-size:1.4rem;color:#fff;"></i>
                         </div>
-                        <div style="text-align:right;">
-                            @if($j['mulai'] === $j['selesai'])
-                                <span style="background:{{ $j['warna'] }};color:#fff;padding:4px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">{{ $j['mulai'] }}</span>
-                            @else
-                                <span style="background:{{ $j['warna'] }};color:#fff;padding:4px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">{{ $j['mulai'] }} — {{ $j['selesai'] }}</span>
-                            @endif
+                        {{-- Line connector --}}
+                        <div style="flex:1;background:rgba(255,255,255,.1);border-radius:12px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                            <div>
+                                <p style="margin:0;color:#fff;font-weight:700;font-size:1rem;">{{ $j['kegiatan'] }}</p>
+                            </div>
+                            <div style="text-align:right;">
+                                @if($j['mulai'] === $j['selesai'])
+                                    <span style="background:{{ $j['warna'] }};color:#fff;padding:4px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">{{ $j['mulai'] }}</span>
+                                @else
+                                    <span style="background:{{ $j['warna'] }};color:#fff;padding:4px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">{{ $j['mulai'] }} — {{ $j['selesai'] }}</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
+
+                    {{-- Sub Items (Pathway Specific) --}}
+                    @if(count($j['sub_items']) > 0)
+                    <div style="margin-left:72px;padding-left:20px;border-left:2px dashed rgba(255,255,255,0.2);margin-top:-10px;margin-bottom:20px;">
+                        @foreach($j['sub_items'] as $sub)
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <i class="la la-check-circle" style="color:#2ecc71;font-size:1.1rem;"></i>
+                                <span style="color:rgba(255,255,255,0.8);font-size:.88rem;font-weight:500;">{{ $sub['nama'] }}</span>
+                            </div>
+                            <span style="color:rgba(255,255,255,0.6);font-size:.82rem;">{{ $sub['mulai'] }} — {{ $sub['selesai'] }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
                 </div>
-                @if(!$loop->last)
-                <div style="width:52px;display:flex;justify-content:center;"><div style="width:2px;height:16px;background:rgba(255,255,255,.2);"></div></div>
-                @endif
                 @endforeach
             </div>
         </div>

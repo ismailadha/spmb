@@ -11,6 +11,12 @@ class PeriodeJalur extends Model
     protected $fillable = [
         'periode_id',
         'jalur_id',
+        'pendaftaran_mulai',
+        'pendaftaran_selesai',
+        'verifikasi_mulai',
+        'verifikasi_selesai',
+        'daftar_ulang_mulai',
+        'daftar_ulang_selesai',
     ];
 
     public function periode()

@@ -208,7 +208,7 @@
 												</svg>
 											</span>
 										</span>
-										<span class="menu-title">Data Kelulusan</span>
+										<span class="menu-title">Proses Data Kelulusan</span>
 										<span class="menu-arrow"></span>
 									</span>
 									<div class="menu-sub menu-sub-accordion menu-active-bg">
@@ -281,7 +281,6 @@
 										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Informasi Sekolah</span>
 									</div>
 								</div>
-								{{-- Sekolah: SD, SMP --}}
 								<div data-kt-menu-trigger="click" class="menu-item here @yield('sekolah-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">

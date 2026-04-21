@@ -26,8 +26,9 @@ class PeriodeDaftarController extends Controller
     public function create()
     {
         $jalur = JalurDaftar::all();
+        $selectedJalur = [];
 
-        return view('backend.pendaftaran.periode.create', compact('jalur'));
+        return view('backend.pendaftaran.periode.create', compact('jalur', 'selectedJalur'));
     }
 
     /**
@@ -53,15 +54,28 @@ class PeriodeDaftarController extends Controller
             'status_aktif' => 'required|boolean',
             'jalur_id' => 'required|array',
             'jalur_id.*' => 'exists:jalur_pendaftaran,id',
+            // Validation for pathway dates
+            'pendaftaran_mulai' => 'nullable|array',
+            'pendaftaran_selesai' => 'nullable|array',
+            'verifikasi_mulai_jalur' => 'nullable|array',
+            'verifikasi_selesai_jalur' => 'nullable|array',
+            'daftar_ulang_mulai_jalur' => 'nullable|array',
+            'daftar_ulang_selesai_jalur' => 'nullable|array',
         ]);
 
-        $periode = PeriodeDaftar::create($request->except('jalur_id'));
+        $periode = PeriodeDaftar::create($request->except(['jalur_id', 'pendaftaran_mulai', 'pendaftaran_selesai', 'verifikasi_mulai_jalur', 'verifikasi_selesai_jalur', 'daftar_ulang_mulai_jalur', 'daftar_ulang_selesai_jalur']));
 
         if ($request->has('jalur_id')) {
             foreach ($request->jalur_id as $jalurId) {
                 PeriodeJalur::create([
                     'periode_id' => $periode->id,
                     'jalur_id' => $jalurId,
+                    'pendaftaran_mulai' => $request->pendaftaran_mulai[$jalurId] ?? null,
+                    'pendaftaran_selesai' => $request->pendaftaran_selesai[$jalurId] ?? null,
+                    'verifikasi_mulai' => $request->verifikasi_mulai_jalur[$jalurId] ?? null,
+                    'verifikasi_selesai' => $request->verifikasi_selesai_jalur[$jalurId] ?? null,
+                    'daftar_ulang_mulai' => $request->daftar_ulang_mulai_jalur[$jalurId] ?? null,
+                    'daftar_ulang_selesai' => $request->daftar_ulang_selesai_jalur[$jalurId] ?? null,
                 ]);
             }
         }
@@ -85,10 +99,11 @@ class PeriodeDaftarController extends Controller
         $periode = PeriodeDaftar::findOrFail($id);
         $jalur = JalurDaftar::all();
 
-        // Ambil array jalur_id yang sudah dipilih oleh periode ini
-        $selectedJalur = PeriodeJalur::where('periode_id', $id)->pluck('jalur_id')->toArray();
+        // Ambil data jalur pendaftaran beserta data pivotnya
+        $selectedJalurData = PeriodeJalur::where('periode_id', $id)->get()->keyBy('jalur_id');
+        $selectedJalur = $selectedJalurData->keys()->toArray();
 
-        return view('backend.pendaftaran.periode.edit', compact('periode', 'jalur', 'selectedJalur'));
+        return view('backend.pendaftaran.periode.edit', compact('periode', 'jalur', 'selectedJalur', 'selectedJalurData'));
     }
 
     /**
@@ -114,20 +129,33 @@ class PeriodeDaftarController extends Controller
             'status_aktif' => 'required|boolean',
             'jalur_id' => 'required|array',
             'jalur_id.*' => 'exists:jalur_pendaftaran,id',
+            // Validation for pathway dates
+            'pendaftaran_mulai' => 'nullable|array',
+            'pendaftaran_selesai' => 'nullable|array',
+            'verifikasi_mulai_jalur' => 'nullable|array',
+            'verifikasi_selesai_jalur' => 'nullable|array',
+            'daftar_ulang_mulai_jalur' => 'nullable|array',
+            'daftar_ulang_selesai_jalur' => 'nullable|array',
         ]);
 
         $periode = PeriodeDaftar::findOrFail($id);
-        $periode->update($request->except('jalur_id'));
+        $periode->update($request->except(['jalur_id', 'pendaftaran_mulai', 'pendaftaran_selesai', 'verifikasi_mulai_jalur', 'verifikasi_selesai_jalur', 'daftar_ulang_mulai_jalur', 'daftar_ulang_selesai_jalur']));
 
         if ($request->has('jalur_id')) {
             // Hapus jalur lama yang berelasi
             PeriodeJalur::where('periode_id', $id)->delete();
 
-            // Insert jalur baru
+            // Insert jalur baru beserta data pivot
             foreach ($request->jalur_id as $jalurId) {
                 PeriodeJalur::create([
                     'periode_id' => $periode->id,
                     'jalur_id' => $jalurId,
+                    'pendaftaran_mulai' => $request->pendaftaran_mulai[$jalurId] ?? null,
+                    'pendaftaran_selesai' => $request->pendaftaran_selesai[$jalurId] ?? null,
+                    'verifikasi_mulai' => $request->verifikasi_mulai_jalur[$jalurId] ?? null,
+                    'verifikasi_selesai' => $request->verifikasi_selesai_jalur[$jalurId] ?? null,
+                    'daftar_ulang_mulai' => $request->daftar_ulang_mulai_jalur[$jalurId] ?? null,
+                    'daftar_ulang_selesai' => $request->daftar_ulang_selesai_jalur[$jalurId] ?? null,
                 ]);
             }
         }

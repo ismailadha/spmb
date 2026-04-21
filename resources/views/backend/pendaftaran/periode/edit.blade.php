@@ -145,17 +145,66 @@
                 <!-- Jalur Seleksi -->
                 <div class="row mb-3">
                     <div class="col-12">
-                        <label class="form-label fw-bold">Jalur Seleksi</label>
-                        <div class="d-flex flex-wrap gap-5 mt-2">
-                            @foreach($jalur as $j)
-                            <div class="form-check form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" name="jalur_id[]" value="{{ $j->id }}" id="jalur_{{ $j->id }}"
-                                    {{ in_array($j->id, old('jalur_id', $selectedJalur)) ? 'checked' : '' }} />
-                                <label class="form-check-label text-dark" for="jalur_{{ $j->id }}">
-                                    {{ $j->nama_jalur }}
-                                </label>
-                            </div>
-                            @endforeach
+                        <label class="form-label fw-bold">Jalur Seleksi & Jadwal Khusus</label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th style="width: 200px;">Jalur</th>
+                                        <th>Jadwal Pendaftaran</th>
+                                        <th>Jadwal Verifikasi</th>
+                                        <th>Jadwal Daftar Ulang</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($jalur as $j)
+                                    @php
+                                        $pivot = $selectedJalurData->get($j->id);
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            <div class="form-check form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="checkbox" name="jalur_id[]" value="{{ $j->id }}" id="jalur_{{ $j->id }}"
+                                                    {{ in_array($j->id, old('jalur_id', $selectedJalur)) ? 'checked' : '' }} />
+                                                <label class="form-check-label text-dark" for="jalur_{{ $j->id }}">
+                                                    {{ $j->nama_jalur }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <input type="date" class="form-control form-control-sm" name="pendaftaran_mulai[{{ $j->id }}]" value="{{ old('pendaftaran_mulai.'.$j->id, $pivot ? $pivot->pendaftaran_mulai : '') }}" placeholder="Mulai">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="date" class="form-control form-control-sm" name="pendaftaran_selesai[{{ $j->id }}]" value="{{ old('pendaftaran_selesai.'.$j->id, $pivot ? $pivot->pendaftaran_selesai : '') }}" placeholder="Selesai">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <input type="date" class="form-control form-control-sm" name="verifikasi_mulai_jalur[{{ $j->id }}]" value="{{ old('verifikasi_mulai_jalur.'.$j->id, $pivot ? $pivot->verifikasi_mulai : '') }}" placeholder="Mulai">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="date" class="form-control form-control-sm" name="verifikasi_selesai_jalur[{{ $j->id }}]" value="{{ old('verifikasi_selesai_jalur.'.$j->id, $pivot ? $pivot->verifikasi_selesai : '') }}" placeholder="Selesai">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <input type="date" class="form-control form-control-sm" name="daftar_ulang_mulai_jalur[{{ $j->id }}]" value="{{ old('daftar_ulang_mulai_jalur.'.$j->id, $pivot ? $pivot->daftar_ulang_mulai : '') }}" placeholder="Mulai">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="date" class="form-control form-control-sm" name="daftar_ulang_selesai_jalur[{{ $j->id }}]" value="{{ old('daftar_ulang_selesai_jalur.'.$j->id, $pivot ? $pivot->daftar_ulang_selesai : '') }}" placeholder="Selesai">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                         @error('jalur_id')
                             <div class="text-danger mt-2">{{ $message }}</div>
