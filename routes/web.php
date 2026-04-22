@@ -102,7 +102,7 @@ Route::middleware('auth')->group(function () {
         Route::post('peserta/{id}/minta-perbaikan', [VerifikasiController::class, 'minta_perbaikan'])->name('peserta.verifikasi.perbaikan');
         Route::post('peserta/{id}/tolak-verifikasi', [VerifikasiController::class, 'tolak_verifikasi'])->name('peserta.verifikasi.tolak');
         Route::get('peserta/detail/{id}', [PesertaController::class, 'show'])->name('peserta.detail');
-        Route::resource('peserta', PesertaController::class);
+        Route::resource('peserta', PesertaController::class)->except(['index']);
 
         // kelulusan
         Route::get('kelulusan/sd', [KelulusanController::class, 'kelulusan_sd'])->name('kelulusan.sd');
@@ -130,6 +130,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('pengguna/operator', [UserController::class, 'operator'])->name('pengguna.operator');
         Route::resource('pengguna', UserController::class)->except(['index']);
+
+        Route::middleware('role:admin_dinas')->group(function () {
+            Route::get('peserta', [PesertaController::class, 'index'])->name('peserta.index');
+        });
     });
 
     // Route berkas bisa diakses oleh admin dan peserta

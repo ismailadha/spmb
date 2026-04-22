@@ -61,12 +61,12 @@
 
                 <div class="d-flex align-items-center">
                     <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
-                    <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ auth()->user()->role == 'admin_sekolah' ? 'disabled' : '' }}>
-                        @if(auth()->user()->role != 'admin_sekolah')
+                    <select id="filter_sekolah" class="form-select form-select-sm form-select-solid w-200px" data-control="select2" data-placeholder="Semua Sekolah" {{ in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah']) ? 'disabled' : '' }}>
+                        @if(!in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah']))
                             <option value="">Semua Sekolah</option>
                         @endif
                         @foreach($semuaSekolah as $s)
-                            <option value="{{ $s->id }}" {{ auth()->user()->role == 'admin_sekolah' ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
+                            <option value="{{ $s->id }}" {{ in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah']) ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
                         @endforeach
                     </select>
                 </div>

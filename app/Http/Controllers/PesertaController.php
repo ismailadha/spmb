@@ -33,7 +33,7 @@ class PesertaController extends Controller
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
         $semuaSekolah = DB::table('sekolah')
-            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+            ->when(in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah']), function ($query) {
                 return $query->where('id', auth()->user()->sekolah_id);
             })
             ->get();
@@ -43,7 +43,7 @@ class PesertaController extends Controller
             $jalurId = $request->get('jalur_id');
             $sekolahId = $request->get('sekolah_id');
 
-            if (auth()->user()->role == 'admin_sekolah') {
+            if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
                 $sekolahId = auth()->user()->sekolah_id;
             }
 
@@ -135,7 +135,7 @@ class PesertaController extends Controller
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
         $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SD')
-            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+            ->when(in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah']), function ($query) {
                 return $query->where('id', auth()->user()->sekolah_id);
             })
             ->get();
@@ -146,7 +146,7 @@ class PesertaController extends Controller
             $sekolahId = $request->get('sekolah_id');
             $status = $request->get('status');
 
-            if (auth()->user()->role == 'admin_sekolah') {
+            if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
                 $sekolahId = auth()->user()->sekolah_id;
             }
 
@@ -237,7 +237,7 @@ class PesertaController extends Controller
         $sekolahId = $request->get('sekolah_id');
         $status = $request->get('status');
 
-        if (auth()->user()->role == 'admin_sekolah') {
+        if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
             $sekolahId = auth()->user()->sekolah_id;
         }
 
@@ -256,7 +256,7 @@ class PesertaController extends Controller
         $sekolahId = $request->get('sekolah_id');
         $status = $request->get('status');
 
-        if (auth()->user()->role == 'admin_sekolah') {
+        if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
             $sekolahId = auth()->user()->sekolah_id;
         }
 
@@ -319,7 +319,7 @@ class PesertaController extends Controller
 
         $semuaJalur = DB::table('jalur_pendaftaran')->get();
         $semuaSekolah = DB::table('sekolah')->where('jenjang', 'SMP')
-            ->when(auth()->user()->role == 'admin_sekolah', function ($query) {
+            ->when(in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah']), function ($query) {
                 return $query->where('id', auth()->user()->sekolah_id);
             })
             ->get();
@@ -330,7 +330,7 @@ class PesertaController extends Controller
             $sekolahId = $request->get('sekolah_id');
             $status = $request->get('status');
 
-            if (auth()->user()->role == 'admin_sekolah') {
+            if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
                 $sekolahId = auth()->user()->sekolah_id;
             }
 
@@ -421,7 +421,7 @@ class PesertaController extends Controller
         $sekolahId = $request->get('sekolah_id');
         $status = $request->get('status');
 
-        if (auth()->user()->role == 'admin_sekolah') {
+        if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
             $sekolahId = auth()->user()->sekolah_id;
         }
 
@@ -440,7 +440,7 @@ class PesertaController extends Controller
         $sekolahId = $request->get('sekolah_id');
         $status = $request->get('status');
 
-        if (auth()->user()->role == 'admin_sekolah') {
+        if (in_array(auth()->user()->role, ['admin_sekolah', 'operator_sekolah'])) {
             $sekolahId = auth()->user()->sekolah_id;
         }
 
@@ -610,11 +610,11 @@ class PesertaController extends Controller
 
             DB::commit();
 
-            return redirect()->route('peserta.index')->with('success', 'Data peserta berhasil dihapus.');
+            return redirect()->back()->with('success', 'Data peserta berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->route('peserta.index')->with('error', 'Terjadi kesalahan saat menghapus data: '.$e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data: '.$e->getMessage());
         }
     }
 
