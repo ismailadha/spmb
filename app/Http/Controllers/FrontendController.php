@@ -71,7 +71,13 @@ class FrontendController extends Controller
 
     public function sekolah_sd(Request $request)
     {
-        $query = Sekolah::query()->where('jenjang', 'SD');
+        $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
+        $query = Sekolah::query()->where('jenjang', 'SD')
+            ->withCount(['sekolahPilihan1 as pendaftar_count' => function ($q) use ($activePeriode) {
+                if ($activePeriode) {
+                    $q->where('periode_id', $activePeriode->id);
+                }
+            }]);
 
         if ($request->filled('search')) {
             $query->where('nama_sekolah', 'like', '%'.$request->search.'%');
@@ -89,7 +95,13 @@ class FrontendController extends Controller
 
     public function sekolah_smp(Request $request)
     {
-        $query = Sekolah::query()->where('jenjang', 'SMP');
+        $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
+        $query = Sekolah::query()->where('jenjang', 'SMP')
+            ->withCount(['sekolahPilihan1 as pendaftar_count' => function ($q) use ($activePeriode) {
+                if ($activePeriode) {
+                    $q->where('periode_id', $activePeriode->id);
+                }
+            }]);
 
         if ($request->filled('search')) {
             $query->where('nama_sekolah', 'like', '%'.$request->search.'%');
@@ -108,15 +120,53 @@ class FrontendController extends Controller
     public function detail_sekolah_sd($id)
     {
         $sekolah = Sekolah::with('kecamatan')->findOrFail($id);
+        $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
 
-        return view('frontend.detail_sekolah_sd', compact('sekolah'));
+        $stats = [
+            'prestasi' => $this->getStatsJalur($id, 3, $sekolah->daya_tampung_prestasi, $activePeriode),
+            'domisili' => $this->getStatsJalur($id, 1, $sekolah->daya_tampung_domisili, $activePeriode),
+            'afirmasi' => $this->getStatsJalur($id, 2, $sekolah->daya_tampung_afirmasi, $activePeriode),
+            'mutasi' => $this->getStatsJalur($id, 4, $sekolah->daya_tampung_mutasi, $activePeriode),
+        ];
+
+        return view('frontend.detail_sekolah_sd', compact('sekolah', 'stats'));
     }
 
     public function detail_sekolah_smp($id)
     {
         $sekolah = Sekolah::with('kecamatan')->findOrFail($id);
+        $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
 
-        return view('frontend.detail_sekolah_smp', compact('sekolah'));
+        $stats = [
+            'prestasi' => $this->getStatsJalur($id, 3, $sekolah->daya_tampung_prestasi, $activePeriode),
+            'domisili' => $this->getStatsJalur($id, 1, $sekolah->daya_tampung_domisili, $activePeriode),
+            'afirmasi' => $this->getStatsJalur($id, 2, $sekolah->daya_tampung_afirmasi, $activePeriode),
+            'mutasi' => $this->getStatsJalur($id, 4, $sekolah->daya_tampung_mutasi, $activePeriode),
+        ];
+
+        return view('frontend.detail_sekolah_smp', compact('sekolah', 'stats'));
+    }
+
+    private function getStatsJalur($sekolahId, $jalurId, $kuota, $activePeriode): array
+    {
+        $count = 0;
+        if ($activePeriode) {
+            $count = Pendaftaran::where('sekolah_pilihan_1', $sekolahId)
+                ->where('jalur_id', $jalurId)
+                ->where('periode_id', $activePeriode->id)
+                ->count();
+        }
+
+        $kuota = $kuota ?? 0;
+        $sisa = max(0, $kuota - $count);
+        $persen = $kuota > 0 ? min(100, round(($count / $kuota) * 100)) : 0;
+
+        return [
+            'kuota' => $kuota,
+            'pendaftar' => $count,
+            'sisa' => $sisa,
+            'persen' => $persen,
+        ];
     }
 
     public function showPost($slug)

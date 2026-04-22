@@ -53,51 +53,127 @@
                         
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100">
-                                    <div class="d-flex align-items-center mb-3">
+                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100 shadow-sm">
+                                    <div class="d-flex align-items-center mb-4">
                                         <div class="icon-circle mr-3" style="background: rgba(52, 152, 219, 0.1); color: #3498db;">
                                             <i class="la la-trophy" style="font-size: 1.5rem;"></i>
                                         </div>
                                         <h6 class="mb-0 font-weight-bold text-dark">Jalur Prestasi</h6>
                                     </div>
-                                    <div class="display-4 font-weight-bold mb-1" style="font-size: 2rem;">{{ $sekolah->daya_tampung_prestasi ?? 0 }}</div>
-                                    <p class="text-muted small mb-0">Peserta Didik</p>
+                                    <div class="row text-center mb-3">
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Kuota</div>
+                                            <div class="font-weight-bold h5 mb-0 text-primary">{{ $stats['prestasi']['kuota'] }}</div>
+                                        </div>
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Pendaftar</div>
+                                            <div class="font-weight-bold h5 mb-0 text-warning">{{ $stats['prestasi']['pendaftar'] }}</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="small text-muted mb-1">Sisa</div>
+                                            <div class="font-weight-bold h5 mb-0 text-success">{{ $stats['prestasi']['sisa'] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 8px; border-radius: 10px; background-color: #f1f5f9;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $stats['prestasi']['persen'] }}%" aria-valuenow="{{ $stats['prestasi']['persen'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <span class="small text-muted">Kapasitas Terisi</span>
+                                        <span class="small font-weight-bold text-dark">{{ $stats['prestasi']['persen'] }}%</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
-                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100">
-                                    <div class="d-flex align-items-center mb-3">
+                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100 shadow-sm">
+                                    <div class="d-flex align-items-center mb-4">
                                         <div class="icon-circle mr-3" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71;">
                                             <i class="la la-home" style="font-size: 1.5rem;"></i>
                                         </div>
                                         <h6 class="mb-0 font-weight-bold text-dark">Jalur Domisili</h6>
                                     </div>
-                                    <div class="display-4 font-weight-bold mb-1" style="font-size: 2rem;">{{ $sekolah->daya_tampung_domisili ?? 0 }}</div>
-                                    <p class="text-muted small mb-0">Peserta Didik</p>
+                                    <div class="row text-center mb-3">
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Kuota</div>
+                                            <div class="font-weight-bold h5 mb-0 text-success">{{ $stats['domisili']['kuota'] }}</div>
+                                        </div>
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Pendaftar</div>
+                                            <div class="font-weight-bold h5 mb-0 text-warning">{{ $stats['domisili']['pendaftar'] }}</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="small text-muted mb-1">Sisa</div>
+                                            <div class="font-weight-bold h5 mb-0 text-success">{{ $stats['domisili']['sisa'] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 8px; border-radius: 10px; background-color: #f1f5f9;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $stats['domisili']['persen'] }}%" aria-valuenow="{{ $stats['domisili']['persen'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <span class="small text-muted">Kapasitas Terisi</span>
+                                        <span class="small font-weight-bold text-dark">{{ $stats['domisili']['persen'] }}%</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
-                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100">
-                                    <div class="d-flex align-items-center mb-3">
+                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100 shadow-sm">
+                                    <div class="d-flex align-items-center mb-4">
                                         <div class="icon-circle mr-3" style="background: rgba(243, 156, 18, 0.1); color: #f39c12;">
                                             <i class="la la-users" style="font-size: 1.5rem;"></i>
                                         </div>
                                         <h6 class="mb-0 font-weight-bold text-dark">Jalur Afirmasi</h6>
                                     </div>
-                                    <div class="display-4 font-weight-bold mb-1" style="font-size: 2rem;">{{ $sekolah->daya_tampung_afirmasi ?? 0 }}</div>
-                                    <p class="text-muted small mb-0">Peserta Didik</p>
+                                    <div class="row text-center mb-3">
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Kuota</div>
+                                            <div class="font-weight-bold h5 mb-0 text-warning">{{ $stats['afirmasi']['kuota'] }}</div>
+                                        </div>
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Pendaftar</div>
+                                            <div class="font-weight-bold h5 mb-0 text-warning">{{ $stats['afirmasi']['pendaftar'] }}</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="small text-muted mb-1">Sisa</div>
+                                            <div class="font-weight-bold h5 mb-0 text-success">{{ $stats['afirmasi']['sisa'] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 8px; border-radius: 10px; background-color: #f1f5f9;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $stats['afirmasi']['persen'] }}%" aria-valuenow="{{ $stats['afirmasi']['persen'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <span class="small text-muted">Kapasitas Terisi</span>
+                                        <span class="small font-weight-bold text-dark">{{ $stats['afirmasi']['persen'] }}%</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
-                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100">
-                                    <div class="d-flex align-items-center mb-3">
+                                <div class="quota-item p-4 border rounded-xl bg-white transition-hover h-100 shadow-sm">
+                                    <div class="d-flex align-items-center mb-4">
                                         <div class="icon-circle mr-3" style="background: rgba(155, 89, 182, 0.1); color: #9b59b6;">
                                             <i class="la la-exchange-alt" style="font-size: 1.5rem;"></i>
                                         </div>
                                         <h6 class="mb-0 font-weight-bold text-dark">Jalur Mutasi</h6>
                                     </div>
-                                    <div class="display-4 font-weight-bold mb-1" style="font-size: 2rem;">{{ $sekolah->daya_tampung_mutasi ?? 0 }}</div>
-                                    <p class="text-muted small mb-0">Peserta Didik</p>
+                                    <div class="row text-center mb-3">
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Kuota</div>
+                                            <div class="font-weight-bold h5 mb-0 text-secondary" style="color: #9b59b6 !important;">{{ $stats['mutasi']['kuota'] }}</div>
+                                        </div>
+                                        <div class="col-4 border-right">
+                                            <div class="small text-muted mb-1">Pendaftar</div>
+                                            <div class="font-weight-bold h5 mb-0 text-warning">{{ $stats['mutasi']['pendaftar'] }}</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="small text-muted mb-1">Sisa</div>
+                                            <div class="font-weight-bold h5 mb-0 text-success">{{ $stats['mutasi']['sisa'] }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 8px; border-radius: 10px; background-color: #f1f5f9;">
+                                        <div class="progress-bar" role="progressbar" style="width: {{ $stats['mutasi']['persen'] }}%; background-color: #9b59b6;" aria-valuenow="{{ $stats['mutasi']['persen'] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <span class="small text-muted">Kapasitas Terisi</span>
+                                        <span class="small font-weight-bold text-dark">{{ $stats['mutasi']['persen'] }}%</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -105,27 +181,6 @@
                         <div class="total-quota bg-danger-soft p-4 rounded-xl mt-2 text-center">
                             <h5 class="mb-1 font-weight-bold text-danger">Total Daya Tampung</h5>
                             <div class="h2 font-weight-bold mb-0">{{ $sekolah->total_daya_tampung }} Kuota</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card border-0 shadow-sm" style="border-radius: 20px;">
-                    <div class="card-body p-4 p-md-5">
-                        <div class="section-title mb-4">
-                            <h4 class="font-weight-bold" style="color: #1e2a4a;">
-                                <span class="d-inline-block p-2 rounded-lg bg-danger-soft mr-2"><i class="la la-info-circle text-danger"></i></span>
-                                Informasi Tambahan
-                            </h4>
-                        </div>
-                        <div class="info-list">
-                            <div class="row no-gutters mb-4 pb-3 border-bottom">
-                                <div class="col-sm-4 text-muted font-weight-bold mb-1 mb-sm-0">Status Perbatasan</div>
-                                <div class="col-sm-8 text-dark font-weight-bold">{{ $sekolah->status_perbatasan == 1 ? 'Menerima Perbatasan' : 'Tidak Menerima Perbatasan' }}</div>
-                            </div>
-                            <div class="row no-gutters mb-4 pb-3 border-bottom">
-                                <div class="col-sm-4 text-muted font-weight-bold mb-1 mb-sm-0">Status Pilihan 1</div>
-                                <div class="col-sm-8 text-dark font-weight-bold">{{ $sekolah->status_pilihan_1 == 1 ? 'Wajib Pilihan 1' : 'Opsional' }}</div>
-                            </div>
                         </div>
                     </div>
                 </div>
