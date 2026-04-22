@@ -65,15 +65,15 @@ class PendaftaranController extends Controller
                 $pendaftaran_data = DB::table('pendaftaran')
                     ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                     ->join('periode_pendaftaran', 'pendaftaran.periode_id', '=', 'periode_pendaftaran.id')
-                    ->join('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
-                    ->join('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
-                    ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
-                    ->join('desa', 'peserta.desa_id', '=', 'desa.id')
+                    ->leftJoin('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
+                    ->leftJoin('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
+                    ->leftJoin('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
+                    ->leftJoin('desa', 'peserta.desa_id', '=', 'desa.id')
                     ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
                     ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
                     ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
                     ->leftJoin('sekolah as sekolah_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sekolah_diterima.id')
-                    ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
+                    ->leftJoin('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
                     ->where('peserta.user_id', Auth::id())
                     ->where('pendaftaran.id', $pendaftaran->id)
                     ->select(
@@ -102,6 +102,7 @@ class PendaftaranController extends Controller
                         'peserta.tanggal_terbit_kk',
                         'peserta.provinsi_id',
                         'peserta.kabupaten_id',
+                        'peserta.kabupaten_luar',
                         'peserta.kecamatan_id',
                         'peserta.desa_id',
                         'peserta.alamat',
@@ -220,7 +221,7 @@ class PendaftaranController extends Controller
         // load semua sekolah dan group by jenjang dan kecamatan
         $semuaSekolah = DB::table('sekolah')
             ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
-            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan', 'sekolah.status_pilihan_1')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan', 'sekolah.status_pilihan_1', 'sekolah.status_perbatasan')
             ->get();
 
         $sekolahGrouped = [];
@@ -259,10 +260,11 @@ class PendaftaranController extends Controller
             'tanggal_lahir' => $isSubmitted ? 'required' : 'nullable',
             'jenis_kelamin' => $isSubmitted ? 'required' : 'nullable',
             'agama' => $isSubmitted ? 'required' : 'nullable',
-            'provinsi' => 'required',
+            'provinsi' => ($isSubmitted && $request->kabupaten == 1173) ? 'required' : 'nullable',
             'kabupaten' => 'required',
-            'kecamatan' => 'required',
-            'desa' => 'required',
+            'kecamatan' => ($isSubmitted && $request->kabupaten == 1173) ? 'required' : 'nullable',
+            'desa' => ($isSubmitted && $request->kabupaten == 1173) ? 'required' : 'nullable',
+            'kabupaten_nama_luar' => ($isSubmitted && $request->kabupaten == 9999) ? 'required' : 'nullable',
             'alamat' => $isSubmitted ? 'required' : 'nullable',
             'nomor_kk' => $isSubmitted ? 'required' : 'nullable',
             'tanggal_terbit_kk' => $isSubmitted ? 'required' : 'nullable',
@@ -292,6 +294,21 @@ class PendaftaranController extends Controller
         try {
             DB::beginTransaction();
 
+            // validation logic
+            if ($request->kabupaten == 9999 && $request->jalur == 1) {
+                $sekolah1 = DB::table('sekolah')->where('id', $request->sekolah_pilihan_1)->first();
+                if ($sekolah1 && $sekolah1->status_perbatasan != 1) {
+                    return back()->with('error', 'Maaf, pendaftar dari luar Kota Lhokseumawe hanya diperbolehkan mendaftar melalui jalur Domisili pada Sekolah Perbatasan.')->withInput();
+                }
+
+                if ($request->sekolah_pilihan_2) {
+                    $sekolah2 = DB::table('sekolah')->where('id', $request->sekolah_pilihan_2)->first();
+                    if ($sekolah2 && $sekolah2->status_perbatasan != 1) {
+                        return back()->with('error', 'Maaf, pendaftar dari luar Kota Lhokseumawe hanya diperbolehkan mendaftar melalui jalur Domisili pada Sekolah Perbatasan (Pilihan 2).')->withInput();
+                    }
+                }
+            }
+
             // 1. Create Peserta (menggunakan query builder)
             $peserta_id = DB::table('peserta')->insertGetId([
                 'user_id' => Auth::id(),
@@ -302,10 +319,11 @@ class PendaftaranController extends Controller
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'agama' => $request->agama,
-                'provinsi_id' => $request->provinsi,
-                'kabupaten_id' => $request->kabupaten,
-                'kecamatan_id' => $request->kecamatan,
-                'desa_id' => $request->desa,
+                'provinsi_id' => $request->kabupaten == 9999 ? null : $request->provinsi,
+                'kabupaten_id' => $request->kabupaten == 9999 ? null : $request->kabupaten,
+                'kabupaten_luar' => $request->kabupaten == 9999 ? $request->kabupaten_nama_luar : null,
+                'kecamatan_id' => $request->kabupaten == 1173 ? $request->kecamatan : null,
+                'desa_id' => $request->kabupaten == 1173 ? $request->desa : null,
                 'alamat' => $request->alamat,
                 'nomor_kk' => $request->nomor_kk,
                 'tanggal_terbit_kk' => $request->tanggal_terbit_kk,
@@ -386,11 +404,11 @@ class PendaftaranController extends Controller
             ->first();
 
         $peserta = DB::table('peserta')
-            ->join('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
-            ->join('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
-            ->join('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
-            ->join('desa', 'peserta.desa_id', '=', 'desa.id')
-            ->join('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
+            ->leftJoin('provinsi', 'peserta.provinsi_id', '=', 'provinsi.id')
+            ->leftJoin('kabupaten', 'peserta.kabupaten_id', '=', 'kabupaten.id')
+            ->leftJoin('kecamatan', 'peserta.kecamatan_id', '=', 'kecamatan.id')
+            ->leftJoin('desa', 'peserta.desa_id', '=', 'desa.id')
+            ->leftJoin('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
             ->join('users', 'peserta.user_id', '=', 'users.id')
             ->where('peserta.id', $pendaftaran->peserta_id)
             ->select('peserta.*', 'provinsi.*', 'kabupaten.*', 'kecamatan.*', 'desa.*', 'orang_tua_wali.*', 'users.nik')
@@ -427,7 +445,7 @@ class PendaftaranController extends Controller
         // load semua sekolah dan group by jenjang dan kecamatan
         $semuaSekolah = DB::table('sekolah')
             ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
-            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan', 'sekolah.status_pilihan_1')
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'sekolah.jenjang', 'sekolah.latitude', 'sekolah.longitude', 'kecamatan.nama_kecamatan', 'sekolah.status_pilihan_1', 'sekolah.status_perbatasan')
             ->get();
 
         $sekolahGrouped = [];
@@ -465,10 +483,11 @@ class PendaftaranController extends Controller
             'tanggal_lahir' => $isSubmitted ? 'required' : 'nullable',
             'jenis_kelamin' => $isSubmitted ? 'required' : 'nullable',
             'agama' => $isSubmitted ? 'required' : 'nullable',
-            'provinsi' => 'required',
+            'provinsi' => ($isSubmitted && $request->kabupaten == 1173) ? 'required' : 'nullable',
             'kabupaten' => 'required',
-            'kecamatan' => 'required',
-            'desa' => 'required',
+            'kecamatan' => ($isSubmitted && $request->kabupaten == 1173) ? 'required' : 'nullable',
+            'desa' => ($isSubmitted && $request->kabupaten == 1173) ? 'required' : 'nullable',
+            'kabupaten_nama_luar' => ($isSubmitted && $request->kabupaten == 9999) ? 'required' : 'nullable',
             'alamat' => $isSubmitted ? 'required' : 'nullable',
             'nomor_kk' => $isSubmitted ? 'required' : 'nullable',
             'tanggal_terbit_kk' => $isSubmitted ? 'required' : 'nullable',
@@ -498,6 +517,21 @@ class PendaftaranController extends Controller
         try {
             DB::beginTransaction();
 
+            // validation logic
+            if ($request->kabupaten == 9999 && $request->jalur == 1) {
+                $sekolah1 = DB::table('sekolah')->where('id', $request->sekolah_pilihan_1)->first();
+                if ($sekolah1 && $sekolah1->status_perbatasan != 1) {
+                    return back()->with('error', 'Maaf, pendaftar dari luar Kota Lhokseumawe hanya diperbolehkan mendaftar melalui jalur Domisili pada Sekolah Perbatasan.')->withInput();
+                }
+
+                if ($request->sekolah_pilihan_2) {
+                    $sekolah2 = DB::table('sekolah')->where('id', $request->sekolah_pilihan_2)->first();
+                    if ($sekolah2 && $sekolah2->status_perbatasan != 1) {
+                        return back()->with('error', 'Maaf, pendaftar dari luar Kota Lhokseumawe hanya diperbolehkan mendaftar melalui jalur Domisili pada Sekolah Perbatasan (Pilihan 2).')->withInput();
+                    }
+                }
+            }
+
             // Handle File Uploads (Upload Berkas)
             $this->uploadBerkas($request, $id);
 
@@ -514,10 +548,11 @@ class PendaftaranController extends Controller
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'agama' => $request->agama,
-                'provinsi_id' => $request->provinsi,
-                'kabupaten_id' => $request->kabupaten,
-                'kecamatan_id' => $request->kecamatan,
-                'desa_id' => $request->desa,
+                'provinsi_id' => $request->kabupaten == 9999 ? null : $request->provinsi,
+                'kabupaten_id' => $request->kabupaten == 9999 ? null : $request->kabupaten,
+                'kabupaten_luar' => $request->kabupaten == 9999 ? $request->kabupaten_nama_luar : null,
+                'kecamatan_id' => $request->kabupaten == 1173 ? $request->kecamatan : null,
+                'desa_id' => $request->kabupaten == 1173 ? $request->desa : null,
                 'alamat' => $request->alamat,
                 'nomor_kk' => $request->nomor_kk,
                 'tanggal_terbit_kk' => $request->tanggal_terbit_kk,

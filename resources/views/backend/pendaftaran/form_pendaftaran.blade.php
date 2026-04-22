@@ -52,18 +52,10 @@
                             <div class="col-md-6">
                                 <label for="jalur" class="form-label">Jalur Pendaftaran</label>
                                 <select class="form-control" id="jalur" name="jalur" required @if(isset($isPerbaikan) && $isPerbaikan) disabled @endif>
-                                    {{-- data jalur yang telah diambil oleh peserta --}}
-                                    @if ($mode == 'edit')
-                                        <option value="" disabled selected>Pilih Jalur Pendaftaran</option>
-                                        @foreach ($jalur_pendaftaran as $jalur)
-                                            <option value="{{ $jalur->jalur_id }}" {{ $data->jalur_id == $jalur->jalur_id ? 'selected' : '' }}>{{ $jalur->nama_jalur }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" disabled selected>Pilih Jalur Pendaftaran</option>
-                                        @foreach ($jalur_pendaftaran as $jalur)
-                                            <option value="{{ $jalur->jalur_id }}">{{ $jalur->nama_jalur }}</option>
-                                        @endforeach
-                                    @endif
+                                    <option value="" disabled {{ !old('jalur', $data->jalur_id ?? '') ? 'selected' : '' }}>Pilih Jalur Pendaftaran</option>
+                                    @foreach ($jalur_pendaftaran as $jalur)
+                                        <option value="{{ $jalur->jalur_id }}" {{ old('jalur', $data->jalur_id ?? '') == $jalur->jalur_id ? 'selected' : '' }}>{{ $jalur->nama_jalur }}</option>
+                                    @endforeach
                                 </select>
                                 @if(isset($isPerbaikan) && $isPerbaikan)
                                     <input type="hidden" name="jalur" value="{{ $data->jalur_id }}">
@@ -72,17 +64,9 @@
                             <div class="col-md-6">
                                 <label for="jenjang" class="form-label">Jenjang</label>
                                 <select class="form-control" id="jenjang" name="jenjang" required @if(isset($isPerbaikan) && $isPerbaikan) disabled @endif>
-                                    {{-- data jenjang yang telah diambil oleh peserta --}}
-                                    @if ($mode == 'edit')
-                                        <option value="" disabled selected>Pilih Jenjang</option>
-                                    {{-- Dropdown biasa: SD, SMP --}}
-                                    <option value="SD" {{ $data->jenjang == 'SD' ? 'selected' : '' }}>SD</option>
-                                    <option value="SMP" {{ $data->jenjang == 'SMP' ? 'selected' : '' }}>SMP</option>
-                                    @else
-                                        <option value="" disabled selected>Pilih Jenjang</option>
-                                        <option value="SD">SD</option>
-                                        <option value="SMP">SMP</option>
-                                    @endif
+                                    <option value="" disabled {{ !old('jenjang', $data->jenjang ?? '') ? 'selected' : '' }}>Pilih Jenjang</option>
+                                    <option value="SD" {{ old('jenjang', $data->jenjang ?? '') == 'SD' ? 'selected' : '' }}>SD</option>
+                                    <option value="SMP" {{ old('jenjang', $data->jenjang ?? '') == 'SMP' ? 'selected' : '' }}>SMP</option>
                                 </select>
                                 @if(isset($isPerbaikan) && $isPerbaikan)
                                     <input type="hidden" name="jenjang" value="{{ $data->jenjang }}">
@@ -109,70 +93,42 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="nisn" class="form-label">Nomor Induk Siswa Nasional (NISN)</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nisn" name="nisn" value="{{ $peserta->nisn }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="nisn" name="nisn" required>
-                                @endif
+                                <input type="text" class="form-control" id="nisn" name="nisn" value="{{ old('nisn', $peserta->nisn ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ $peserta->nama_lengkap }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
-                                @endif
+                                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap', $peserta->nama_lengkap ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                @if ($mode == 'edit')
-                                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required @if(isset($isPerbaikan) && $isPerbaikan) disabled @endif>
-                                        <option value="" disabled>Pilih Jenis Kelamin</option>
-                                        <option value="L" {{ $peserta->jenis_kelamin == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                        <option value="P" {{ $peserta->jenis_kelamin == 'P' ? 'selected' : '' }}>Perempuan</option>
-                                    </select>
-                                    @if(isset($isPerbaikan) && $isPerbaikan)
-                                        <input type="hidden" name="jenis_kelamin" value="{{ $peserta->jenis_kelamin }}">
-                                    @endif
-                                @else
-                                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
-                                        <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                                        <option value="L">Laki-laki</option>
-                                        <option value="P">Perempuan</option>
-                                    </select>
+                                <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required @if(isset($isPerbaikan) && $isPerbaikan) disabled @endif>
+                                    <option value="" disabled {{ !old('jenis_kelamin', $peserta->jenis_kelamin ?? '') ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                                    <option value="L" {{ old('jenis_kelamin', $peserta->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="P" {{ old('jenis_kelamin', $peserta->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                </select>
+                                @if(isset($isPerbaikan) && $isPerbaikan)
+                                    <input type="hidden" name="jenis_kelamin" value="{{ old('jenis_kelamin', $peserta->jenis_kelamin ?? '') }}">
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="agama" class="form-label">Agama</label>
-                                @if ($mode == 'edit')
-                                    <select class="form-control" id="agama" name="agama" required @if(isset($isPerbaikan) && $isPerbaikan) disabled @endif>
-                                        <option value="" disabled>Pilih Agama</option>
-                                        <option value="Islam" {{ $peserta->agama == 'Islam' ? 'selected' : '' }}>Islam</option>
-                                        <option value="Kristen" {{ $peserta->agama == 'Kristen' ? 'selected' : '' }}>Kristen</option>
-                                        <option value="Katolik" {{ $peserta->agama == 'Katolik' ? 'selected' : '' }}>Katolik</option>
-                                        <option value="Hindu" {{ $peserta->agama == 'Hindu' ? 'selected' : '' }}>Hindu</option>
-                                        <option value="Buddha" {{ $peserta->agama == 'Buddha' ? 'selected' : '' }}>Buddha</option>
-                                        <option value="Konghucu" {{ $peserta->agama == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
-                                    </select>
-                                    @if(isset($isPerbaikan) && $isPerbaikan)
-                                        <input type="hidden" name="agama" value="{{ $peserta->agama }}">
-                                    @endif
-                                @else
-                                    <select class="form-control" id="agama" name="agama" required>
-                                        <option value="" disabled selected>Pilih Agama</option>
-                                        <option value="Islam">Islam</option>
-                                        <option value="Kristen">Kristen</option>
-                                        <option value="Katolik">Katolik</option>
-                                        <option value="Hindu">Hindu</option>
-                                        <option value="Buddha">Buddha</option>
-                                        <option value="Konghucu">Konghucu</option>
-                                    </select>
+                                <select class="form-control" id="agama" name="agama" required @if(isset($isPerbaikan) && $isPerbaikan) disabled @endif>
+                                    <option value="" disabled {{ !old('agama', $peserta->agama ?? '') ? 'selected' : '' }}>Pilih Agama</option>
+                                    <option value="Islam" {{ old('agama', $peserta->agama ?? '') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                                    <option value="Kristen" {{ old('agama', $peserta->agama ?? '') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                                    <option value="Katolik" {{ old('agama', $peserta->agama ?? '') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                                    <option value="Hindu" {{ old('agama', $peserta->agama ?? '') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                                    <option value="Buddha" {{ old('agama', $peserta->agama ?? '') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                                    <option value="Konghucu" {{ old('agama', $peserta->agama ?? '') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                                </select>
+                                @if(isset($isPerbaikan) && $isPerbaikan)
+                                    <input type="hidden" name="agama" value="{{ old('agama', $peserta->agama ?? '') }}">
                                 @endif
                             </div>
                         </div>
@@ -180,74 +136,52 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ $peserta->tempat_lahir }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" required>
-                                @endif
+                                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ old('tempat_lahir', $peserta->tempat_lahir ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                @if ($mode == 'edit')
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ $peserta->tanggal_lahir }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
-                                @endif
+                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', $peserta->tanggal_lahir ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nomor_kk" class="form-label">Nomor Kartu Keluarga (KK)</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ $peserta->nomor_kk }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" required>
-                                @endif
+                                <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ old('nomor_kk', $peserta->nomor_kk ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_kk" class="form-label">Tanggal Penerbitan KK</label>
-                                @if ($mode == 'edit')
-                                    <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" value="{{ $peserta->tanggal_terbit_kk }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" required>
-                                @endif
+                                <input type="date" class="form-control" id="tanggal_kk" name="tanggal_terbit_kk" value="{{ old('tanggal_terbit_kk', $peserta->tanggal_terbit_kk ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
-                        {{-- Wilayah --}}
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="provinsi" class="form-label">Provinsi</label>
-                                <select class="form-control" id="provinsi" name="provinsi" required>
-                                    @if ($mode == 'edit')
-                                        <option value="" disabled>Pilih Provinsi</option>
-                                        @foreach ($provinsi as $item)
-                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->provinsi_id ? 'selected' : '' }}>{{ $item->nama_provinsi }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" disabled selected>Pilih Provinsi</option>
-                                        @foreach ($provinsi as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_provinsi }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label d-block">Status Domisili</label>
+                                <div class="form-check form-switch form-check-custom form-check-solid mt-2">
+                                    <input class="form-check-input h-30px w-50px" type="checkbox" id="check_luar_daerah" {{ old('kabupaten', $mode == 'edit' ? ($peserta->kabupaten_id ?: '9999') : '1173') == '9999' ? 'checked' : '' }} />
+                                    <label class="form-check-label fw-bold text-gray-700" for="check_luar_daerah">
+                                        Pendaftar dari luar Kota Lhokseumawe?
+                                    </label>
+                                </div>
+                                <input type="hidden" id="kabupaten" name="kabupaten" value="{{ old('kabupaten', $mode == 'edit' ? ($peserta->kabupaten_id ?: '9999') : '1173') }}">
                             </div>
                             <div class="col-md-6">
-                                <label for="kabupaten" class="form-label">Kabupaten/Kota</label>
-                                <select class="form-control" id="kabupaten" name="kabupaten" required>
-                                    @if ($mode == 'edit')
-                                        <option value="" disabled>Pilih Kabupaten/Kota</option>
-                                        @foreach ($kabupaten as $item)
-                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->kabupaten_id ? 'selected' : '' }}>{{ $item->nama_kabupaten }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" disabled selected>Pilih Kabupaten/Kota</option>
-                                        @foreach ($kabupaten as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_kabupaten }}</option>
-                                        @endforeach
-                                    @endif
+                                <label for="provinsi_display" class="form-label">Provinsi</label>
+                                <select class="form-control" id="provinsi_display" name="provinsi_display" required>
+                                    <option value="" disabled {{ !old('provinsi', $peserta->provinsi_id ?? '') ? 'selected' : '' }}>Pilih Provinsi</option>
+                                    @foreach ($provinsi as $item)
+                                        <option value="{{ $item->id }}" {{ old('provinsi', $peserta->provinsi_id ?? '') == $item->id ? 'selected' : '' }}>{{ $item->nama_provinsi }}</option>
+                                    @endforeach
                                 </select>
+                                <input type="hidden" id="provinsi" name="provinsi" value="{{ old('provinsi', $peserta->provinsi_id ?? '') }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" id="kabupaten_luar_container" style="display: none;">
+                            <div class="col-md-12">
+                                <label for="kabupaten_nama_luar" class="form-label">Nama Kabupaten/Kota Asal</label>
+                                <input type="text" class="form-control" id="kabupaten_nama_luar" name="kabupaten_nama_luar" value="{{ old('kabupaten_nama_luar', $peserta->kabupaten_luar ?? '') }}" placeholder="Contoh: Banda Aceh, Medan, dll">
                             </div>
                         </div>
 
@@ -255,33 +189,19 @@
                             <div class="col-md-6">
                                 <label for="kecamatan" class="form-label">Kecamatan</label>
                                 <select class="form-control" id="kecamatan" name="kecamatan" required>
-                                    @if ($mode == 'edit')
-                                        <option value="" disabled>Pilih Kecamatan</option>
-                                        @foreach ($kecamatan as $item)
-                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->kecamatan_id ? 'selected' : '' }}>{{ $item->nama_kecamatan }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" disabled selected>Pilih Kecamatan</option>
-                                        @foreach ($kecamatan as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_kecamatan }}</option>
-                                        @endforeach
-                                    @endif
+                                    <option value="" disabled {{ !old('kecamatan', $peserta->kecamatan_id ?? '') ? 'selected' : '' }}>Pilih Kecamatan</option>
+                                    @foreach ($kecamatan as $item)
+                                        <option value="{{ $item->id }}" {{ old('kecamatan', $peserta->kecamatan_id ?? '') == $item->id ? 'selected' : '' }}>{{ $item->nama_kecamatan }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="desa" class="form-label">Desa/Kelurahan</label>
                                 <select class="form-control" id="desa" name="desa" required>
-                                    @if ($mode == 'edit')
-                                        <option value="" disabled>Pilih Desa/Kelurahan</option>
-                                        @foreach ($desa as $item)
-                                            <option value="{{ $item->id }}" {{ $item->id == $peserta->desa_id ? 'selected' : '' }}>{{ $item->nama_desa }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" disabled selected>Pilih Desa/Kelurahan</option>
-                                        @foreach ($desa as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_desa }}</option>
-                                        @endforeach
-                                    @endif
+                                    <option value="" disabled {{ !old('desa', $peserta->desa_id ?? '') ? 'selected' : '' }}>Pilih Desa/Kelurahan</option>
+                                    @foreach ($desa as $item)
+                                        <option value="{{ $item->id }}" {{ old('desa', $peserta->desa_id ?? '') == $item->id ? 'selected' : '' }}>{{ $item->nama_desa }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -289,11 +209,7 @@
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <label for="alamat" class="form-label">Alamat</label>
-                                @if ($mode == 'edit')
-                                    <textarea class="form-control" id="alamat" name="alamat" rows="3" required>{{ $peserta->alamat }}</textarea>
-                                @else
-                                    <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
-                                @endif
+                                <textarea class="form-control" id="alamat" name="alamat" rows="3" required>{{ old('alamat', $peserta->alamat ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -306,19 +222,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="latitude" class="form-label">Latitude</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="latitude" name="latitude" value="{{ $peserta->latitude }}" required>
-                                @else
-                                    <input type="text" class="form-control" id="latitude" name="latitude" required>
-                                @endif
+                                <input type="text" class="form-control" id="latitude" name="latitude" value="{{ old('latitude', $peserta->latitude ?? '') }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="longitude" class="form-label">Longitude</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="longitude" name="longitude" value="{{ $peserta->longitude }}" required>
-                                @else
-                                    <input type="text" class="form-control" id="longitude" name="longitude" required>
-                                @endif
+                                <input type="text" class="form-control" id="longitude" name="longitude" value="{{ old('longitude', $peserta->longitude ?? '') }}" required>
                             </div>
                         </div>
 
@@ -333,41 +241,25 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="nama_wali" class="form-label">Nama Wali</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="nama_wali" name="nama_wali" value="{{ $peserta->nama_wali ?? '' }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="nama_wali" name="nama_wali" required>
-                                @endif
+                                <input type="text" class="form-control" id="nama_wali" name="nama_wali" value="{{ old('nama_wali', $peserta->nama_wali ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="pekerjaan_wali" class="form-label">Pekerjaan Wali</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" value="{{ $peserta->pekerjaan_wali ?? '' }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" required>
-                                @endif
+                                <input type="text" class="form-control" id="pekerjaan_wali" name="pekerjaan_wali" value="{{ old('pekerjaan_wali', $peserta->pekerjaan_wali ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                             <div class="col-md-6">
                                 <label for="no_hp_wali" class="form-label">No. HP Wali</label>
-                                @if ($mode == 'edit')
-                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ $peserta->no_hp ?? '' }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
-                                @else
-                                    <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" required>
-                                @endif
+                                <input type="text" class="form-control" id="no_hp_wali" name="no_hp_wali" value="{{ old('no_hp_wali', $peserta->no_hp ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="alamat_wali" class="form-label">Alamat Wali</label>
-                                @if ($mode == 'edit')
-                                    <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>{{ $peserta->alamat_wali ?? '' }}</textarea>
-                                @else
-                                    <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3" required></textarea>
-                                @endif
+                                <textarea class="form-control" id="alamat_wali" name="alamat_wali" rows="3" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>{{ old('alamat_wali', $peserta->alamat_wali ?? '') }}</textarea>
                             </div>
                         </div>
 
@@ -738,11 +630,11 @@
                                                     <td class="text-gray-500 fw-semibold">Alamat</td>
                                                     <td class="text-gray-800 fw-bold">: <span id="sum-alamat">-</span></td>
                                                 </tr>
-                                                <tr>
+                                                <tr id="sum-prov-row" style="display: none;">
                                                     <td class="text-gray-500 fw-semibold">Provinsi</td>
                                                     <td class="text-gray-800 fw-bold">: <span id="sum-provinsi">-</span></td>
                                                 </tr>
-                                                <tr>
+                                                <tr id="sum-wil-row" style="display: none;">
                                                     <td class="text-gray-500 fw-semibold">Kota/Kec/Desa</td>
                                                     <td class="text-gray-800 fw-bold">: <span id="sum-wilayah">-</span></td>
                                                 </tr>
@@ -1111,6 +1003,8 @@
             if (jalur) {
                 jalur.addEventListener('change', function() {
                     toggleDokumen();
+                    if (typeof updateSchoolOptions === 'function') updateSchoolOptions();
+                    
                     if(this.value) {
                         nextBtn.disabled = false;
                         document.querySelectorAll('#step2-tab, #step-wali-tab, #step3-tab, #step4-tab, #step5-tab').forEach(tab => {
@@ -1140,87 +1034,174 @@
             }
 
             // Dynamics Cascading Default for Wilayah
-            const provinsiSelect = document.getElementById('provinsi');
+            const provSelect = document.querySelector('select[name="provinsi_display"]');
+            const provHidden = document.querySelector('input[name="provinsi"]');
             const kabupatenSelect = document.getElementById('kabupaten');
             const kecamatanSelect = document.getElementById('kecamatan');
             const desaSelect = document.getElementById('desa');
+            const kabupatenLuarContainer = document.getElementById('kabupaten_luar_container');
+            const kabupatenLuarInput = document.getElementById('kabupaten_nama_luar');
+            const checkLuarDaerah = document.getElementById('check_luar_daerah');
 
-            if (provinsiSelect) {
-                provinsiSelect.addEventListener('change', function() {
-                    const provinsiId = this.value;
+            if (provSelect) {
+                // Initialize Province (Aceh by default)
+                if (!provHidden.value) {
+                    provSelect.value = "11";
+                    provHidden.value = "11";
+                } else {
+                    provSelect.value = provHidden.value;
+                }
+                provSelect.disabled = true;
+                provSelect.parentElement.style.opacity = '0.7';
 
-                    // Reset children
-                    kabupatenSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
-                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
-                    desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
-
-                    if (provinsiId) {
-                        fetch(`/wilayah/kabupaten/${provinsiId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                kabupatenSelect.innerHTML = '<option value="" disabled selected>Pilih Kabupaten/Kota</option>';
-                                data.forEach(item => {
-                                    kabupatenSelect.innerHTML += `<option value="${item.id}">${item.nama_kabupaten}</option>`;
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error fetching kabupaten:', error);
-                                kabupatenSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
-                            });
+                provSelect.addEventListener('change', function() {
+                    provHidden.value = this.value;
+                    // Reset local selects if province changes (though currently locked)
+                    if (checkLuarDaerah && !checkLuarDaerah.checked) {
+                        kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+                        desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+                        loadKecamatan("1173");
                     }
                 });
             }
 
-            if (kabupatenSelect) {
-                kabupatenSelect.addEventListener('change', function() {
-                    const kabupatenId = this.value;
+            function toggleKabupatenLuar() {
+                const isLuar = checkLuarDaerah ? checkLuarDaerah.checked : false;
+                const kabVal = isLuar ? "9999" : "1173";
+                if (kabupatenSelect) kabupatenSelect.value = kabVal;
 
-                    // Reset children
-                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
-                    desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+                if (isLuar) {
+                    if (kabupatenLuarContainer) kabupatenLuarContainer.style.display = 'block';
+                    if (kabupatenLuarInput) kabupatenLuarInput.required = true;
 
-                    if (kabupatenId) {
-                        fetch(`/wilayah/kecamatan/${kabupatenId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
-                                data.forEach(item => {
-                                    kecamatanSelect.innerHTML += `<option value="${item.id}">${item.nama_kecamatan}</option>`;
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error fetching kecamatan:', error);
-                                kecamatanSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
-                            });
+                    // Disable local selects
+                    kecamatanSelect.required = false;
+                    desaSelect.required = false;
+                    kecamatanSelect.parentElement.style.opacity = '0.5';
+                    desaSelect.parentElement.style.opacity = '0.5';
+                    kecamatanSelect.disabled = true;
+                    desaSelect.disabled = true;
+
+                    kecamatanSelect.innerHTML = '<option value="" selected>Luar Lhokseumawe</option>';
+                    desaSelect.innerHTML = '<option value="" selected>Luar Lhokseumawe</option>';
+
+                    if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
+                        $(kecamatanSelect).trigger('change');
+                        $(desaSelect).trigger('change');
                     }
+
+                    // Disable and clear province
+                    if (provSelect) {
+                        provSelect.value = "";
+                        provHidden.value = "";
+                        provSelect.disabled = true;
+                        provSelect.parentElement.style.opacity = '0.5';
+                        if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
+                            $(provSelect).trigger('change');
+                        }
+                    }
+                } else {
+                    if (kabupatenLuarContainer) kabupatenLuarContainer.style.display = 'none';
+                    if (kabupatenLuarInput) kabupatenLuarInput.required = false;
+
+                    // Enable local selects
+                    kecamatanSelect.required = true;
+                    desaSelect.required = true;
+                    kecamatanSelect.parentElement.style.opacity = '1';
+                    desaSelect.parentElement.style.opacity = '1';
+                    kecamatanSelect.disabled = false;
+                    desaSelect.disabled = false;
+
+                    loadKecamatan("1173");
+
+                    // Explicitly set to Aceh (ID 11) for locals
+                    if (provSelect) {
+                        provSelect.value = "11";
+                        provHidden.value = "11";
+                        provSelect.disabled = true;
+                        provSelect.parentElement.style.opacity = '0.7';
+                    }
+                }
+            }
+
+            if (checkLuarDaerah) {
+                checkLuarDaerah.addEventListener('change', function() {
+                    toggleKabupatenLuar();
+                    if (typeof updateSchoolOptions === 'function') updateSchoolOptions();
                 });
+                toggleKabupatenLuar();
             }
 
             if (kecamatanSelect) {
                 kecamatanSelect.addEventListener('change', function() {
-                    const kecamatanId = this.value;
-
-                    // Reset children
-                    desaSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
-
-                    if (kecamatanId) {
-                        fetch(`/wilayah/desa/${kecamatanId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
-                                data.forEach(item => {
-                                    desaSelect.innerHTML += `<option value="${item.id}">${item.nama_desa}</option>`;
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Error fetching desa:', error);
-                                desaSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
-                            });
-                    }
+                    loadDesa(this.value);
                 });
             }
 
-            // Wizard navigation logic
+            function loadKecamatan(kabupatenId) {
+                if (!kabupatenId || kabupatenId == "9999") return;
+                
+                // Optimized check for edit mode
+                if (kecamatanSelect.options.length > 2 && "{{ $mode }}" == "edit") {
+                    if (kecamatanSelect.value) {
+                        loadDesa(kecamatanSelect.value);
+                        return;
+                    }
+                }
+
+                kecamatanSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                fetch(`/wilayah/kecamatan/${kabupatenId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+                        let currentKecId = "";
+                        data.forEach(item => {
+                            let selected = (item.id == "{{ old('kecamatan', $peserta->kecamatan_id ?? '') }}") ? 'selected' : '';
+                            if (selected) currentKecId = item.id;
+                            kecamatanSelect.innerHTML += `<option value="${item.id}" ${selected}>${item.nama_kecamatan}</option>`;
+                        });
+                        
+                        if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
+                            $(kecamatanSelect).trigger('change');
+                        }
+
+                        if (currentKecId) {
+                            loadDesa(currentKecId);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching kecamatan:', error);
+                        kecamatanSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                    });
+            }
+
+            function loadDesa(kecamatanId) {
+                if (!kecamatanId || (kabupatenSelect && kabupatenSelect.value == "9999")) return;
+
+                // Optimized check for edit mode
+                if (desaSelect.options.length > 2 && "{{ $mode }}" == "edit") {
+                    if (desaSelect.value) return;
+                }
+
+                desaSelect.innerHTML = '<option value="" disabled selected>Memuat...</option>';
+                fetch(`/wilayah/desa/${kecamatanId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        desaSelect.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+                        data.forEach(item => {
+                            let selected = (item.id == "{{ old('desa', $peserta->desa_id ?? '') }}") ? 'selected' : '';
+                            desaSelect.innerHTML += `<option value="${item.id}" ${selected}>${item.nama_desa}</option>`;
+                        });
+                        
+                        if (window.jQuery && typeof jQuery.fn.select2 !== 'undefined') {
+                            $(desaSelect).trigger('change');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching desa:', error);
+                        desaSelect.innerHTML = '<option value="" disabled selected>Gagal memuat data</option>';
+                    });
+            }// Wizard navigation logic
             const nextButtons = document.querySelectorAll('.btn-next');
             const prevButtons = document.querySelectorAll('.btn-prev');
 
@@ -1299,13 +1280,30 @@
                 document.getElementById('sum-tgl-kk').innerText = document.getElementById('tanggal_kk').value || '-';
                 document.getElementById('sum-alamat').innerText = document.getElementById('alamat').value || '-';
 
-                const provText = provinsiSelect.options[provinsiSelect.selectedIndex] ? provinsiSelect.options[provinsiSelect.selectedIndex].text : '-';
-                const kabText = kabupatenSelect.options[kabupatenSelect.selectedIndex] ? kabupatenSelect.options[kabupatenSelect.selectedIndex].text : '-';
+                const provText = provSelect.options[provSelect.selectedIndex] ? provSelect.options[provSelect.selectedIndex].text : '-';
+                let kabText = kabupatenSelect.value == "1173" ? "Kota Lhokseumawe" : "Luar Lhokseumawe";
+                if (kabupatenSelect.value == "9999") {
+                    kabText = 'Luar Lhokseumawe (' + (kabupatenLuarInput.value || '-') + ')';
+                }
                 const kecText = kecamatanSelect.options[kecamatanSelect.selectedIndex] ? kecamatanSelect.options[kecamatanSelect.selectedIndex].text : '-';
                 const desaText = desaSelect.options[desaSelect.selectedIndex] ? desaSelect.options[desaSelect.selectedIndex].text : '-';
 
-                document.getElementById('sum-provinsi').innerText = provText;
-                document.getElementById('sum-wilayah').innerText = `${kabText} / ${kecText} / ${desaText}`;
+                const sumProvRow = document.getElementById('sum-prov-row');
+                const sumWilRow = document.getElementById('sum-wil-row');
+
+                if (kabupatenSelect.value == "1173") {
+                    if(sumProvRow) sumProvRow.style.display = 'table-row';
+                    if(sumWilRow) sumWilRow.style.display = 'table-row';
+
+                    const sumProv = document.getElementById('sum-provinsi');
+                    if (sumProv) sumProv.innerText = provText;
+
+                    const sumWilayah = document.getElementById('sum-wilayah');
+                    if (sumWilayah) sumWilayah.innerText = `${kabText} / ${kecText} / ${desaText}`;
+                } else {
+                    if(sumProvRow) sumProvRow.style.display = 'none';
+                    if(sumWilRow) sumWilRow.style.display = 'none';
+                }
 
                 // Wali
                 document.getElementById('sum-wali-nama').innerText = document.getElementById('nama_wali').value || '-';
@@ -1390,6 +1388,31 @@
                     $(sekolahPilihan2).trigger('change.select2');
                 }
 
+                // Policy Check: Outside Residents on Domisili Path
+                const isLuar = kabupatenSelect.value == "9999";
+                const isDomisili = jalur.options[jalur.selectedIndex] ? jalur.options[jalur.selectedIndex].text.toLowerCase().includes('domisili') : false;
+
+                if (isLuar && isDomisili) {
+                    const sel1 = sekolahPilihan1.options[sekolahPilihan1.selectedIndex];
+                    const sel2 = sekolahPilihan2.options[sekolahPilihan2.selectedIndex];
+
+                    if (val1 && sel1 && sel1.getAttribute('data-perbatasan') != '1') {
+                        Swal.fire({
+                            title: "Peringatan Luar Daerah",
+                            text: "Maaf, pendaftar dari luar Kota Lhokseumawe hanya diperbolehkan mendaftar melalui jalur Domisili pada Sekolah Perbatasan.",
+                            icon: "error"
+                        });
+                        sekolahPilihan1.value = "";
+                        $(sekolahPilihan1).val('').trigger('change');
+                    }
+
+                    if (val2 && sel2 && sel2.getAttribute('data-perbatasan') != '1') {
+                        // Silent reset or same swal
+                        sekolahPilihan2.value = "";
+                        $(sekolahPilihan2).val('').trigger('change');
+                    }
+                }
+
                 calculateDistances();
             }
 
@@ -1461,11 +1484,12 @@
                         optionsHTML1 += `<optgroup label="Kecamatan ${kecamatan}">`;
                         optionsHTML2 += `<optgroup label="Kecamatan ${kecamatan}">`;
                         sekolahData[jenjang][kecamatan].forEach(sekolah => {
-                            optionsHTML1 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
+                            let perbatasanText = sekolah.status_perbatasan == 1 ? ' [Sekolah Perbatasan]' : '';
+                            optionsHTML1 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}" data-perbatasan="${sekolah.status_perbatasan}">${sekolah.nama_sekolah}${perbatasanText}</option>`;
 
                             // Jika sekolah tidak di-set hanya untuk pilihan 1
                             if (sekolah.status_pilihan_1 != 1) {
-                                optionsHTML2 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}">${sekolah.nama_sekolah}</option>`;
+                                optionsHTML2 += `<option value="${sekolah.id}" data-lat="${sekolah.latitude}" data-lng="${sekolah.longitude}" data-perbatasan="${sekolah.status_perbatasan}">${sekolah.nama_sekolah}${perbatasanText}</option>`;
                             }
                         });
                         optionsHTML1 += `</optgroup>`;
@@ -1515,9 +1539,9 @@
                         sekolahPilihan2.required = selectedText.includes('domisili');
                     }
 
-                    @if ($mode == 'edit')
-                        const selectedSekolah1 = "{{ $data->sekolah_pilihan_1 ?? '' }}";
-                        const selectedSekolah2 = "{{ $data->sekolah_pilihan_2 ?? '' }}";
+                    @if ($mode == 'edit' || old('sekolah_pilihan_1') || old('sekolah_pilihan_2'))
+                        const selectedSekolah1 = "{{ old('sekolah_pilihan_1', $data->sekolah_pilihan_1 ?? '') }}";
+                        const selectedSekolah2 = "{{ old('sekolah_pilihan_2', $data->sekolah_pilihan_2 ?? '') }}";
 
                         if (selectedSekolah1) {
                             sekolahPilihan1.value = selectedSekolah1;
@@ -1544,7 +1568,14 @@
                     let isValid = true;
                     if (isDraft) {
                         // Minimal validation for Draft: Jalur, Jenjang, Nama, NIK, NISN, Wilayah
-                        const minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'nisn', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'sekolah_pilihan_1'];
+                        let minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'nisn', 'provinsi', 'kabupaten', 'sekolah_pilihan_1'];
+                        
+                        if (kabupatenSelect.value == "1173") {
+                            minimalFields.push('kecamatan', 'desa');
+                        } else {
+                            minimalFields.push('kabupaten_nama_luar');
+                        }
+
                         minimalFields.forEach(id => {
                             const field = document.getElementById(id);
                             if (field && !field.checkValidity()) {

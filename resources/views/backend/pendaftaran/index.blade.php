@@ -111,7 +111,12 @@
                                         <i class="bi bi-person-badge fs-4 me-1"></i>NISN: {{ $pendaftaran->nisn }}
                                     </span>
                                     <span class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                        <i class="bi bi-geo-alt fs-4 me-1"></i>{{ $pendaftaran->nama_kecamatan }}, {{ $pendaftaran->nama_kabupaten }}
+                                        <i class="bi bi-geo-alt fs-4 me-1"></i>
+                                        @if($pendaftaran->kabupaten_id != 1173)
+                                            {{ $pendaftaran->kabupaten_luar ?? 'Luar Daerah' }} (Luar Lhokseumawe)
+                                        @else
+                                            {{ $pendaftaran->nama_kecamatan }}, {{ $pendaftaran->nama_kabupaten }}
+                                        @endif
                                     </span>
                                     <span class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                         <i class="bi bi-calendar-check fs-4 me-1"></i>Terdaftar: {{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->isoFormat('D MMMM YYYY') }}
@@ -285,6 +290,7 @@
                                 <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->alamat }}</span>
                             </div>
                         </div>
+                        @if($pendaftaran->kabupaten_id == 1173)
                         <div class="row mb-7">
                             <label class="col-lg-4 fw-bold text-muted">Desa/Kelurahan</label>
                             <div class="col-lg-8 fv-row">
@@ -297,18 +303,27 @@
                                 <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_kecamatan }}</span>
                             </div>
                         </div>
+                        @endif
                         <div class="row mb-7">
                             <label class="col-lg-4 fw-bold text-muted">Kabupaten/Kota</label>
                             <div class="col-lg-8">
-                                <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_kabupaten }}</span>
+                                <span class="fw-bold text-gray-800 fs-6">
+                                    @if($pendaftaran->kabupaten_id != 1173)
+                                        {{ $pendaftaran->kabupaten_luar ?? 'Luar Daerah' }} (Luar Lhokseumawe)
+                                    @else
+                                        {{ $pendaftaran->nama_kabupaten }}
+                                    @endif
+                                </span>
                             </div>
                         </div>
+                        @if($pendaftaran->kabupaten_id == 1173)
                         <div class="row mb-7">
                             <label class="col-lg-4 fw-bold text-muted">Provinsi</label>
                             <div class="col-lg-8">
                                 <span class="fw-bold text-gray-800 fs-6">{{ $pendaftaran->nama_provinsi }}</span>
                             </div>
                         </div>
+                        @endif
                         <div class="row mb-7">
                             <label class="col-lg-4 fw-bold text-muted">No. Kartu Keluarga</label>
                             <div class="col-lg-8">
