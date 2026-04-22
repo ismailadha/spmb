@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/desa/{id}', [WilayahController::class, 'getDesa'])->name('wilayah.desa');
     });
 
-    Route::middleware('role:admin_dinas,admin_sekolah')->group(function () {
+    Route::middleware('role:admin_dinas,admin_sekolah,operator_sekolah')->group(function () {
         // sekolah
         Route::get('sekolah/sd', [SekolahController::class, 'sekolah_sd'])->name('sekolah.sd');
         Route::get('sekolah/smp', [SekolahController::class, 'sekolah_smp'])->name('sekolah.smp');
@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
         Route::get('peserta/{id}/verifikasi', [PesertaController::class, 'detail_verifikasi'])->name('peserta.verifikasi');
         Route::post('peserta/{id}/setuju-verifikasi', [VerifikasiController::class, 'setuju_verifikasi'])->name('peserta.verifikasi.setuju');
         Route::post('peserta/{id}/minta-perbaikan', [VerifikasiController::class, 'minta_perbaikan'])->name('peserta.verifikasi.perbaikan');
+        Route::post('peserta/{id}/tolak-verifikasi', [VerifikasiController::class, 'tolak_verifikasi'])->name('peserta.verifikasi.tolak');
         Route::get('peserta/detail/{id}', [PesertaController::class, 'show'])->name('peserta.detail');
         Route::resource('peserta', PesertaController::class);
 
@@ -111,6 +112,7 @@ Route::middleware('auth')->group(function () {
         Route::get('kelulusan/smp/data', [KelulusanController::class, 'data_smp'])->name('kelulusan.smp.data');
         Route::post('kelulusan/smp/sahkan', [KelulusanController::class, 'sahkan_smp'])->name('kelulusan.smp.sahkan');
         Route::post('kelulusan/luluskan', [KelulusanController::class, 'setLulus'])->name('kelulusan.luluskan');
+        Route::post('kelulusan/{id}/tidak-lulus', [KelulusanController::class, 'setTidakLulus'])->name('kelulusan.tidak_lulus');
 
         // hasil seleksi
         Route::get('hasil-seleksi/sd', [HasilSeleksiController::class, 'hasil_seleksi_sd'])->name('hasil-seleksi.sd');
@@ -119,6 +121,15 @@ Route::middleware('auth')->group(function () {
         Route::get('hasil-seleksi/smp', [HasilSeleksiController::class, 'hasil_seleksi_smp'])->name('hasil-seleksi.smp');
         Route::get('hasil-seleksi/smp/export/excel', [HasilSeleksiController::class, 'exportExcel_smp'])->name('hasil-seleksi.smp.export.excel');
         Route::get('hasil-seleksi/smp/export/pdf', [HasilSeleksiController::class, 'exportPdf_smp'])->name('hasil-seleksi.smp.export.pdf');
+
+        // pengguna (Specific routes must come before resource)
+        Route::middleware('role:admin_dinas')->group(function () {
+            Route::get('pengguna/administrator', [UserController::class, 'administrator'])->name('pengguna.administrator');
+            Route::get('pengguna/peserta', [UserController::class, 'peserta'])->name('pengguna.peserta');
+        });
+
+        Route::get('pengguna/operator', [UserController::class, 'operator'])->name('pengguna.operator');
+        Route::resource('pengguna', UserController::class)->except(['index']);
     });
 
     // Route berkas bisa diakses oleh admin dan peserta
@@ -153,9 +164,6 @@ Route::middleware('auth')->group(function () {
 
         // resource periode
         Route::resource('periode', PeriodeDaftarController::class);
-
-        // pengguna
-        Route::resource('pengguna', UserController::class);
 
         // Post
         Route::resource('posts', PostController::class);

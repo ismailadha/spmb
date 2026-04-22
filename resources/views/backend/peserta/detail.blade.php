@@ -1,5 +1,28 @@
 @extends('backend.main')
 
+@section('scripts')
+    <script>
+
+
+        function confirmTidakLulus() {
+            Swal.fire({
+                title: 'Batalkan Kelulusan',
+                text: "Apakah Anda yakin ingin membatalkan kelulusan ini? Status akan kembali menjadi Tidak Lulus.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f1416c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Batalkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-tidak-lulus').submit();
+                }
+            });
+        }
+    </script>
+@endsection
+
 @section('content')
     <div class="mb-5">
         @if (session('info'))
@@ -48,7 +71,7 @@
                                         <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan Berkas</span>
                                     @elseif ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima')
                                         <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #e8fff3; color: #50cd89;">{{ ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima') ? 'LULUS / DITERIMA' : 'TIDAK LULUS' }}</span>
-                                    @elseif ($pendaftaran->status == 'tidak_lulus' || $pendaftaran->status == 'ditolak')
+                                    @elseif ($pendaftaran->status == 'tidak_lulus')
                                         <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">TIDAK LULUS</span>
                                     @endif
                                 </div>
@@ -68,6 +91,23 @@
                                 <!--end::Info-->
                             </div>
                             <!--end::User-->
+
+                            <!--begin::Actions-->
+                            <div class="d-flex my-4">
+                                @if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah')
+                                    @if (in_array($pendaftaran->status, ['submit', 'perbaikan', 'tidak_lulus']))
+                                        <a href="{{ route('peserta.verifikasi', $pendaftaran->id) }}" class="btn btn-sm btn-primary me-2">Verifikasi Sekarang</a>
+                                    @endif
+
+                                    @if (auth()->user()->role == 'admin_dinas' && ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima'))
+                                        <form action="{{ route('kelulusan.tidak_lulus', $pendaftaran->id) }}" method="POST" class="d-inline" id="form-tidak-lulus">
+                                            @csrf
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmTidakLulus()">Batalkan Kelulusan</button>
+                                        </form>
+                                    @endif
+                                @endif
+                            </div>
+                            <!--end::Actions-->
                         </div>
                         <!--end::Title-->
                         <!--begin::Stats-->

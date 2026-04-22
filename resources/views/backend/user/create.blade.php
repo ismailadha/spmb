@@ -17,18 +17,23 @@
         <form action="{{ route('pengguna.store') }}" method="POST">
             @csrf
             
+            @if(auth()->user()->role == 'admin_dinas')
             <div class="fv-row mb-7">
                 <label class="required fs-6 fw-bold mb-2">Role</label>
                 <select class="form-select form-select-solid @error('role') is-invalid @enderror" name="role" required>
                     <option value="" disabled selected>Pilih Role</option>
                     <option value="admin_dinas" {{ old('role') == 'admin_dinas' ? 'selected' : '' }}>Admin Dinas</option>
                     <option value="admin_sekolah" {{ old('role') == 'admin_sekolah' ? 'selected' : '' }}>Admin Sekolah</option>
+                    <option value="operator_sekolah" {{ old('role') == 'operator_sekolah' ? 'selected' : '' }}>Operator Sekolah</option>
                     <option value="peserta" {{ old('role') == 'peserta' ? 'selected' : '' }}>Peserta</option>
                 </select>
                 @error('role')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            @else
+                <input type="hidden" name="role" value="operator_sekolah">
+            @endif
 
             <div class="fv-row mb-7">
                 <label class="required fs-6 fw-bold mb-2">Nama Lengkap</label>
@@ -55,12 +60,12 @@
                 <div class="text-muted fs-7 mt-1">NIK ini akan otomatis digunakan sebagai username untuk login Peserta.</div>
             </div>
 
-            <div class="fv-row mb-7 d-none" id="sekolah_container">
+            <div class="fv-row mb-7 {{ auth()->user()->role == 'admin_dinas' ? 'd-none' : '' }}" id="sekolah_container">
                 <label class="required fs-6 fw-bold mb-2">Sekolah</label>
-                <select class="form-select form-select-solid @error('sekolah_id') is-invalid @enderror" name="sekolah_id" id="sekolah_input">
+                <select class="form-select form-select-solid @error('sekolah_id') is-invalid @enderror" name="sekolah_id" id="sekolah_input" {{ auth()->user()->role == 'admin_sekolah' ? 'required' : '' }}>
                     <option value="" disabled selected>Pilih Sekolah</option>
                     @foreach ($sekolah as $s)
-                        <option value="{{ $s->id }}" {{ old('sekolah_id') == $s->id ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
+                        <option value="{{ $s->id }}" {{ (old('sekolah_id') == $s->id || (auth()->user()->role == 'admin_sekolah' && auth()->user()->sekolah_id == $s->id)) ? 'selected' : '' }}>{{ $s->nama_sekolah }}</option>
                     @endforeach
                 </select>
                 @error('sekolah_id')
@@ -88,7 +93,7 @@
             <div class="separator mb-8"></div>
 
             <div class="d-flex justify-content-end">
-                <a href="{{ route('pengguna.index') }}" class="btn btn-light me-3">Batal</a>
+                <a href="{{ auth()->user()->role == 'admin_sekolah' ? route('pengguna.operator') : route('pengguna.administrator') }}" class="btn btn-light me-3">Batal</a>
                 <button type="submit" class="btn btn-primary">
                     <span class="indicator-label">Simpan Pengguna</span>
                 </button>
@@ -118,7 +123,7 @@
                 usernameInput.prop('required', false);
                 nikInput.prop('required', true);
                 sekolahInput.prop('required', false);
-            } else if (role === 'admin_sekolah') {
+            } else if (role === 'admin_sekolah' || role === 'operator_sekolah') {
                 nikContainer.addClass('d-none');
                 usernameContainer.removeClass('d-none');
                 sekolahContainer.removeClass('d-none');

@@ -142,7 +142,7 @@ class KelulusanController extends Controller
                 $existingCount = DB::table('pendaftaran')
                     ->where('sekolah_diterima_id', $sekolahId)
                     ->where('jalur_id', $jalurId)
-                    ->where('status', 'Lulus')
+                    ->where('status', 'lulus')
                     ->count();
 
                 $remainingQuota = max(0, $quota - $existingCount);
@@ -303,7 +303,7 @@ class KelulusanController extends Controller
                 $existingCount = DB::table('pendaftaran')
                     ->where('sekolah_diterima_id', $sekolahId)
                     ->where('jalur_id', $jalurId)
-                    ->where('status', 'Lulus')
+                    ->where('status', 'lulus')
                     ->count();
 
                 $remainingQuota = max(0, $quota - $existingCount);
@@ -378,7 +378,7 @@ class KelulusanController extends Controller
                 $existingCount = DB::table('pendaftaran')
                     ->where('sekolah_diterima_id', $sekolahId)
                     ->where('jalur_id', $jalurId)
-                    ->where('status', 'Lulus')
+                    ->where('status', 'lulus')
                     ->count();
 
                 $available = $quota - $existingCount;
@@ -404,7 +404,7 @@ class KelulusanController extends Controller
                 DB::table('pendaftaran')
                     ->where('id', $id)
                     ->update([
-                        'status' => 'Lulus',
+                        'status' => 'lulus',
                         'sekolah_diterima_id' => $sekolahId,
                         'updated_at' => now(),
                     ]);
@@ -413,7 +413,7 @@ class KelulusanController extends Controller
                 DB::table('hasil_seleksi')->updateOrInsert(
                     ['pendaftaran_id' => $id],
                     [
-                        'status' => 'Lulus',
+                        'status' => 'lulus',
                         'keterangan' => "Selamat, Anda diterima di pilihan $pilihan.",
                     ]
                 );
@@ -432,6 +432,46 @@ class KelulusanController extends Controller
                 'success' => false,
                 'message' => 'Gagal meluluskan peserta: '.$e->getMessage(),
             ], 500);
+        }
+    }
+
+    /**
+     * Set graduation status to 'Tidak Lulus'.
+     */
+    public function setTidakLulus($id)
+    {
+        if (auth()->user()->role != 'admin_dinas') {
+            return redirect()->back()->with('error', 'Hanya Admin Dinas yang dapat membatalkan kelulusan.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Update status pendaftaran
+            DB::table('pendaftaran')
+                ->where('id', $id)
+                ->update([
+                    'status' => 'tidak_lulus',
+                    'sekolah_diterima_id' => null,
+                    'updated_at' => now(),
+                ]);
+
+            // 2. Insert or Update HasilSeleksi
+            DB::table('hasil_seleksi')->updateOrInsert(
+                ['pendaftaran_id' => $id],
+                [
+                    'status' => 'tidak_lulus',
+                    'keterangan' => 'Mohon maaf, Anda belum berhasil lulus pada seleksi ini.',
+                ]
+            );
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Status kelulusan berhasil dibatalkan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Gagal memproses: '.$e->getMessage());
         }
     }
 }

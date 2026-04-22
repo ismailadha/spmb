@@ -72,6 +72,9 @@ class PesertaController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('nomor_pendaftaran', function ($row) {
+                    return '<a href="'.route('peserta.detail', $row->pendaftaran_id).'" class="text-dark fw-bolder text-hover-primary">'.$row->nomor_pendaftaran.'</a>';
+                })
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'verifikasi') {
                         return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
@@ -83,6 +86,8 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>';
                     } elseif ($row->status == 'draft') {
                         return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
+                    } elseif ($row->status == 'tidak_lulus' || $row->status == 'ditolak') {
+                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
                     } else {
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
@@ -96,18 +101,19 @@ class PesertaController extends Controller
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="'.route('peserta.verifikasi', $row->id).'">Verifikasi</a></li>
                                 <li><a class="dropdown-item" href="'.route('peserta.edit', $row->id).'">Edit</a></li>
+                                '.(! in_array($row->status, ['lulus', 'diterima']) ? '
                                 <li>
                                     <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" style="margin: 0;">
                                         '.csrf_field().'
                                         '.method_field('DELETE').'
                                         <button type="button" class="dropdown-item text-danger btn-delete" data-id="'.$row->id.'">Delete</button>
                                     </form>
-                                </li>
+                                </li>' : '').'
                             </ul>
                         </div>
                     ';
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['status', 'action', 'nomor_pendaftaran'])
                 ->make(true);
         }
 
@@ -176,6 +182,9 @@ class PesertaController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('nomor_pendaftaran', function ($row) {
+                    return '<a href="'.route('peserta.detail', $row->pendaftaran_id).'" class="text-hover-primary" target="_blank">'.$row->nomor_pendaftaran.'</a>';
+                })
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'verifikasi') {
                         return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
@@ -187,6 +196,8 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>';
                     } elseif ($row->status == 'draft') {
                         return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
+                    } elseif ($row->status == 'tidak_lulus' || $row->status == 'ditolak') {
+                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
                     } else {
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
@@ -194,21 +205,22 @@ class PesertaController extends Controller
                 ->addColumn('action', function ($row) {
                     return '
                         <div class="btn-group" role="group">
-                            '.(in_array($row->status, ['submit', 'verifikasi', 'perbaikan']) ? '
+                            '.(in_array($row->status, ['submit', 'verifikasi', 'perbaikan', 'tidak_lulus']) ? '
                             <a href="'.route('peserta.verifikasi', $row->id).'" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Verifikasi">
                                 <i class="bi bi-check-circle fs-3"></i>
                             </a>' : '').'
+                            '.(! in_array($row->status, ['lulus', 'diterima']) ? '
                             <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" class="d-inline">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
                                 <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm btn-delete" data-id="'.$row->id.'" title="Hapus">
                                     <i class="bi bi-trash fs-3"></i>
                                 </button>
-                            </form>
+                            </form>' : '').'
                         </div>
                     ';
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['status', 'action', 'nomor_pendaftaran'])
                 ->make(true);
         }
 
@@ -354,6 +366,9 @@ class PesertaController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('nomor_pendaftaran', function ($row) {
+                    return '<a href="'.route('peserta.detail', $row->pendaftaran_id).'" class="text-hover-primary" target="_blank">'.$row->nomor_pendaftaran.'</a>';
+                })
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'verifikasi') {
                         return '<span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>';
@@ -365,6 +380,8 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>';
                     } elseif ($row->status == 'draft') {
                         return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
+                    } elseif ($row->status == 'tidak_lulus' || $row->status == 'ditolak') {
+                        return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
                     } else {
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
@@ -372,21 +389,22 @@ class PesertaController extends Controller
                 ->addColumn('action', function ($row) {
                     return '
                         <div class="btn-group" role="group">
-                            '.(in_array($row->status, ['submit', 'verifikasi', 'perbaikan']) ? '
+                            '.(in_array($row->status, ['submit', 'verifikasi', 'perbaikan', 'tidak_lulus']) ? '
                             <a href="'.route('peserta.verifikasi', $row->id).'" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Verifikasi">
                                 <i class="bi bi-check-circle fs-3"></i>
                             </a>' : '').'
+                            '.(! in_array($row->status, ['lulus', 'diterima']) ? '
                             <form action="'.route('peserta.destroy', $row->id).'" method="POST" id="delete-form-'.$row->id.'" class="d-inline">
                                 '.csrf_field().'
                                 '.method_field('DELETE').'
                                 <button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm btn-delete" data-id="'.$row->id.'" title="Hapus">
                                     <i class="bi bi-trash fs-3"></i>
                                 </button>
-                            </form>
+                            </form>' : '').'
                         </div>
                     ';
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['status', 'action', 'nomor_pendaftaran'])
                 ->make(true);
         }
 
@@ -505,8 +523,9 @@ class PesertaController extends Controller
             ->leftJoin('orang_tua_wali', 'orang_tua_wali.peserta_id', '=', 'peserta.id')
             ->where('pendaftaran.id', $id)
             ->select(
-                'pendaftaran.*',
                 'peserta.*',
+                'pendaftaran.*',
+                'pendaftaran.id as id',
                 'provinsi.nama_provinsi',
                 'kabupaten.nama_kabupaten',
                 'kecamatan.nama_kecamatan',

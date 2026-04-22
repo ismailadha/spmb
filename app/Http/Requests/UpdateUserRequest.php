@@ -42,8 +42,8 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users', 'username')->ignore($userId),
             ],
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|string|in:admin_dinas,admin_sekolah,peserta',
-            'sekolah_id' => 'required_if:role,admin_sekolah|nullable|exists:sekolah,id',
+            'role' => 'required|string|in:admin_dinas,admin_sekolah,operator_sekolah,peserta',
+            'sekolah_id' => 'required_if:role,admin_sekolah,operator_sekolah|nullable|exists:sekolah,id',
         ];
     }
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\HasilSeleksiExport;
 use App\Models\JalurDaftar;
 use App\Models\Pendaftaran;
 use App\Models\Sekolah;
-use App\Exports\HasilSeleksiExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,7 +71,7 @@ class HasilSeleksiController extends Controller
             ->get();
 
         $pdf = Pdf::loadView('backend.hasil_seleksi.export_pdf', compact('data', 'jenjang', 'sekolah_filter', 'jalur_filter'));
-        
+
         return $pdf->download('hasil_seleksi_sd_'.date('YmdHis').'.pdf');
     }
 
@@ -113,13 +113,13 @@ class HasilSeleksiController extends Controller
                 ->addColumn('action', function ($row) {
                     return '
                         <div class="d-flex justify-content-end">
-                            <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail">
+                            <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail" target="_blank">
                                 <i class="bi bi-eye fs-3"></i>
                             </a>
-                            <a href="#" class="btn btn-icon btn-light-danger btn-sm me-1" title="Download">
+                            <a href="'.route('hasil-seleksi.download', $row->id).'" target="_blank" class="btn btn-icon btn-light-danger btn-sm me-1" title="Download Kartu Lulus">
                                 <i class="bi bi-file-earmark-pdf fs-3"></i>
                             </a>
-                            <a href="#" class="btn btn-icon btn-light-dark btn-sm me-1" title="Cetak">
+                            <a href="'.route('hasil-seleksi.cetak', $row->id).'" target="_blank" class="btn btn-icon btn-light-dark btn-sm me-1" title="Cetak Kartu Lulus">
                                 <i class="bi bi-printer fs-3"></i>
                             </a>
                         </div>
@@ -197,7 +197,7 @@ class HasilSeleksiController extends Controller
             ->get();
 
         $pdf = Pdf::loadView('backend.hasil_seleksi.export_pdf', compact('data', 'jenjang', 'sekolah_filter', 'jalur_filter'));
-        
+
         return $pdf->download('hasil_seleksi_smp_'.date('YmdHis').'.pdf');
     }
 
@@ -242,10 +242,10 @@ class HasilSeleksiController extends Controller
                             <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail">
                                 <i class="bi bi-eye fs-3"></i>
                             </a>
-                            <a href="#" class="btn btn-icon btn-light-danger btn-sm me-1" title="Download">
+                            <a href="'.route('hasil-seleksi.download', $row->id).'" target="_blank" class="btn btn-icon btn-light-danger btn-sm me-1" title="Download Kartu Lulus">
                                 <i class="bi bi-file-earmark-pdf fs-3"></i>
                             </a>
-                            <a href="#" class="btn btn-icon btn-light-dark btn-sm me-1" title="Cetak">
+                            <a href="'.route('hasil-seleksi.cetak', $row->id).'" target="_blank" class="btn btn-icon btn-light-dark btn-sm me-1" title="Cetak Kartu Lulus">
                                 <i class="bi bi-printer fs-3"></i>
                             </a>
                         </div>

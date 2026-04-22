@@ -1,8 +1,14 @@
 @extends('backend.main')
 
-@section('peserta-menu-active')
+@if($peserta->pendaftaran->jenjang == 'SD')
+@section('peserta-sd-menu-active')
     active
 @endsection
+@else
+@section('peserta-smp-menu-active')
+    active
+@endsection
+@endif
 
 @section('peserta-menu-open')
     show
@@ -20,13 +26,14 @@
                 <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Verifikasi Calon Peserta</h1>
             </div>
             <div class="d-flex align-items-center py-1">
-                <a href="{{ route('peserta.sd') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
-                <button class="btn btn-sm btn-danger me-3">Tolak Pendaftaran</button>
+                <a href="{{ $peserta->pendaftaran->jenjang == 'SD' ? route('peserta.sd') : route('peserta.smp') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
+
                 @if($peserta->pendaftaran)
                 <button type="button" class="btn btn-sm btn-warning me-3" data-bs-toggle="modal" data-bs-target="#modal_perbaikan">Minta Perbaikan</button>
                 <form id="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}" action="{{ route('peserta.verifikasi.setuju', $peserta->pendaftaran->id) }}" method="POST">
                     @csrf
                 </form>
+
                 <button type="button" class="btn btn-sm btn-primary" onclick="confirmSetuju({{ $peserta->pendaftaran->id }})">Setujui & Verifikasi</button>
                 @endif
             </div>
@@ -419,6 +426,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
+
+
     function confirmSetuju(id) {
         Swal.fire({
             title: 'Konfirmasi Verifikasi',

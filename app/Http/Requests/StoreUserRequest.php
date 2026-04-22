@@ -27,8 +27,8 @@ class StoreUserRequest extends FormRequest
             'nik' => 'required_if:role,peserta|nullable|string|size:16|unique:users,nik',
             'username' => 'required_unless:role,peserta|nullable|string|max:255|unique:users,username',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin_dinas,admin_sekolah,peserta',
-            'sekolah_id' => 'required_if:role,admin_sekolah|nullable|exists:sekolah,id',
+            'role' => 'required|string|in:admin_dinas,admin_sekolah,operator_sekolah,peserta',
+            'sekolah_id' => 'required_if:role,admin_sekolah,operator_sekolah|nullable|exists:sekolah,id',
         ];
     }
 

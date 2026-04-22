@@ -18,8 +18,26 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $role_filter = $request->get('role');
+
+        if (! $role_filter && ! $request->ajax()) {
+            return redirect()->route('pengguna.administrator');
+        }
+
         if ($request->ajax()) {
-            $data = User::select('*');
+            $data = User::query();
+
+            if ($role_filter === 'administrator') {
+                $data->whereIn('role', ['admin_dinas', 'admin_sekolah']);
+            } elseif ($role_filter === 'operator') {
+                $data->where('role', 'operator_sekolah');
+            } elseif ($role_filter === 'peserta') {
+                $data->where('role', 'peserta');
+            }
+
+            if (auth()->user()->role === 'admin_sekolah') {
+                $data->where('sekolah_id', auth()->user()->sekolah_id);
+            }
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -59,6 +77,10 @@ class UserController extends Controller
                             $class = 'badge-light-warning';
                             $text = 'Admin Sekolah';
                             break;
+                        case 'operator_sekolah':
+                            $class = 'badge-light-info';
+                            $text = 'Operator Sekolah';
+                            break;
                         case 'peserta':
                             $class = 'badge-light-success';
                             $text = 'Peserta';
@@ -75,7 +97,37 @@ class UserController extends Controller
                 ->make(true);
         }
 
-        return view('backend.user.index');
+        return view('backend.user.index', compact('role_filter'));
+    }
+
+    /**
+     * Display a listing of administrator users.
+     */
+    public function administrator(Request $request)
+    {
+        $request->merge(['role' => 'administrator']);
+
+        return $this->index($request);
+    }
+
+    /**
+     * Display a listing of peserta users.
+     */
+    public function peserta(Request $request)
+    {
+        $request->merge(['role' => 'peserta']);
+
+        return $this->index($request);
+    }
+
+    /**
+     * Display a listing of operator sekolah users.
+     */
+    public function operator(Request $request)
+    {
+        $request->merge(['role' => 'operator']);
+
+        return $this->index($request);
     }
 
     /**
@@ -83,7 +135,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $sekolah = Sekolah::orderBy('nama_sekolah')->get();
+        $sekolah = auth()->user()->role === 'admin_sekolah'
+            ? Sekolah::where('id', auth()->user()->sekolah_id)->get()
+            : Sekolah::orderBy('nama_sekolah')->get();
 
         return view('backend.user.create', compact('sekolah'));
     }
@@ -93,20 +147,28 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $role = $request->role;
+        $role = auth()->user()->role === 'admin_sekolah' ? 'operator_sekolah' : $request->role;
         $username = $role === 'peserta' ? $request->nik : $request->username;
         $nik = $role === 'peserta' ? $request->nik : null;
+        $sekolah_id = auth()->user()->role === 'admin_sekolah' ? auth()->user()->sekolah_id : $request->sekolah_id;
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'nik' => $nik,
             'username' => $username,
             'password' => Hash::make($request->password),
             'role' => $role,
-            'sekolah_id' => $role === 'admin_sekolah' ? $request->sekolah_id : null,
+            'sekolah_id' => in_array($role, ['admin_sekolah', 'operator_sekolah']) ? $sekolah_id : null,
         ]);
 
-        return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil ditambahkan.');
+        $redirectRoute = 'pengguna.peserta';
+        if (in_array($role, ['admin_dinas', 'admin_sekolah'])) {
+            $redirectRoute = 'pengguna.administrator';
+        } elseif ($role === 'operator_sekolah') {
+            $redirectRoute = 'pengguna.operator';
+        }
+
+        return redirect()->route($redirectRoute)->with('success', 'Data pengguna berhasil ditambahkan.');
     }
 
     /**
@@ -122,7 +184,13 @@ class UserController extends Controller
      */
     public function edit(User $pengguna)
     {
-        $sekolah = Sekolah::orderBy('nama_sekolah')->get();
+        if (auth()->user()->role === 'admin_sekolah' && ($pengguna->role !== 'operator_sekolah' || $pengguna->sekolah_id !== auth()->user()->sekolah_id)) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $sekolah = auth()->user()->role === 'admin_sekolah'
+            ? Sekolah::where('id', auth()->user()->sekolah_id)->get()
+            : Sekolah::orderBy('nama_sekolah')->get();
 
         return view('backend.user.edit', [
             'user' => $pengguna,
@@ -135,16 +203,21 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $pengguna)
     {
-        $role = $request->role;
+        if (auth()->user()->role === 'admin_sekolah' && ($pengguna->role !== 'operator_sekolah' || $pengguna->sekolah_id !== auth()->user()->sekolah_id)) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $role = auth()->user()->role === 'admin_sekolah' ? 'operator_sekolah' : $request->role;
         $username = $role === 'peserta' ? $request->nik : $request->username;
         $nik = $request->nik;
+        $sekolah_id = auth()->user()->role === 'admin_sekolah' ? auth()->user()->sekolah_id : $request->sekolah_id;
 
         $data = [
             'name' => $request->name,
             'nik' => $nik,
             'username' => $username,
             'role' => $role,
-            'sekolah_id' => $role === 'admin_sekolah' ? $request->sekolah_id : null,
+            'sekolah_id' => in_array($role, ['admin_sekolah', 'operator_sekolah']) ? $sekolah_id : null,
         ];
 
         if ($request->filled('password')) {
@@ -153,7 +226,14 @@ class UserController extends Controller
 
         $pengguna->update($data);
 
-        return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil diperbarui.');
+        $redirectRoute = 'pengguna.peserta';
+        if (in_array($role, ['admin_dinas', 'admin_sekolah'])) {
+            $redirectRoute = 'pengguna.administrator';
+        } elseif ($role === 'operator_sekolah') {
+            $redirectRoute = 'pengguna.operator';
+        }
+
+        return redirect()->route($redirectRoute)->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
     /**
@@ -161,6 +241,10 @@ class UserController extends Controller
      */
     public function destroy(User $pengguna)
     {
+        if (auth()->user()->role === 'admin_sekolah' && ($pengguna->role !== 'operator_sekolah' || $pengguna->sekolah_id !== auth()->user()->sekolah_id)) {
+            abort(403, 'Akses ditolak.');
+        }
+
         // Hapus direktori berkas jika user adalah peserta
         if ($pengguna->role === 'peserta' && $pengguna->peserta) {
             $pendaftaran = $pengguna->peserta->pendaftaran;
@@ -172,8 +256,16 @@ class UserController extends Controller
             }
         }
 
+        $role = $pengguna->role;
         $pengguna->delete();
 
-        return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil dihapus.');
+        $redirectRoute = 'pengguna.peserta';
+        if (in_array($role, ['admin_dinas', 'admin_sekolah'])) {
+            $redirectRoute = 'pengguna.administrator';
+        } elseif ($role === 'operator_sekolah') {
+            $redirectRoute = 'pengguna.operator';
+        }
+
+        return redirect()->route($redirectRoute)->with('success', 'Data pengguna berhasil dihapus.');
     }
 }

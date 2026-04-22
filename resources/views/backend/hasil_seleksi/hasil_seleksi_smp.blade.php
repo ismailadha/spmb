@@ -24,9 +24,9 @@
                     <button type="button" id="btn_export_excel" class="btn btn-sm btn-success d-flex align-items-center">
                         <i class="fas fa-file-excel fs-4 me-2"></i> Excel
                     </button>
-                    <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
+                    {{-- <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
                         <i class="fas fa-file-pdf fs-4 me-2"></i> PDF
-                    </button>
+                    </button> --}}
                 </div>
                 <!--end::Export Buttons-->
             </div>

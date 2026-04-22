@@ -96,7 +96,13 @@ class VerifikasiController extends Controller
         return redirect()->back()->with('success', 'Permintaan perbaikan pendaftaran berhasil dikirim ke pendaftar.');
     }
 
-    public function tolak_verifikasi($id) {}
+    public function tolak_verifikasi($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->update(['status' => 'tidak_lulus']);
+
+        return redirect()->back()->with('success', 'Pendaftaran telah ditolak.');
+    }
 
     /**
      * Helper to calculate score based on distance.

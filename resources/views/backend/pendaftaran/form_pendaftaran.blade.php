@@ -474,7 +474,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6" id="jarak_sekolah_2_container">
-                                <label for="jarak_sekolah_2" class="form-label">Jarak Sekolah 2</label>
+                                <label for="jarak_sekolah_2" class="form-label">Jarak Sekolah 2 <span class="text-muted">(Disarankan pilih jarak terdekat dari tempat tinggal)</span></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control bg-light" id="jarak_sekolah_2" name="jarak_sekolah_2" value="{{ $data->jarak_sekolah_2 ?? '' }}" readonly>
                                     <span class="input-group-text">km</span>
@@ -712,7 +712,6 @@
                         <div class="d-flex justify-content-between mt-10">
                             <button type="button" class="btn btn-light btn-prev" data-prev="step4">Sebelumnya</button>
                             <div class="d-flex gap-3">
-                                <button type="button" class="btn btn-info shadow-sm" id="btnPreview">Preview</button>
                                 <div class="separator separator-vertical h-40px mx-2"></div>
                                 @if(!isset($isPerbaikan) || !$isPerbaikan)
                                     <button type="submit" name="status" value="draft" class="btn btn-primary shadow-sm">Simpan Sebagai Draft</button>
@@ -723,88 +722,6 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-    <!--end::Card-->
-
-    <!-- Preview Modal -->
-    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Preview Kartu Pendaftaran</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-10">
-                    <div class="border border-secondary p-8 rounded" id="preview-card-content" style="background-color: #fff;">
-                        <div class="d-flex align-items-center mb-8 pb-5 border-bottom border-secondary">
-                            <img src="{{ asset('images/spmb-logo.png') }}" alt="Logo" class="h-60px me-6" />
-                            <div>
-                                <h3 class="mb-0 fw-bolder">KARTU PENDAFTARAN PESERTA DIDIK BARU</h3>
-                                <h4 class="text-muted fw-bold">Periode Tahun Ajaran {{ $data->tahun_ajaran }}</h4>
-                                <p class="mb-0">Dinas Pendidikan dan Kebudayaan Kota Lhokseumawe</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-8">
-                                <table class="table table-borderless gy-2">
-                                    <tr>
-                                        <td class="fw-bold w-200px">Jalur Pendaftaran</td>
-                                        <td class="fw-bold">: <span id="pre-jalur"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nama Lengkap</td>
-                                        <td>: <span id="pre-nama"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>NIK</td>
-                                        <td>: <span id="pre-nik"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>NISN</td>
-                                        <td>: <span id="pre-nisn"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tempat & Tanggal Lahir</td>
-                                        <td>: <span id="pre-ttl"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jenis Kelamin</td>
-                                        <td>: <span id="pre-jk"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sekolah Pilihan 1</td>
-                                        <td class="fw-bold">: <span id="pre-sekolah1"></span> <small class="text-muted fw-normal">(<span id="pre-jarak1"></span>)</small></td>
-                                    </tr>
-                                    <tr id="pre-sekolah2-row">
-                                        <td>Sekolah Pilihan 2</td>
-                                        <td class="fw-bold">: <span id="pre-sekolah2"></span> <small class="text-muted fw-normal">(<span id="pre-jarak2"></span>)</small></td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <div class="border border-dashed border-secondary w-150px h-200px mx-auto d-flex align-items-center justify-content-center mb-3">
-                                    <span class="text-muted">Pas Foto 3x4</span>
-                                </div>
-                                <div class="p-4 bg-light rounded text-start">
-                                    <p class="small mb-1 fw-bold text-center border-bottom pb-1">TANDA TANGAN PESERTA</p>
-                                    <div class="h-60px"></div>
-                                    <p class="small mb-0 text-center">( ............................................ )</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-10 pt-5 border-top border-gray-300">
-                            <p class="small text-muted"><em>* Kartu ini adalah bentuk preview sementara. Data yang sah adalah data yang telah tersimpan di sistem.</em></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" onclick="window.print()">Cetak</button>
-                </div>
-            </div>
         </div>
     </div>
     <!--end::Card-->

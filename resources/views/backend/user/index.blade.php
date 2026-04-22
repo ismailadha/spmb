@@ -1,12 +1,26 @@
 @extends('backend.main')
 
-@section('pengguna-menu-active')
-    active
-@endsection
-
 @section('pengguna-menu-open')
     show
 @endsection
+
+@if($role_filter === 'administrator')
+    @section('pengguna-administrator-menu-active')
+        active
+    @endsection
+@elseif($role_filter === 'operator')
+    @section('pengguna-operator-menu-active')
+        active
+    @endsection
+@elseif($role_filter === 'peserta')
+    @section('pengguna-peserta-menu-active')
+        active
+    @endsection
+@else
+    @section('pengguna-all-menu-active')
+        active
+    @endsection
+@endif
 
 @section('content')
 <!--begin::Card-->
@@ -14,7 +28,16 @@
     <div class="card-header border-0 pt-6">
         <div class="card-title">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bolder fs-3 mb-1">Daftar Pengguna</span>
+                <span class="card-label fw-bolder fs-3 mb-1">
+                    Daftar Pengguna
+                    @if($role_filter === 'administrator')
+                        (Admin)
+                    @elseif($role_filter === 'operator')
+                        (Operator Sekolah)
+                    @elseif($role_filter === 'peserta')
+                        (Peserta)
+                    @endif
+                </span>
                 <span class="text-muted mt-1 fw-bold fs-7">Kelola data pengguna sistem</span>
             </h3>
         </div>
@@ -64,7 +87,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         scrollX: true,
-        ajax: "{{ route('pengguna.index') }}",
+        ajax: "{{ request()->fullUrl() }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
