@@ -2,24 +2,121 @@
 
 @section('scripts')
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
 
         function confirmTidakLulus() {
+            var status = "{{ $pendaftaran->status }}";
+            var title = status === 'cadangan' ? 'Batalkan Status Cadangan' : 'Batalkan Kelulusan';
+            var text = status === 'cadangan' ? 'Apakah Anda yakin ingin membatalkan status cadangan ini?' : 'Apakah Anda yakin ingin membatalkan kelulusan ini?';
+
             Swal.fire({
-                title: 'Batalkan Kelulusan',
-                text: "Apakah Anda yakin ingin membatalkan kelulusan ini? Status akan kembali menjadi Tidak Lulus.",
+                title: title,
+                text: text + " Silakan berikan alasan pembatalan:",
                 icon: 'warning',
+                input: 'textarea',
+                inputPlaceholder: 'Tulis alasan di sini...',
+                inputAttributes: {
+                    'aria-label': 'Tulis alasan di sini'
+                },
                 showCancelButton: true,
                 confirmButtonColor: '#f1416c',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya, Batalkan!',
-                cancelButtonText: 'Batal'
+                cancelButtonText: 'Batal',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Anda harus mengisi alasan pembatalan!'
+                    }
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    document.getElementById('input-keterangan').value = result.value;
                     document.getElementById('form-tidak-lulus').submit();
                 }
             });
         }
+
+        // Handler untuk Radio & Dropdown di section penempatan
+        $(document).on('change', '#select_other_school', function() {
+            if ($(this).val()) {
+                $('input[name="target_sekolah"]').prop('checked', false);
+            }
+        });
+
+        $(document).on('click', 'input[name="target_sekolah"]', function() {
+            $('#select_other_school').val('').trigger('change');
+        });
+
+        $(document).on('click', '#btn_proses_luluskan', function() {
+            let selectedRadio = $('input[name="target_sekolah"]:checked').val();
+            let selectedOther = $('#select_other_school').val();
+            let finalSekolahId = selectedOther ? selectedOther : selectedRadio;
+
+            if (!finalSekolahId) {
+                Swal.fire('Error', 'Anda harus memilih salah satu sekolah!', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Konfirmasi Kelulusan',
+                text: "Apakah Anda yakin ingin meluluskan peserta ke sekolah terpilih?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Luluskan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('kelulusan.luluskan') }}",
+                        type: "POST",
+                        data: {
+                            pendaftaran_ids: ["{{ $pendaftaran->id }}"],
+                            sekolah_id: finalSekolahId
+                        },
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Mohon Tunggu',
+                                text: 'Sedang memproses kelulusan...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                }
+                            });
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    text: response.message,
+                                    icon: "success",
+                                    confirmButtonText: "Ok, mengerti!",
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    text: response.message,
+                                    icon: "error",
+                                    confirmButtonText: "Ok, mengerti!",
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem saat meluluskan.",
+                                icon: "error",
+                                confirmButtonText: "Ok, mengerti!",
+                            });
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @endsection
 
@@ -62,6 +159,9 @@
                                 <!--begin::Name-->
                                 <div class="d-flex align-items-center mb-2">
                                     <span class="text-gray-900 fs-2 fw-bolder me-1">{{ $pendaftaran->nama_lengkap }}</span>
+                                    @if($pendaftaran->kabupaten_luar)
+                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff5f8; color: #f1416c;">LUAR LHOKSEUMAWE</span>
+                                    @endif
                                     {{-- Jika status pendaftaran adalah submit, maka tampilkan badge --}}
                                     @if ($pendaftaran->status == 'submit')
                                         <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3">Proses Verifikasi</span>
@@ -70,7 +170,9 @@
                                     @elseif ($pendaftaran->status == 'perbaikan')
                                         <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan Berkas</span>
                                     @elseif ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima')
-                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #e8fff3; color: #50cd89;">{{ ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima') ? 'LULUS / DITERIMA' : 'TIDAK LULUS' }}</span>
+                                        <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #e8fff3; color: #50cd89;">LULUS / DITERIMA</span>
+                                    @elseif ($pendaftaran->status == 'cadangan')
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff8dd; color: #ffc700;">CADANGAN</span>
                                     @elseif ($pendaftaran->status == 'tidak_lulus')
                                         <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">TIDAK LULUS</span>
                                     @endif
@@ -82,7 +184,7 @@
                                         <i class="bi bi-person-badge fs-4 me-1"></i>NISN: {{ $pendaftaran->nisn }}
                                     </span>
                                     <span class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                        <i class="bi bi-geo-alt fs-4 me-1"></i>{{ $pendaftaran->nama_kecamatan }}, {{ $pendaftaran->nama_kabupaten }}
+                                        <i class="bi bi-geo-alt fs-4 me-1"></i>{{ $pendaftaran->nama_kecamatan }}, <span class="ms-1 {{ $pendaftaran->kabupaten_luar ? 'text-danger fw-bolder' : '' }}">{{ $pendaftaran->kabupaten_luar ?? $pendaftaran->nama_kabupaten }}</span>
                                     </span>
                                     <span class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                         <i class="bi bi-calendar-check fs-4 me-1"></i>Terdaftar: {{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->isoFormat('D MMMM YYYY') }}
@@ -99,12 +201,6 @@
                                         <a href="{{ route('peserta.verifikasi', $pendaftaran->id) }}" class="btn btn-sm btn-primary me-2">Verifikasi Sekarang</a>
                                     @endif
 
-                                    @if (auth()->user()->role == 'admin_dinas' && ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima'))
-                                        <form action="{{ route('kelulusan.tidak_lulus', $pendaftaran->id) }}" method="POST" class="d-inline" id="form-tidak-lulus">
-                                            @csrf
-                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmTidakLulus()">Batalkan Kelulusan</button>
-                                        </form>
-                                    @endif
                                 @endif
                             </div>
                             <!--end::Actions-->
@@ -193,18 +289,94 @@
         <!--end::Navbar-->
 
         <!--begin::Hasil Seleksi Section-->
-        @if ($pendaftaran->status == 'lulus' || $pendaftaran->sekolah_diterima)
+        @if (in_array($pendaftaran->status, ['lulus', 'diterima', 'cadangan']) || $pendaftaran->sekolah_diterima)
         <div class="card mb-5 mb-xl-10">
-            <div class="card-header border-0 cursor-pointer" role="button">
+            <div class="card-header border-0">
                 <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0 text-success"><i class="bi bi-patch-check-fill text-success fs-2 me-2"></i>Hasil Seleksi</h3>
+                    @if($pendaftaran->status == 'cadangan')
+                        <h3 class="fw-bolder m-0 text-warning"><i class="bi bi-clock-history text-warning fs-2 me-2"></i>Hasil Seleksi (Cadangan)</h3>
+                    @else
+                        <h3 class="fw-bolder m-0 text-success"><i class="bi bi-patch-check-fill text-success fs-2 me-2"></i>Hasil Seleksi</h3>
+                    @endif
                 </div>
+                @if (auth()->user()->role == 'admin_dinas')
+                <div class="card-toolbar">
+                    @if($pendaftaran->status == 'cadangan')
+                        <button type="button" class="btn btn-sm btn-primary fw-bold me-2" data-bs-toggle="collapse" data-bs-target="#section_penempatan">
+                            <i class="bi bi-check-circle fs-4 me-2"></i>Luluskan Peserta
+                        </button>
+                    @endif
+                    
+                    <form action="{{ route('kelulusan.tidak_lulus', $pendaftaran->id) }}" method="POST" class="d-inline" id="form-tidak-lulus">
+                        @csrf
+                        <input type="hidden" name="keterangan" id="input-keterangan">
+                        <button type="button" class="btn btn-sm btn-light-danger fw-bold" onclick="confirmTidakLulus()">
+                            <i class="bi bi-x-circle fs-4 me-2"></i>{{ $pendaftaran->status == 'cadangan' ? 'Batalkan Cadangan' : 'Batalkan Kelulusan' }}
+                        </button>
+                    </form>
+                </div>
+                @endif
             </div>
             <div class="card-body border-top p-9">
+                <!--begin::Manajemen Penempatan (Accordion Style)-->
+                @if($pendaftaran->status == 'cadangan' && auth()->user()->role == 'admin_dinas')
+                <div class="collapse mb-10" id="section_penempatan">
+                    <div class="card card-bordered bg-light-primary border-primary border-dashed">
+                        <div class="card-body p-6">
+                            <h5 class="fw-bolder mb-5 text-primary d-flex align-items-center">
+                                <i class="bi bi-gear-wide-connected fs-2 me-3 text-primary"></i>Manajemen Penempatan Kelulusan
+                            </h5>
+                            <div class="row g-9">
+                                <div class="col-md-6 border-end border-gray-300">
+                                    <label class="form-label fw-bolder mb-4">Pilihan Asli Peserta:</label>
+                                    <div class="form-check form-check-custom form-check-solid mb-4">
+                                        <input class="form-check-input h-20px w-20px" type="radio" name="target_sekolah" value="{{ $pendaftaran->sekolah_pilihan_1 }}" id="radio_p1" checked>
+                                        <label class="form-check-label text-gray-800 fw-bold" for="radio_p1">
+                                            Pilihan 1: {{ $pendaftaran->pilihan_1 }}
+                                        </label>
+                                    </div>
+                                    @if($pendaftaran->sekolah_pilihan_2)
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input h-20px w-20px" type="radio" name="target_sekolah" value="{{ $pendaftaran->sekolah_pilihan_2 }}" id="radio_p2">
+                                        <label class="form-check-label text-gray-800 fw-bold" for="radio_p2">
+                                            Pilihan 2: {{ $pendaftaran->pilihan_2 }}
+                                        </label>
+                                    </div>
+                                    @endif
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bolder mb-4">Penempatan Sekolah Lain (Opsi Dinas):</label>
+                                    <select id="select_other_school" class="form-select form-select-solid" data-control="select2" data-placeholder="Pilih Sekolah Lain">
+                                        <option value="">-- Pilih Sekolah Lain --</option>
+                                        @foreach($semuaSekolah as $kecamatan => $sekolahs)
+                                            <optgroup label="KECAMATAN {{ strtoupper($kecamatan) }}">
+                                                @foreach($sekolahs as $sekolah)
+                                                    <option value="{{ $sekolah->id }}">{{ $sekolah->nama_sekolah }}</option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    </select>
+                                    <div class="text-muted fs-8 mt-3 italic">* Memilih dari dropdown akan otomatis mengabaikan pilihan radio.</div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-6">
+                                <button type="button" class="btn btn-primary btn-sm px-6" id="btn_proses_luluskan">
+                                    <i class="bi bi-check-all fs-3 me-1"></i>Proses Kelulusan Sekarang
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                <!--end::Manajemen Penempatan-->
                 <div class="row mb-7">
                     <label class="col-lg-4 fw-bold text-muted">Status Akhir</label>
                     <div class="col-lg-8">
-                        <span class="badge badge-success fw-bolder fs-6 px-4 py-2">DITERIMA / LULUS</span>
+                        @if($pendaftaran->status == 'cadangan')
+                            <span class="badge badge-warning fw-bolder fs-6 px-4 py-2">CADANGAN</span>
+                        @else
+                            <span class="badge badge-success fw-bolder fs-6 px-4 py-2">DITERIMA / LULUS</span>
+                        @endif
                     </div>
                 </div>
                 <div class="row mb-7">
@@ -256,10 +428,10 @@
                         </div>
 
                         <div class="d-flex gap-3">
-                            <a href="#" class="btn btn-danger btn-sm">
+                            <a href="{{ route('pendaftaran.lulus.download', $pendaftaran->id) }}" class="btn btn-danger btn-sm" target="_blank">
                                 <i class="bi bi-file-earmark-pdf fs-4 me-2"></i>Download
                             </a>
-                            <a href="#" class="btn btn-secondary btn-sm">
+                            <a href="{{ route('pendaftaran.lulus.print', $pendaftaran->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                                 <i class="bi bi-printer fs-4 me-2"></i>Cetak
                             </a>
                         </div>
@@ -358,12 +530,12 @@
                                             <span class="text-dark fw-bolder d-block fs-6">{{ $pendaftaran->nama_provinsi }}</span>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="ps-0">
+                                    <tr class="{{ $pendaftaran->kabupaten_luar ? 'bg-light-danger' : '' }}">
+                                        <td class="ps-3">
                                             <span class="text-muted fw-bolder d-block fs-7">Kabupaten</span>
                                         </td>
-                                        <td class="pe-0">
-                                            <span class="text-dark fw-bolder d-block fs-6">{{ $pendaftaran->nama_kabupaten }}</span>
+                                        <td class="pe-3">
+                                            <span class="text-dark fw-bolder d-block fs-6">{{ $pendaftaran->kabupaten_luar ?? $pendaftaran->nama_kabupaten }}</span>
                                         </td>
                                     </tr>
                                     <tr>

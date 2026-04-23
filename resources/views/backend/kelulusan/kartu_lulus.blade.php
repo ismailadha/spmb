@@ -278,7 +278,7 @@
                         </div>
                     </td>
                     <td class="header-logo">
-                        <img src="{{ $logoSurat }}" alt="Logo">
+                        <img src="{{ $logoSurat }}" style="max-height: 120px; max-width: 120px;" alt="Logo">
                     </td>
                 </tr>
             </table>

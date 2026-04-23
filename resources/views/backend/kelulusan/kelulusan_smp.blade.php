@@ -22,6 +22,8 @@
             <div class="card-toolbar">
                 <div class="d-flex align-items-center flex-wrap gap-3">
                     <button id="bulk-luluskan" type="button" class="btn btn-sm btn-primary" disabled>Luluskan</button>
+                    <button id="bulk-cadangkan" type="button" class="btn btn-sm btn-warning ms-2" disabled>Jadikan Cadangan</button>
+                    <button id="btn-finalize" type="button" class="btn btn-sm btn-danger ms-2" style="display: none;">Finalisasi Hasil</button>
 
                     <div class="d-flex align-items-center">
                          <label for="filter_sekolah" class="me-2 fw-bold text-muted">Sekolah:</label>
@@ -87,6 +89,7 @@
                         <th class="min-w-100px text-center">Skor Jarak</th>
                         <th class="min-w-100px text-center">Skor Usia</th>
                         <th class="min-w-100px text-center">Total Skor</th>
+                        <th class="min-w-150px text-center">Aksi</th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
@@ -156,7 +159,8 @@ $(document).ready(function() {
             { data: 'status', name: 'status', className: 'text-center', visible: $('#filter_jalur').val() !== '', searchable: false },
             { data: 'skor_jarak', name: 'skor_jarak', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3'), searchable: false },
             { data: 'skor_usia', name: 'skor_usia', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3'), searchable: false },
-            { data: 'nilai_akhir', name: 'nilai_akhir', className: 'text-center', visible: $('#filter_jalur').val() !== '', searchable: false }
+            { data: 'nilai_akhir', name: 'nilai_akhir', className: 'text-center', visible: $('#filter_jalur').val() !== '', searchable: false },
+            { data: 'action', name: 'action', className: 'text-center', searchable: false }
         ],
         language: {
             "emptyTable": "Tidak ada data yang tersedia",
@@ -184,6 +188,15 @@ $(document).ready(function() {
             if (json && json.quota > 0) {
                 $('#quota_text').text('Daya Tampung: ' + json.quota);
                 $('#applicants_text').text('Sisa Kuota: ' + json.remaining_quota + ' / Total Pendaftar: ' + json.recordsFiltered);
+                
+                if (json.remaining_quota <= 0) {
+                    $('#quota_info_container').removeClass('bg-light-primary').addClass('bg-light-danger');
+                    $('#quota_text').removeClass('text-primary').addClass('text-danger').append(' <span class="badge badge-danger ms-2">KUOTA PENUH</span>');
+                } else {
+                    $('#quota_info_container').removeClass('bg-light-danger').addClass('bg-light-primary');
+                    $('#quota_text').removeClass('text-danger').addClass('text-primary');
+                }
+                
                 $('#quota_info_container').attr('style', 'display: flex !important;');
                 window.remainingQuota = json.remaining_quota;
             } else {
@@ -196,8 +209,16 @@ $(document).ready(function() {
             // Hide bulk button if no data
             if (json && json.recordsFiltered === 0) {
                 $('#bulk-luluskan').hide();
+                $('#bulk-cadangkan').hide();
+                $('#btn-finalize').hide();
             } else {
                 $('#bulk-luluskan').show();
+                $('#bulk-cadangkan').show();
+                if ($('#filter_jalur').val() !== '') {
+                    $('#btn-finalize').show();
+                } else {
+                    $('#btn-finalize').hide();
+                }
             }
         }
     });
@@ -217,6 +238,7 @@ $(document).ready(function() {
             $('#select_all').prop('disabled', false);
             $('.row-checkbox').prop('disabled', false);
             $('#bulk-luluskan').prop('disabled', selectedCount === 0);
+            $('#bulk-cadangkan').prop('disabled', selectedCount === 0);
         }
     }
 
@@ -284,6 +306,90 @@ $(document).ready(function() {
                         Swal.fire({
                             title: 'Mohon Tunggu',
                             text: 'Sedang memproses kelulusan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $('#bulk-cadangkan').on('click', function() {
+        var selectedIds = $('.row-checkbox:checked').map(function() {
+            return $(this).data('id');
+        }).get();
+
+        if (selectedIds.length === 0) {
+            return;
+        }
+
+        Swal.fire({
+            title: 'Jadikan cadangan peserta terpilih?',
+            text: 'Anda akan menjadikan ' + selectedIds.length + ' peserta sebagai cadangan.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ffc700',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Jadikan Cadangan!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: 'btn fw-bold btn-warning',
+                cancelButton: 'btn fw-bold btn-active-light-primary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var sekolahId = $('#filter_sekolah').val();
+                
+                $.ajax({
+                    url: "{{ route('kelulusan.cadangan') }}",
+                    type: "POST",
+                    data: {
+                        pendaftaran_ids: selectedIds,
+                        sekolah_id: sekolahId
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses cadangan...',
                             allowOutsideClick: false,
                             didOpen: () => {
                                 Swal.showLoading()
@@ -410,6 +516,187 @@ $(document).ready(function() {
                         Swal.fire({
                             title: 'Mohon Tunggu',
                             text: 'Sedang memproses kelulusan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Handle Cadangkan button click
+    $(document).on('click', '.btn-cadangkan', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+
+        Swal.fire({
+            title: 'Jadikan cadangan peserta ini?',
+            text: "Peserta akan masuk dalam daftar cadangan.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ffc700',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Jadikan Cadangan!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: "btn fw-bold btn-warning",
+                cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var sekolahId = $('#filter_sekolah').val();
+                
+                $.ajax({
+                    url: "{{ route('kelulusan.cadangan') }}",
+                    type: "POST",
+                    data: {
+                        pendaftaran_ids: [id],
+                        sekolah_id: sekolahId
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses cadangan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            }).then(() => {
+                                table.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, mengerti!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            text: xhr.responseJSON ? xhr.responseJSON.message : "Terjadi kesalahan sistem.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, mengerti!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary"
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Handle Finalize button click
+    $('#btn-finalize').on('click', function() {
+        var sekolahId = $('#filter_sekolah').val();
+        var jalurId = $('#filter_jalur').val();
+        var pilihanKe = $('#filter_pilihan').val();
+        var totalData = table.page.info().recordsTotal;
+
+        if (!sekolahId || !jalurId) {
+            Swal.fire({
+                text: "Silakan pilih Sekolah dan Jalur terlebih dahulu.",
+                icon: "warning",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, mengerti!",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-primary"
+                }
+            });
+            return;
+        }
+
+        var confirmText = 'Semua peserta yang masih berstatus "Terverifikasi" (sebanyak ' + totalData + ' orang) pada filter ini akan dinyatakan TIDAK LULUS. Tindakan ini tidak dapat dibatalkan secara massal.';
+        
+        if (window.remainingQuota > 0) {
+            confirmText = '<strong>PERHATIAN: Sisa kuota masih tersedia (' + window.remainingQuota + ' kursi).</strong><br><br>' + confirmText;
+        }
+
+        Swal.fire({
+            title: 'Finalisasi Hasil Seleksi?',
+            html: confirmText,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f1416c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Finalisasi Sekarang!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: 'btn fw-bold btn-danger',
+                cancelButton: 'btn fw-bold btn-active-light-primary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('kelulusan.finalize') }}",
+                    type: "POST",
+                    data: {
+                        sekolah_id: sekolahId,
+                        jalur_id: jalurId,
+                        jenjang: 'SMP',
+                        pilihan_ke: pilihanKe
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Mohon Tunggu',
+                            text: 'Sedang memproses finalisasi...',
                             allowOutsideClick: false,
                             didOpen: () => {
                                 Swal.showLoading()

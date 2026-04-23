@@ -153,22 +153,39 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+            ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
                 $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
             })
-            ->filterColumn('nama_lengkap', function($query, $keyword) {
+            ->filterColumn('nama_lengkap', function ($query, $keyword) {
                 $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
             })
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
+                if ($row->status == 'lulus') {
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Lulus</span>';
+                } elseif ($row->status == 'cadangan') {
+                    return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">Cadangan</span>';
+                } elseif ($row->status == 'tidak_lulus') {
+                    return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
+                }
+
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
                     return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Calon Lulus</span>';
                 }
 
-                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Calon Tidak Lulus</span>';
+                return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">Calon Cadangan</span>';
             })
             ->addColumn('action', function ($row) {
-                return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
+                $html = '<div class="d-flex justify-content-center gap-2">';
+                if ($row->status == 'verifikasi') {
+                    $html .= '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->pendaftaran_id.'">Luluskan</button>';
+                    $html .= '<button type="button" class="btn btn-sm btn-warning btn-cadangkan" data-id="'.$row->pendaftaran_id.'">Cadangkan</button>';
+                } else {
+                    $html .= '<span class="text-muted fs-7 italic">Sudah Diproses</span>';
+                }
+                $html .= '</div>';
+
+                return $html;
             })
             ->with('quota', $quota)
             ->with('remaining_quota', $remainingQuota)
@@ -320,22 +337,39 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+            ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
                 $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
             })
-            ->filterColumn('nama_lengkap', function($query, $keyword) {
+            ->filterColumn('nama_lengkap', function ($query, $keyword) {
                 $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
             })
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
+                if ($row->status == 'lulus') {
+                    return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Lulus</span>';
+                } elseif ($row->status == 'cadangan') {
+                    return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">Cadangan</span>';
+                } elseif ($row->status == 'tidak_lulus') {
+                    return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
+                }
+
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
                     return '<span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">Calon Lulus</span>';
                 }
 
-                return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Calon Tidak Lulus</span>';
+                return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">Calon Cadangan</span>';
             })
             ->addColumn('action', function ($row) {
-                return '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->id.'">Luluskan</button>';
+                $html = '<div class="d-flex justify-content-center gap-2">';
+                if ($row->status == 'verifikasi') {
+                    $html .= '<button type="button" class="btn btn-sm btn-primary btn-luluskan" data-id="'.$row->pendaftaran_id.'">Luluskan</button>';
+                    $html .= '<button type="button" class="btn btn-sm btn-warning btn-cadangkan" data-id="'.$row->pendaftaran_id.'">Cadangkan</button>';
+                } else {
+                    $html .= '<span class="text-muted fs-7 italic">Sudah Diproses</span>';
+                }
+                $html .= '</div>';
+
+                return $html;
             })
             ->with('quota', $quota)
             ->with('remaining_quota', $remainingQuota)
@@ -448,9 +482,86 @@ class KelulusanController extends Controller
     }
 
     /**
+     * Finalize selection results for a specific school and pathway.
+     */
+    public function finalize(Request $request)
+    {
+        $request->validate([
+            'sekolah_id' => 'required|exists:sekolah,id',
+            'jalur_id' => 'required|exists:jalur_pendaftaran,id',
+            'jenjang' => 'required|in:SD,SMP',
+            'pilihan_ke' => 'required|in:1,2',
+        ]);
+
+        $sekolahId = $request->sekolah_id;
+        $jalurId = $request->jalur_id;
+        $jenjang = $request->jenjang;
+        $pilihanKe = $request->pilihan_ke;
+
+        try {
+            DB::beginTransaction();
+
+            // Find participants who are still in 'verifikasi' status for this school/pathway/choice
+            $query = DB::table('pendaftaran')
+                ->where('jenjang', $jenjang)
+                ->where('jalur_id', $jalurId)
+                ->where('status', 'verifikasi');
+
+            if ($pilihanKe == '1') {
+                $query->where('pendaftaran.sekolah_pilihan_1', $sekolahId);
+            } else {
+                $query->where('pendaftaran.sekolah_pilihan_2', $sekolahId);
+            }
+
+            $pendaftarans = $query->get();
+            $count = count($pendaftarans);
+
+            if ($count === 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada peserta yang perlu difinalisasi.',
+                ], 422);
+            }
+
+            foreach ($pendaftarans as $pendaftaran) {
+                // 1. Update status pendaftaran
+                DB::table('pendaftaran')
+                    ->where('id', $pendaftaran->id)
+                    ->update([
+                        'status' => 'tidak_lulus',
+                        'updated_at' => now(),
+                    ]);
+
+                // 2. Insert or Update HasilSeleksi
+                DB::table('hasil_seleksi')->updateOrInsert(
+                    ['pendaftaran_id' => $pendaftaran->id],
+                    [
+                        'status' => 'tidak_lulus',
+                        'keterangan' => 'Mohon maaf, Anda belum berhasil lulus pada seleksi ini.',
+                    ]
+                );
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => "$count peserta berhasil dinyatakan Tidak Lulus (Finalisasi).",
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses finalisasi: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Set graduation status to 'Tidak Lulus'.
      */
-    public function setTidakLulus($id)
+    public function setTidakLulus(Request $request, $id)
     {
         if (auth()->user()->role != 'admin_dinas') {
             return redirect()->back()->with('error', 'Hanya Admin Dinas yang dapat membatalkan kelulusan.');
@@ -469,11 +580,13 @@ class KelulusanController extends Controller
                 ]);
 
             // 2. Insert or Update HasilSeleksi
+            $keterangan = $request->get('keterangan', 'Mohon maaf, Anda belum berhasil lulus pada seleksi ini.');
+            
             DB::table('hasil_seleksi')->updateOrInsert(
                 ['pendaftaran_id' => $id],
                 [
                     'status' => 'tidak_lulus',
-                    'keterangan' => 'Mohon maaf, Anda belum berhasil lulus pada seleksi ini.',
+                    'keterangan' => $keterangan,
                 ]
             );
 
@@ -484,6 +597,70 @@ class KelulusanController extends Controller
             DB::rollBack();
 
             return redirect()->back()->with('error', 'Gagal memproses: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Set graduation status to 'Cadangan' for selected participants.
+     */
+    public function setCadangan(Request $request)
+    {
+        $request->validate([
+            'pendaftaran_ids' => 'required|array',
+            'pendaftaran_ids.*' => 'exists:pendaftaran,id',
+            'sekolah_id' => 'required|exists:sekolah,id',
+        ]);
+
+        $pendaftaranIds = $request->pendaftaran_ids;
+        $sekolahId = $request->sekolah_id;
+
+        try {
+            DB::beginTransaction();
+
+            $pendaftarans = DB::table('pendaftaran')
+                ->whereIn('id', $pendaftaranIds)
+                ->get();
+
+            foreach ($pendaftarans as $pendaftaran) {
+                $id = $pendaftaran->id;
+                // Determine which choice this school is
+                $pilihan = 1;
+                if ($pendaftaran->sekolah_pilihan_2 == $sekolahId) {
+                    $pilihan = 2;
+                }
+
+                // 1. Update status pendaftaran
+                DB::table('pendaftaran')
+                    ->where('id', $id)
+                    ->update([
+                        'status' => 'cadangan',
+                        'sekolah_diterima_id' => null, // Reset if they were accepted elsewhere
+                        'updated_at' => now(),
+                    ]);
+
+                // 2. Insert or Update HasilSeleksi
+                DB::table('hasil_seleksi')->updateOrInsert(
+                    ['pendaftaran_id' => $id],
+                    [
+                        'status' => 'cadangan',
+                        'keterangan' => "Anda masuk dalam daftar cadangan di pilihan $pilihan.",
+                    ]
+                );
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => count($pendaftaranIds).' peserta berhasil dijadikan cadangan.',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses cadangan: '.$e->getMessage(),
+            ], 500);
         }
     }
 }

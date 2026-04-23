@@ -117,6 +117,9 @@ Route::middleware('auth')->group(function () {
         Route::get('kelulusan/smp/data', [KelulusanController::class, 'data_smp'])->name('kelulusan.smp.data');
         Route::post('kelulusan/smp/sahkan', [KelulusanController::class, 'sahkan_smp'])->name('kelulusan.smp.sahkan');
         Route::post('kelulusan/luluskan', [KelulusanController::class, 'setLulus'])->name('kelulusan.luluskan');
+        Route::post('kelulusan/cadangan', [KelulusanController::class, 'setCadangan'])->name('kelulusan.cadangan');
+        Route::post('kelulusan/finalize', [KelulusanController::class, 'finalize'])->name('kelulusan.finalize');
+        Route::get('kelulusan/sekolah-list', [KelulusanController::class, 'getSekolahList'])->name('kelulusan.sekolah_list');
         Route::post('kelulusan/{id}/tidak-lulus', [KelulusanController::class, 'setTidakLulus'])->name('kelulusan.tidak_lulus');
 
         // hasil seleksi
@@ -136,6 +139,9 @@ Route::middleware('auth')->group(function () {
         Route::get('pengguna/operator', [UserController::class, 'operator'])->name('pengguna.operator');
         Route::resource('pengguna', UserController::class)->except(['index']);
 
+        // Kelulusan Print/Download (Accessible by Admin and Peserta)
+        Route::get('pendaftaran/{id}/print-lulus', [PendaftaranController::class, 'printLulus'])->name('pendaftaran.lulus.print');
+        Route::get('pendaftaran/{id}/download-lulus', [PendaftaranController::class, 'downloadLulusPdf'])->name('pendaftaran.lulus.download');
     });
 
     // Route berkas bisa diakses oleh admin dan peserta
@@ -151,9 +157,7 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
             Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
-            Route::get('/{id}/print-lulus', [PendaftaranController::class, 'printLulus'])->name('pendaftaran.lulus.print');
             Route::get('/{id}/download', [PendaftaranController::class, 'downloadPdf'])->name('pendaftaran.download');
-            Route::get('/{id}/download-lulus', [PendaftaranController::class, 'downloadLulusPdf'])->name('pendaftaran.lulus.download');
             Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
             Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
         });

@@ -474,7 +474,16 @@ class PesertaController extends Controller
             ->where('pendaftaran_id', $id)
             ->get();
 
-        return view('backend.peserta.detail', compact('pendaftaran', 'berkas'));
+        $semuaSekolah = DB::table('sekolah')
+            ->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->where('sekolah.jenjang', $pendaftaran->jenjang)
+            ->select('sekolah.id', 'sekolah.nama_sekolah', 'kecamatan.nama_kecamatan')
+            ->orderBy('kecamatan.nama_kecamatan', 'asc')
+            ->orderBy('sekolah.nama_sekolah', 'asc')
+            ->get()
+            ->groupBy('nama_kecamatan');
+
+        return view('backend.peserta.detail', compact('pendaftaran', 'berkas', 'semuaSekolah'));
     }
 
     /**
