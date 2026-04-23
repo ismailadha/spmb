@@ -120,6 +120,7 @@ $(document).ready(function() {
         serverSide: true,
         scrollX: true,
         ordering: false,
+        dom: 'lfrtip',
         ajax: {
             url: "{{ route('kelulusan.sd.data') }}",
             data: function (d) {
@@ -151,11 +152,11 @@ $(document).ready(function() {
                 }
             },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
-            { data: 'nama_jalur', name: 'nama_jalur' },
-            { data: 'status', name: 'status', className: 'text-center', visible: $('#filter_jalur').val() !== '' },
-            { data: 'skor_jarak', name: 'skor_jarak', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3') },
-            { data: 'skor_usia', name: 'skor_usia', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3') },
-            { data: 'nilai_akhir', name: 'nilai_akhir', className: 'text-center', visible: $('#filter_jalur').val() !== '' }
+            { data: 'nama_jalur', name: 'nama_jalur', searchable: false },
+            { data: 'status', name: 'status', className: 'text-center', visible: $('#filter_jalur').val() !== '', searchable: false },
+            { data: 'skor_jarak', name: 'skor_jarak', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3'), searchable: false },
+            { data: 'skor_usia', name: 'skor_usia', className: 'text-center', visible: ($('#filter_jalur').val() !== '' && $('#filter_jalur').val() != '3'), searchable: false },
+            { data: 'nilai_akhir', name: 'nilai_akhir', className: 'text-center', visible: $('#filter_jalur').val() !== '', searchable: false }
         ],
         language: {
             "emptyTable": "Tidak ada data yang tersedia",

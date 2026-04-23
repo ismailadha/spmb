@@ -17,17 +17,7 @@
             <div class="card-title">
                 <h3 class="card-label me-5">Data Peserta SMP</h3>
                 <!--begin::Search-->
-                <div class="d-flex align-items-center position-relative my-1">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->
-                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Cari Peserta" />
-                </div>
+
                 <!--end::Search-->
             </div>
             <!--end::Card title-->
@@ -139,6 +129,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         scrollX: true,
+        dom: 'lfrtip',
         ajax: {
             url: "{{ route('peserta.smp') }}",
             data: function (d) {
@@ -152,9 +143,9 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
             { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
-            { data: 'nama_jalur', name: 'nama_jalur' },
-            { data: 'jenjang', name: 'jenjang' },
-            { data: 'status', name: 'status', className: 'text-center' },
+            { data: 'nama_jalur', name: 'nama_jalur', searchable: false },
+            { data: 'jenjang', name: 'jenjang', searchable: false },
+            { data: 'status', name: 'status', className: 'text-center', searchable: false },
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
         ],
         language: {
@@ -176,10 +167,7 @@ $(document).ready(function() {
         }
     });
     
-    // Handle search input
-    $('[data-kt-user-table-filter="search"]').on('keyup', function() {
-        $('#kt_table_peserta').DataTable().search($(this).val()).draw();
-    });
+
 
     // Handle delete button click
     $(document).on('click', '.btn-delete', function(e) {

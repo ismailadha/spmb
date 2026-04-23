@@ -125,6 +125,7 @@ $(document).ready(function() {
     var table = $('#kt_table_hasil_seleksi').DataTable({
         processing: true,
         serverSide: true,
+        dom: 'lfrtip',
         ajax: {
             url: "{{ route('hasil-seleksi.smp') }}",
             data: function (d) {
@@ -136,11 +137,12 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
             { data: 'peserta_info', name: 'peserta_info' },
-            { data: 'jalur_info', name: 'jalur_info' },
-            { data: 'sekolah_info', name: 'sekolah_info' },
+            { data: 'jalur_info', name: 'jalur_info', searchable: false },
+            { data: 'sekolah_info', name: 'sekolah_info', searchable: false },
             { 
                 data: 'skor_usia', 
                 name: 'nilaiSeleksi.skor_usia',
+                searchable: false,
                 render: function(data, type, row) {
                     if (row.jalur_id == 3) return '-';
                     return row.nilai_seleksi ? row.nilai_seleksi.skor_usia : '-';
@@ -149,6 +151,7 @@ $(document).ready(function() {
             { 
                 data: 'skor_jarak', 
                 name: 'nilaiSeleksi.skor_jarak',
+                searchable: false,
                 render: function(data, type, row) {
                     if (row.jalur_id == 3) return '-';
                     if (!row.nilai_seleksi) return '-';
@@ -158,6 +161,7 @@ $(document).ready(function() {
             { 
                 data: 'nilai_akhir', 
                 name: 'nilaiSeleksi.nilai_akhir',
+                searchable: false,
                 render: function(data, type, row) {
                     return row.nilai_seleksi ? row.nilai_seleksi.nilai_akhir : '-';
                 }

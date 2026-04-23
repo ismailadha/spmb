@@ -105,6 +105,14 @@ class HasilSeleksiController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+                    $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('peserta_info', function($query, $keyword) {
+                    $query->whereHas('peserta', function($q) use ($keyword) {
+                        $q->where('nama_lengkap', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('peserta_info', function ($row) {
                     return '
                         <div class="d-flex flex-column">
@@ -243,6 +251,14 @@ class HasilSeleksiController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+                    $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('peserta_info', function($query, $keyword) {
+                    $query->whereHas('peserta', function($q) use ($keyword) {
+                        $q->where('nama_lengkap', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('peserta_info', function ($row) {
                     return '
                         <div class="d-flex flex-column">

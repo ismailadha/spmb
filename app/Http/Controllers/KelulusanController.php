@@ -153,6 +153,12 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+                $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('nama_lengkap', function($query, $keyword) {
+                $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
+            })
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
@@ -314,6 +320,12 @@ class KelulusanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+                $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+            })
+            ->filterColumn('nama_lengkap', function($query, $keyword) {
+                $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
+            })
             ->editColumn('status', function ($row) use (&$counter, $remainingQuota) {
                 $counter++;
                 if ($remainingQuota > 0 && $counter <= $remainingQuota) {
