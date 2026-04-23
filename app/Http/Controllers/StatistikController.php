@@ -7,6 +7,7 @@ use App\Models\Pendaftaran;
 use App\Models\PeriodeDaftar;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -21,9 +22,16 @@ class StatistikController extends Controller
         $jalurs = JalurDaftar::all();
 
         $jenjang = $request->get('jenjang');
+        $user = Auth::user();
 
         // Filter Sekolah
         $sekolahsQuery = Sekolah::orderBy('jenjang')->orderBy('nama_sekolah');
+
+        // If admin_sekolah, only show their school
+        if ($user->role == 'admin_sekolah' && $user->sekolah_id) {
+            $sekolahsQuery->where('id', $user->sekolah_id);
+        }
+
         if ($jenjang) {
             $sekolahsQuery->where('jenjang', $jenjang);
         }
@@ -31,6 +39,12 @@ class StatistikController extends Controller
 
         // Filter Pendaftaran base query
         $pendaftaranBase = Pendaftaran::where('periode_id', $activePeriode->id);
+
+        // If admin_sekolah, only count registrations for their school
+        if ($user->role == 'admin_sekolah' && $user->sekolah_id) {
+            $pendaftaranBase->where('sekolah_pilihan_1', $user->sekolah_id);
+        }
+
         if ($jenjang) {
             $pendaftaranBase->where('jenjang', $jenjang);
         }
@@ -78,8 +92,8 @@ class StatistikController extends Controller
                 return $j;
             }),
             'by_jenjang' => [
-                'SD' => Pendaftaran::where('jenjang', 'SD')->where('periode_id', $activePeriode->id)->where('status', '!=', 'draft')->count(),
-                'SMP' => Pendaftaran::where('jenjang', 'SMP')->where('periode_id', $activePeriode->id)->where('status', '!=', 'draft')->count(),
+                'SD' => (clone $pendaftaranBase)->where('jenjang', 'SD')->where('status', '!=', 'draft')->count(),
+                'SMP' => (clone $pendaftaranBase)->where('jenjang', 'SMP')->where('status', '!=', 'draft')->count(),
             ],
             'by_status' => (clone $pendaftaranBase)
                 ->select('status', DB::raw('count(*) as total'))

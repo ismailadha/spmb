@@ -76,6 +76,7 @@
                         <span class="card-label fw-bold text-gray-800">Statistik Pendaftaran Per Sekolah</span>
                         <span class="text-gray-400 mt-1 fw-semibold fs-6">Data kuota dan jumlah pendaftar per jalur ({{ $stats['periode']->tahun_ajaran }})</span>
                     </h3>
+                    @if(auth()->user()->role == 'admin_dinas')
                     <div class="card-toolbar">
                         <form action="{{ route('statistik.index') }}" method="GET" class="d-flex align-items-center">
                             <select name="jenjang" class="form-select form-select-solid form-select-sm w-150px me-3" data-control="select2" data-hide-search="true" onchange="this.form.submit()">
@@ -88,6 +89,7 @@
                             @endif
                         </form>
                     </div>
+                    @endif
                 </div>
                 <div class="card-body pt-2">
                     <div class="table-responsive">

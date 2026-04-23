@@ -279,7 +279,7 @@
 									</div>
 								</div>
 								@endif
-								@if(auth()->user()->role == 'admin_dinas')
+								@if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah')
 								<div class="menu-item">
 									<a class="menu-link @yield('statistik-menu-active')" href="{{ route('statistik.index') }}">
 										<span class="menu-icon">
