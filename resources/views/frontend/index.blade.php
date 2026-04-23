@@ -67,7 +67,7 @@
             <div class="col-lg-5 col-md-6 mb-4">
                 <div style="border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.10);">
                     <div style="position:relative;">
-                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80" alt="SD"
+                        <img src="{{ asset('images/sekolah-sd.jpg') }}" alt="SD"
                              style="width:100%;height:200px;object-fit:cover;">
                         <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(231,76,60,.2),rgba(231,76,60,.85));"></div>
                         <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);text-align:center;">

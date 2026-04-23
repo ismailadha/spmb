@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class JalurDaftar extends Model
 {
@@ -14,4 +15,9 @@ class JalurDaftar extends Model
     ];
 
     public $timestamps = false;
+
+    public function pendaftaran(): HasMany
+    {
+        return $this->hasMany(Pendaftaran::class, 'jalur_id');
+    }
 }

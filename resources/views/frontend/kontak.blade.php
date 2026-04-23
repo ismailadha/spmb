@@ -18,7 +18,7 @@
             <!-- Office Contact Info -->
             <div class="col-lg-4 mb-4">
                 <div class="contact_info h-100" style="background: #fff; padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; border-top: 4px solid #3498db;">
-                    <h4 style="font-size: 1.3rem; font-weight: 700; color: #1e2a4a; margin-bottom: 25px;">Informasi Kantor</h4>
+                    <h4 style="font-size: 1.3rem; font-weight: 700; color: #1e2a4a; margin-bottom: 25px;">Informasi</h4>
                     
                     <div class="info_item d-flex align-items-start mb-4">
                         <div class="icon" style="width: 40px; height: 40px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">

@@ -11,6 +11,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SambutanController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\WilayahController;
@@ -77,6 +78,10 @@ Route::middleware('auth')->group(function () {
 
         return view('backend.home', compact('stats'));
     })->name('dashboard');
+
+    Route::middleware('role:admin_dinas')->group(function () {
+        Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik.index');
+    });
 
     Route::prefix('wilayah')->group(function () {
         Route::get('/kabupaten/{id}', [WilayahController::class, 'getKabupaten'])->name('wilayah.kabupaten');
