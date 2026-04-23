@@ -63,6 +63,7 @@ class PesertaController extends Controller
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
+                    'peserta.nik',
                     'pendaftaran.nomor_pendaftaran',
                     'peserta.nama_lengkap',
                     'jalur_pendaftaran.nama_jalur',
@@ -72,6 +73,15 @@ class PesertaController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
+                    $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('nama_lengkap', function ($query, $keyword) {
+                    $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('nama_jalur', function ($query, $keyword) {
+                    $query->where('jalur_pendaftaran.nama_jalur', 'like', "%{$keyword}%");
+                })
                 ->editColumn('nomor_pendaftaran', function ($row) {
                     return '<a href="'.route('peserta.detail', $row->pendaftaran_id).'" class="text-dark fw-bolder text-hover-primary">'.$row->nomor_pendaftaran.'</a>';
                 })
@@ -170,6 +180,7 @@ class PesertaController extends Controller
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
+                    'peserta.nik',
                     'pendaftaran.nomor_pendaftaran',
                     'peserta.nama_lengkap',
                     'jalur_pendaftaran.nama_jalur',
@@ -182,6 +193,15 @@ class PesertaController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
+                    $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('nama_lengkap', function ($query, $keyword) {
+                    $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('nama_jalur', function ($query, $keyword) {
+                    $query->where('jalur_pendaftaran.nama_jalur', 'like', "%{$keyword}%");
+                })
                 ->editColumn('nomor_pendaftaran', function ($row) {
                     return '<a href="'.route('peserta.detail', $row->pendaftaran_id).'" class="text-hover-primary" target="_blank">'.$row->nomor_pendaftaran.'</a>';
                 })
@@ -354,6 +374,7 @@ class PesertaController extends Controller
                 ->select(
                     'pendaftaran.id as pendaftaran_id',
                     'peserta.id as id',
+                    'peserta.nik',
                     'pendaftaran.nomor_pendaftaran',
                     'peserta.nama_lengkap',
                     'jalur_pendaftaran.nama_jalur',
@@ -366,6 +387,15 @@ class PesertaController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
+                    $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('nama_lengkap', function ($query, $keyword) {
+                    $query->where('peserta.nama_lengkap', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('nama_jalur', function ($query, $keyword) {
+                    $query->where('jalur_pendaftaran.nama_jalur', 'like', "%{$keyword}%");
+                })
                 ->editColumn('nomor_pendaftaran', function ($row) {
                     return '<a href="'.route('peserta.detail', $row->pendaftaran_id).'" class="text-hover-primary" target="_blank">'.$row->nomor_pendaftaran.'</a>';
                 })
