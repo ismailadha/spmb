@@ -241,6 +241,18 @@
                                     <div class="fw-bolder fs-5 text-primary">{{ $pendaftaran->nilai_prestasi }}</div>
                                 </div>
                             @endif
+                            @if($pendaftaran->rata_rapor)
+                                <div class="border border-gray-300 border-dashed rounded py-3 px-4">
+                                    <div class="fw-bold text-muted fs-7">Rata-rata Rapor</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ $pendaftaran->rata_rapor }}</div>
+                                </div>
+                            @endif
+                            @if($pendaftaran->nilai_tes_akademik)
+                                <div class="border border-gray-300 border-dashed rounded py-3 px-4">
+                                    <div class="fw-bold text-muted fs-7">Nilai Tes Akademik</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ $pendaftaran->nilai_tes_akademik }}</div>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="d-flex gap-3">

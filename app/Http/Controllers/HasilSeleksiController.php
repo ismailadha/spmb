@@ -50,6 +50,7 @@ class HasilSeleksiController extends Controller
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
+            ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->where('pendaftaran.jenjang', $jenjang)
             ->where('pendaftaran.status', 'Lulus')
             ->when($jalurId, function ($query, $jalurId) {
@@ -65,7 +66,15 @@ class HasilSeleksiController extends Controller
                 'peserta.nisn',
                 'jalur_pendaftaran.nama_jalur',
                 'sek_diterima.nama_sekolah as sekolah_penerima',
-                'pendaftaran.tanggal_daftar'
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'pendaftaran.sekolah_diterima_id',
+                'pendaftaran.jalur_id',
+                'nilai_seleksi.skor_usia',
+                'nilai_seleksi.skor_jarak',
+                'nilai_seleksi.skor_jarak_2',
+                'nilai_seleksi.nilai_akhir'
             )
             ->orderBy('pendaftaran.nomor_pendaftaran', 'asc')
             ->get();
@@ -78,7 +87,7 @@ class HasilSeleksiController extends Controller
     public function hasil_seleksi_sd(Request $request)
     {
         if ($request->ajax()) {
-            $data = Pendaftaran::with(['peserta', 'jalur', 'sekolahDiterima'])
+            $data = Pendaftaran::with(['peserta', 'jalur', 'sekolahDiterima', 'nilaiSeleksi'])
                 ->where('jenjang', 'SD')
                 ->where('status', 'Lulus');
 
@@ -104,6 +113,9 @@ class HasilSeleksiController extends Controller
                         </div>
                     ';
                 })
+                ->editColumn('nomor_pendaftaran', function ($row) {
+                    return '<a href="'.route('peserta.detail', $row->id).'" class="text-hover-primary fw-bold" target="_blank">'.$row->nomor_pendaftaran.'</a>';
+                })
                 ->addColumn('jalur_info', function ($row) {
                     return $row->jalur->nama_jalur ?? '-';
                 })
@@ -125,7 +137,7 @@ class HasilSeleksiController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['peserta_info', 'action'])
+                ->rawColumns(['peserta_info', 'action', 'nomor_pendaftaran'])
                 ->make(true);
         }
 
@@ -176,6 +188,7 @@ class HasilSeleksiController extends Controller
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
+            ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->where('pendaftaran.jenjang', $jenjang)
             ->where('pendaftaran.status', 'Lulus')
             ->when($jalurId, function ($query, $jalurId) {
@@ -191,7 +204,15 @@ class HasilSeleksiController extends Controller
                 'peserta.nisn',
                 'jalur_pendaftaran.nama_jalur',
                 'sek_diterima.nama_sekolah as sekolah_penerima',
-                'pendaftaran.tanggal_daftar'
+                'pendaftaran.tanggal_daftar',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'pendaftaran.sekolah_diterima_id',
+                'pendaftaran.jalur_id',
+                'nilai_seleksi.skor_usia',
+                'nilai_seleksi.skor_jarak',
+                'nilai_seleksi.skor_jarak_2',
+                'nilai_seleksi.nilai_akhir'
             )
             ->orderBy('pendaftaran.nomor_pendaftaran', 'asc')
             ->get();
@@ -204,7 +225,7 @@ class HasilSeleksiController extends Controller
     public function hasil_seleksi_smp(Request $request)
     {
         if ($request->ajax()) {
-            $data = Pendaftaran::with(['peserta', 'jalur', 'sekolahDiterima'])
+            $data = Pendaftaran::with(['peserta', 'jalur', 'sekolahDiterima', 'nilaiSeleksi'])
                 ->where('jenjang', 'SMP')
                 ->where('status', 'Lulus');
 
@@ -230,6 +251,9 @@ class HasilSeleksiController extends Controller
                         </div>
                     ';
                 })
+                ->editColumn('nomor_pendaftaran', function ($row) {
+                    return '<a href="'.route('peserta.detail', $row->id).'" class="text-hover-primary fw-bold" target="_blank">'.$row->nomor_pendaftaran.'</a>';
+                })
                 ->addColumn('jalur_info', function ($row) {
                     return $row->jalur->nama_jalur ?? '-';
                 })
@@ -251,7 +275,7 @@ class HasilSeleksiController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['peserta_info', 'action'])
+                ->rawColumns(['peserta_info', 'action', 'nomor_pendaftaran'])
                 ->make(true);
         }
 

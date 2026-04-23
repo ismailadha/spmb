@@ -136,9 +136,6 @@ Route::middleware('auth')->group(function () {
         Route::get('pengguna/operator', [UserController::class, 'operator'])->name('pengguna.operator');
         Route::resource('pengguna', UserController::class)->except(['index']);
 
-        Route::middleware('role:admin_dinas')->group(function () {
-            Route::get('peserta', [PesertaController::class, 'index'])->name('peserta.index');
-        });
     });
 
     // Route berkas bisa diakses oleh admin dan peserta

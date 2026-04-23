@@ -79,6 +79,9 @@
                 <th width="120">NIK</th>
                 <th width="100">Jalur</th>
                 <th>Sekolah Diterima</th>
+                <th width="60">Skor Usia</th>
+                <th width="60">Skor Jarak</th>
+                <th width="60">Skor Akhir</th>
                 <th width="80">Tgl Daftar</th>
             </tr>
         </thead>
@@ -91,6 +94,15 @@
                 <td>{{ $row->nik }}</td>
                 <td>{{ $row->nama_jalur }}</td>
                 <td>{{ $row->sekolah_penerima }}</td>
+                <td style="text-align: center;">{{ $row->jalur_id == 3 ? '-' : ($row->skor_usia ?? '-') }}</td>
+                <td style="text-align: center;">
+                    @if($row->jalur_id == 3)
+                        -
+                    @else
+                        {{ ($row->sekolah_diterima_id == $row->sekolah_pilihan_2) ? ($row->skor_jarak_2 ?? '-') : ($row->skor_jarak ?? '-') }}
+                    @endif
+                </td>
+                <td style="text-align: center;">{{ $row->nilai_akhir ?? '-' }}</td>
                 <td style="text-align: center;">{{ \Carbon\Carbon::parse($row->tanggal_daftar)->format('d-m-Y') }}</td>
             </tr>
             @endforeach

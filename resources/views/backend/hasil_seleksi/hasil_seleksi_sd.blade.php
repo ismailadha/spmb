@@ -77,6 +77,9 @@
                             <th class="min-w-200px">Peserta</th>
                             <th class="min-w-150px">Jalur Seleksi</th>
                             <th class="min-w-200px">Sekolah Diterima</th>
+                            <th class="min-w-100px">Skor Usia</th>
+                            <th class="min-w-100px">Skor Jarak</th>
+                            <th class="min-w-125px">Skor Akhir</th>
                             <th class="text-end min-w-125px">Actions</th>
                         </tr>
                     </thead>
@@ -86,6 +89,27 @@
                 </table>
             </div>
             <!--end::Table-->
+
+            <!--begin::Note-->
+            <div class="mt-5">
+                <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-4">
+                    <i class="ki-duotone ki-information-5 fs-2tx text-primary me-4">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                        <span class="path3"></span>
+                    </i>
+                    <div class="d-flex flex-stack flex-grow-1">
+                        <div class="fw-semibold">
+                            <div class="fs-6 text-gray-700">
+                                <strong class="text-dark">Informasi Perhitungan:</strong> 
+                                Skor Akhir untuk jalur selain Prestasi dihitung berdasarkan <strong>Skor Usia + Skor Jarak</strong>. 
+                                Untuk Jalur Prestasi, skor akhir dihitung berdasarkan komponen penilaian prestasi masing-masing.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Note-->
         </div>
         <!--end::Card body-->
     </div>
@@ -114,6 +138,30 @@ $(document).ready(function() {
             { data: 'peserta_info', name: 'peserta_info' },
             { data: 'jalur_info', name: 'jalur_info' },
             { data: 'sekolah_info', name: 'sekolah_info' },
+            { 
+                data: 'skor_usia', 
+                name: 'nilaiSeleksi.skor_usia',
+                render: function(data, type, row) {
+                    if (row.jalur_id == 3) return '-';
+                    return row.nilai_seleksi ? row.nilai_seleksi.skor_usia : '-';
+                }
+            },
+            { 
+                data: 'skor_jarak', 
+                name: 'nilaiSeleksi.skor_jarak',
+                render: function(data, type, row) {
+                    if (row.jalur_id == 3) return '-';
+                    if (!row.nilai_seleksi) return '-';
+                    return row.sekolah_diterima_id == row.sekolah_pilihan_2 ? row.nilai_seleksi.skor_jarak_2 : row.nilai_seleksi.skor_jarak;
+                }
+            },
+            { 
+                data: 'nilai_akhir', 
+                name: 'nilaiSeleksi.nilai_akhir',
+                render: function(data, type, row) {
+                    return row.nilai_seleksi ? row.nilai_seleksi.nilai_akhir : '-';
+                }
+            },
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
         ]
     });
