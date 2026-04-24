@@ -581,7 +581,7 @@ class KelulusanController extends Controller
 
             // 2. Insert or Update HasilSeleksi
             $keterangan = $request->get('keterangan', 'Mohon maaf, Anda belum berhasil lulus pada seleksi ini.');
-            
+
             DB::table('hasil_seleksi')->updateOrInsert(
                 ['pendaftaran_id' => $id],
                 [

@@ -154,6 +154,10 @@ Route::middleware('auth')->group(function () {
         Route::get('pendaftaran/{id}/download-lulus', [PendaftaranController::class, 'downloadLulusPdf'])->name('pendaftaran.lulus.download');
     });
 
+    // Registration Card Print/Download (Accessible by Admin, Operator, and Peserta)
+    Route::get('pendaftaran/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
+    Route::get('pendaftaran/{id}/download', [PendaftaranController::class, 'downloadPdf'])->name('pendaftaran.download');
+
     // Route berkas bisa diakses oleh admin dan peserta
     Route::get('/pendaftaran/berkas/{id}', [PendaftaranController::class, 'showBerkas'])->name('pendaftaran.berkas.show');
 
@@ -166,8 +170,6 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
             Route::get('/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
-            Route::get('/{id}/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
-            Route::get('/{id}/download', [PendaftaranController::class, 'downloadPdf'])->name('pendaftaran.download');
             Route::put('/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
             Route::get('/sekolah/jalur/{jalur_id}', [PendaftaranController::class, 'getSekolahByJalur'])->name('pendaftaran.sekolah_jalur');
         });

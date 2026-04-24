@@ -29,12 +29,20 @@
                 <a href="{{ $peserta->pendaftaran->jenjang == 'SD' ? route('peserta.sd') : route('peserta.smp') }}" class="btn btn-sm btn-secondary me-3">Kembali</a>
 
                 @if($peserta->pendaftaran)
-                <button type="button" class="btn btn-sm btn-warning me-3" data-bs-toggle="modal" data-bs-target="#modal_perbaikan">Minta Perbaikan</button>
-                <form id="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}" action="{{ route('peserta.verifikasi.setuju', $peserta->pendaftaran->id) }}" method="POST">
-                    @csrf
-                </form>
+                    @if (in_array($peserta->pendaftaran->status, ['submit', 'verifikasi']))
+                        <a href="{{ route('pendaftaran.download', $peserta->pendaftaran->id) }}" class="btn btn-sm btn-light-danger me-3" target="_blank">
+                            <i class="bi bi-file-earmark-pdf fs-4 me-1"></i>Download Kartu
+                        </a>
+                        <a href="{{ route('pendaftaran.print', $peserta->pendaftaran->id) }}" class="btn btn-sm btn-light-info me-3" target="_blank">
+                            <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu
+                        </a>
+                    @endif
+                    <button type="button" class="btn btn-sm btn-warning me-3" data-bs-toggle="modal" data-bs-target="#modal_perbaikan">Minta Perbaikan</button>
+                    <form id="form-setuju-verifikasi-{{ $peserta->pendaftaran->id }}" action="{{ route('peserta.verifikasi.setuju', $peserta->pendaftaran->id) }}" method="POST">
+                        @csrf
+                    </form>
 
-                <button type="button" class="btn btn-sm btn-primary" onclick="confirmSetuju({{ $peserta->pendaftaran->id }})">Setujui & Verifikasi</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="confirmSetuju({{ $peserta->pendaftaran->id }})">Setujui & Verifikasi</button>
                 @endif
             </div>
         </div>

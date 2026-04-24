@@ -200,7 +200,15 @@
                                     @if (in_array($pendaftaran->status, ['submit', 'perbaikan', 'tidak_lulus']))
                                         <a href="{{ route('peserta.verifikasi', $pendaftaran->peserta_id) }}" class="btn btn-sm btn-primary me-2">Verifikasi Sekarang</a>
                                     @endif
+                                @endif
 
+                                @if (in_array($pendaftaran->status, ['submit', 'verifikasi']))
+                                    <a href="{{ route('pendaftaran.download', $pendaftaran->id) }}" class="btn btn-sm btn-light-danger me-2" target="_blank">
+                                        <i class="bi bi-file-earmark-pdf fs-4 me-1"></i>Download Kartu
+                                    </a>
+                                    <a href="{{ route('pendaftaran.print', $pendaftaran->id) }}" class="btn btn-sm btn-light-info" target="_blank">
+                                        <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu
+                                    </a>
                                 @endif
                             </div>
                             <!--end::Actions-->
@@ -373,7 +381,7 @@
                     <label class="col-lg-4 fw-bold text-muted">Status Akhir</label>
                     <div class="col-lg-8">
                         @if($pendaftaran->status == 'cadangan')
-                            <span class="badge badge-warning fw-bolder fs-6 px-4 py-2">CADANGAN</span>
+                            <span class="badge badge-light-warning fw-bolder fs-6 px-4 py-2" style="background-color: #fff8dd; color: #ffc700;">CADANGAN</span>
                         @else
                             <span class="badge badge-success fw-bolder fs-6 px-4 py-2">DITERIMA / LULUS</span>
                         @endif

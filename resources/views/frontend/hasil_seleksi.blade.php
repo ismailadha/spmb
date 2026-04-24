@@ -149,13 +149,13 @@
                     <button class="btn btn-outline-secondary mr-2 mb-2 mb-md-0 font-weight-bold px-4 rounded" onclick="hideResult()">
                         Kembali
                     </button>
-                    <button id="btn-cetak" class="btn btn-success font-weight-bold d-inline-flex align-items-center mb-2 mb-md-0 px-4 rounded shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="mr-2" viewBox="0 0 16 16">
-                            <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
-                            <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                    <a id="btn_cetak_lulus" href="#" target="_blank" class="btn btn-primary font-weight-bold px-4 rounded d-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2 mb-1" viewBox="0 0 16 16">
+                            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                            <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
                         </svg>
                         Cetak Bukti Kelulusan
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -213,6 +213,15 @@
                         badge.removeClass('badge-success badge-danger badge-info badge-warning');
                         card.removeClass('rejected');
                         
+                        var btnCetak = $('#btn_cetak_lulus');
+                        if (status === 'lulus' || status === 'tidak lulus' || status === 'tidak_lulus') {
+                            btnCetak.removeClass('d-none');
+                            var printUrl = "{{ route('hasil-seleksi.cetak', ':id') }}";
+                            btnCetak.attr('href', printUrl.replace(':id', data.id));
+                        } else {
+                            btnCetak.addClass('d-none');
+                        }
+
                         if (status === 'lulus') {
                             badge.addClass('badge-success');
                             text.text('SELAMAT! ANDA DINYATAKAN LULUS');
@@ -221,17 +230,15 @@
                             sekolah.addClass('text-primary').removeClass('text-danger text-muted');
                             keterangan.text(data.keterangan || 'Silakan lakukan daftar ulang sesuai jadwal.');
                             $('#alert-perhatian').show();
-                            $('#btn-cetak').show().attr('onclick', "window.open('{{ url('hasil-seleksi/cetak') }}/" + data.id + "', '_blank')");
-                        } else if (status === 'tidak lulus') {
+                        } else if (status === 'tidak lulus' || status === 'tidak_lulus') {
                             badge.addClass('badge-danger');
                             card.addClass('rejected');
-                            text.text('MOHON MAAF, ANDA BELUM BERHASIL');
+                            text.text('TETAP SEMANGAT! JANGAN MENYERAH DAN TERUSLAH BELAJAR');
                             $('#res_label_penerimaan').text('Status Penerimaan:');
                             sekolah.text('TIDAK DITERIMA');
                             sekolah.addClass('text-danger').removeClass('text-primary text-muted');
                             keterangan.text('Tetap semangat dan coba lagi di kesempatan berikutnya.');
                             $('#alert-perhatian').hide();
-                            $('#btn-cetak').hide();
                         } else {
                             badge.addClass('badge-info');
                             text.text('STATUS: DALAM PROSES / VERIFIKASI');

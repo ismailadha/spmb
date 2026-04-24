@@ -34,19 +34,19 @@
         }
         .card-container {
             border: 2px solid #000;
-            padding: 15px;
-            max-width: 800px;
+            padding: 10px;
+            max-width: 650px;
             width: 95%;
-            margin: 0 auto 10px auto;
+            margin: 0 auto 5px auto;
             position: relative;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
         .card-outer-container {
-            padding: 15px;
-            max-width: 800px;
+            padding: 10px;
+            max-width: 650px;
             width: 95%;
-            margin: 0 auto 10px auto;
+            margin: 0 auto 5px auto;
             position: relative;
             background-color: #fff;
         }
@@ -62,7 +62,7 @@
         .cut-separator {
             width: 100%;
             border-top: 2px dashed #999;
-            margin: 30px 0;
+            margin: 15px 0;
             position: relative;
             text-align: center;
         }
@@ -96,29 +96,28 @@
             vertical-align: middle;
         }
         .header-logo {
-            width: 150px;
+            width: 80px;
             text-align: center;
         }
         .header-logo img {
-            max-height: 140px;
-            max-width: 140px;
+            max-height: 70px;
+            max-width: 70px;
         }
         .header-text {
             text-align: center;
-            /* padding-right: 50px; */
         }
         .header h1 {
             margin: 0 0 3px 0;
-            font-size: 14px;
+            font-size: 16px;
             text-transform: uppercase;
         }
         .header h2 {
             margin: 0 0 3px 0;
-            font-size: 12px;
+            font-size: 14px;
         }
         .header p {
             margin: 0;
-            font-size: 9px;
+            font-size: 10px;
             line-height: 1.3;
         }
         .content {
@@ -134,14 +133,12 @@
             color: #666;
         }
         .registration-number div {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
-            /* padding: 6px 12px; */
-            border: 2px dashed #000;
             display: inline-block;
             margin-top: 5px;
-            letter-spacing: 1px;
             background: #fff;
+            color: #9c0202ff;
         }
         .data-table {
             width: 100%;
@@ -379,18 +376,18 @@
                 <table class="header-table">
                     <tr>
                         <td class="header-logo">
-                            <img src="{{ $logoDaerah }}" style="width: 50px; height: 50px;" alt="Logo">
+                            <img src="{{ $logoDaerah }}" alt="Logo">
                         </td>
                         <td class="header-text">
                             <div class="header">
-                                <h1>{{ strtoupper('Pemerintah Kota Lhokseumawe') }}</h1>
+                                <h1>PEMERINTAH KOTA LHOKSEUMAWE</h1>
                                 <h2>{{ strtoupper($appConfig['nama_instansi'] ?? 'Dinas Pendidikan') }}</h2>
                                 <p>{{ $appConfig['alamat'] ?? '' }}</p>
                                 <p>Telp: {{ $appConfig['telepon'] ?? '-' }} | Email: {{ $appConfig['email_resmi'] ?? '-' }}</p>
                             </div>
                         </td>
                         <td class="header-logo">
-                            <img src="{{ $logoSurat }}" style="width: 2000px; height: 50px;" alt="Logo">
+                            <img src="{{ $logoSurat }}" style="max-height: 120px; max-width: 120px;" alt="Logo">
                         </td>
                     </tr>
                 </table>
@@ -438,12 +435,12 @@
                                     <tr>
                                         <td class="label">Pilihan 1</td>
                                         <td class="separator">:</td>
-                                        <td>{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</td>
+                                        <td style="font-weight: bold; color: #1e40af;">{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td class="label">Pilihan 2</td>
                                         <td class="separator">:</td>
-                                        <td>{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</td>
+                                        <td style="font-weight: bold; color: #1e40af;">{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</td>
                                     </tr>
                                 </table>
                             </td>
@@ -520,18 +517,18 @@
                 <table class="header-table">
                     <tr>
                         <td class="header-logo">
-                            <img src="{{ $logoDaerah }}" style="width: 50px; height: 50px;" alt="Logo">
+                            <img src="{{ $logoDaerah }}" alt="Logo">
                         </td>
                         <td class="header-text">
                             <div class="header">
-                                <h1>{{ strtoupper('Pemerintah Kota Lhokseumawe') }}</h1>
+                                <h1>PEMERINTAH KOTA LHOKSEUMAWE</h1>
                                 <h2>{{ strtoupper($appConfig['nama_instansi'] ?? 'Dinas Pendidikan') }}</h2>
                                 <p>{{ $appConfig['alamat'] ?? '' }}</p>
                                 <p>Telp: {{ $appConfig['telepon'] ?? '-' }} | Email: {{ $appConfig['email_resmi'] ?? '-' }}</p>
                             </div>
                         </td>
                         <td class="header-logo">
-                            <img src="{{ $logoSurat }}" style="width: 2000px; height: 50px;" alt="Logo">
+                            <img src="{{ $logoSurat }}" style="max-height: 120px; max-width: 120px;" alt="Logo">
                         </td>
                     </tr>
                 </table>
@@ -579,12 +576,12 @@
                                     <tr>
                                         <td class="label">Pilihan 1</td>
                                         <td class="separator">:</td>
-                                        <td>{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</td>
+                                        <td style="font-weight: bold; color: #1e40af;">{{ $pendaftaran->sekolah_pilihan_1_nama ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td class="label">Pilihan 2</td>
                                         <td class="separator">:</td>
-                                        <td>{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</td>
+                                        <td style="font-weight: bold; color: #1e40af;">{{ $pendaftaran->sekolah_pilihan_2_nama ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td class="label">Waktu Daftar</td>

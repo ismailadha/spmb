@@ -106,6 +106,8 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
                     } elseif ($row->status == 'tidak_lulus' || $row->status == 'ditolak') {
                         return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
+                    } elseif ($row->status == 'cadangan') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">Cadangan</span>';
                     } else {
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
@@ -300,6 +302,8 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>';
                     } elseif ($row->status == 'tidak_lulus' || $row->status == 'ditolak') {
                         return '<span class="badge badge-light-danger fw-bolder px-4 py-3">Tidak Lulus</span>';
+                    } elseif ($row->status == 'cadangan') {
+                        return '<span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">Cadangan</span>';
                     } else {
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
