@@ -43,6 +43,8 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
             ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
+            ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
+            ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
             ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->where('pendaftaran.jenjang', $this->jenjang)
             ->where('pendaftaran.status', 'Lulus')
@@ -59,6 +61,10 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
                 'peserta.nisn',
                 'jalur_pendaftaran.nama_jalur',
                 'sek_diterima.nama_sekolah as sekolah_penerima',
+                'sek1.nama_sekolah as pilihan_1',
+                'pendaftaran.jarak_sekolah_1',
+                'sek2.nama_sekolah as pilihan_2',
+                'pendaftaran.jarak_sekolah_2',
                 'pendaftaran.tanggal_daftar',
                 'pendaftaran.sekolah_pilihan_1',
                 'pendaftaran.sekolah_pilihan_2',
@@ -84,6 +90,10 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
             'NISN',
             'Jalur Seleksi',
             'Sekolah Diterima',
+            'Sekolah Pilihan 1',
+            'Jarak Sekolah Pilihan 1',
+            'Sekolah Pilihan 2',
+            'Jarak Sekolah Pilihan 2',
             'Skor Usia',
             'Skor Jarak',
             'Rata-rata Rapor',
@@ -103,6 +113,10 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
             $row->nisn,
             $row->nama_jalur,
             $row->sekolah_penerima,
+            $row->pilihan_1 ?? '-',
+            $row->jarak_sekolah_1 ?? '-',
+            $row->pilihan_2 ?? '-',
+            $row->jarak_sekolah_2 ?? '-',
             $row->jalur_id == 3 ? '-' : ($row->skor_usia ?? '-'),
             $row->jalur_id == 3 ? '-' : (($row->sekolah_diterima_id == $row->sekolah_pilihan_2) ? ($row->skor_jarak_2 ?? '-') : ($row->skor_jarak ?? '-')),
             $row->rata_rapor ?? '-',

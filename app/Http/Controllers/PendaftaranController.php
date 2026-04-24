@@ -280,7 +280,7 @@ class PendaftaranController extends Controller
             'jarak_sekolah_2' => 'nullable|numeric',
 
             // Validasi Berkas (Upload)
-            'pasfoto' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pasfoto' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png|max:2048',
             'akta_lahir' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'ktp_orang_tua' => ($isSubmitted ? 'required|' : 'nullable|').'file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -503,7 +503,7 @@ class PendaftaranController extends Controller
             'jarak_sekolah_2' => 'nullable|numeric',
 
             // Validasi Berkas (Update) - Selalu nullable karena berkas mungkin sudah ada
-            'pasfoto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pasfoto' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'akta_lahir' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'ktp_orang_tua' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',

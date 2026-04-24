@@ -55,6 +55,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         $stats = [
             'total' => Pendaftaran::count(),
+            'jenjang' => [
+                'sd' => Pendaftaran::where('jenjang', 'SD')->count(),
+                'smp' => Pendaftaran::where('jenjang', 'SMP')->count(),
+            ],
             'domisili' => [
                 'total' => Pendaftaran::where('jalur_id', 1)->count(),
                 'sd' => Pendaftaran::where('jalur_id', 1)->where('jenjang', 'SD')->count(),
@@ -73,6 +77,12 @@ Route::middleware('auth')->group(function () {
                 'total' => Pendaftaran::where('jalur_id', 4)->count(),
                 'sd' => Pendaftaran::where('jalur_id', 4)->where('jenjang', 'SD')->count(),
                 'smp' => Pendaftaran::where('jalur_id', 4)->where('jenjang', 'SMP')->count(),
+            ],
+            'verification' => [
+                'submit' => Pendaftaran::where('status', 'submit')->count(),
+                'verifikasi' => Pendaftaran::where('status', 'verifikasi')->count(),
+                'perbaikan' => Pendaftaran::where('status', 'perbaikan')->count(),
+                'hasil' => Pendaftaran::whereIn('status', ['lulus', 'cadangan', 'tidak_lulus', 'diterima'])->count(),
             ],
         ];
 

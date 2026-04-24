@@ -164,17 +164,17 @@
                                     @endif
                                     {{-- Jika status pendaftaran adalah submit, maka tampilkan badge --}}
                                     @if ($pendaftaran->status == 'submit')
-                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3">Proses Verifikasi</span>
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff8dd; color: #ffc700;">PROSES VERIFIKASI</span>
                                     @elseif ($pendaftaran->status == 'verifikasi')
-                                        <span class="badge badge-light-info fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>
+                                        <span class="badge badge-light-info fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #f3f1ff; color: #7239ea;">TERVERIFIKASI</span>
                                     @elseif ($pendaftaran->status == 'perbaikan')
-                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan Berkas</span>
+                                        <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff4e1; color: #ff8c00;">PERBAIKAN BERKAS</span>
                                     @elseif ($pendaftaran->status == 'lulus' || $pendaftaran->status == 'diterima')
                                         <span class="badge badge-light-success fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #e8fff3; color: #50cd89;">LULUS / DITERIMA</span>
                                     @elseif ($pendaftaran->status == 'cadangan')
                                         <span class="badge badge-light-warning fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff8dd; color: #ffc700;">CADANGAN</span>
                                     @elseif ($pendaftaran->status == 'tidak_lulus')
-                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3">TIDAK LULUS</span>
+                                        <span class="badge badge-light-danger fw-bolder ms-2 fs-8 py-1 px-3" style="background-color: #fff5f8; color: #f1416c;">TIDAK LULUS</span>
                                     @endif
                                 </div>
                                 <!--end::Name-->
@@ -198,7 +198,7 @@
                             <div class="d-flex my-4">
                                 @if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah')
                                     @if (in_array($pendaftaran->status, ['submit', 'perbaikan', 'tidak_lulus']))
-                                        <a href="{{ route('peserta.verifikasi', $pendaftaran->id) }}" class="btn btn-sm btn-primary me-2">Verifikasi Sekarang</a>
+                                        <a href="{{ route('peserta.verifikasi', $pendaftaran->peserta_id) }}" class="btn btn-sm btn-primary me-2">Verifikasi Sekarang</a>
                                     @endif
 
                                 @endif

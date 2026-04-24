@@ -7,32 +7,128 @@
 @section('content')
     <!--begin::Row - Hero Stats-->
     <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-        <!--begin::Col-->
-        <div class="col-12">
+        <!--begin::Col - Total Seluruh-->
+        <div class="col-lg-4">
             <div class="card card-flush h-md-100" style="background-color: #F8F5FF; border: 1px solid #E1D9FE;">
-                <!--begin::Header-->
                 <div class="card-header pt-5">
-                    <!--begin::Title-->
                     <div class="card-title d-flex flex-column">
                         <div class="d-flex align-items-center mb-2">
                              <i class="bi bi-people-fill fs-2hx text-primary me-3"></i>
                              <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ number_format($stats['total']) }}</span>
                         </div>
-                        <span class="text-gray-600 pt-1 fw-semibold fs-6">Total Seluruh Peserta Pendaftar (Seluruh Jalur)</span>
+                        <span class="text-gray-600 pt-1 fw-bold fs-7 text-uppercase">Total Seluruh Peserta</span>
                     </div>
                 </div>
-                <!--begin::Card body-->
                 <div class="card-body d-flex align-items-end pt-0 pb-6">
-                    <div class="d-flex align-items-center flex-wrap">
-                        <div class="d-flex align-items-center me-5">
-                            
-                        </div>
-                    </div>
+                    <span class="text-muted fs-8">Seluruh Jalur Pendaftaran</span>
                 </div>
             </div>
         </div>
+        <!--end::Col-->
+
+        <!--begin::Col - Total SD-->
+        <div class="col-lg-4">
+            <div class="card card-flush h-md-100" style="background-color: #E8FFF3; border: 1px solid #50CD89;">
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center mb-2">
+                             <i class="bi bi-mortarboard-fill fs-2hx text-success me-3"></i>
+                             <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ number_format($stats['jenjang']['sd']) }}</span>
+                        </div>
+                        <span class="text-success pt-1 fw-bold fs-7 text-uppercase">Total Jenjang SD</span>
+                    </div>
+                </div>
+                <div class="card-body d-flex align-items-end pt-0 pb-6">
+                    <span class="text-muted fs-8">Calon Peserta Didik Baru SD</span>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
+
+        <!--begin::Col - Total SMP-->
+        <div class="col-lg-4">
+            <div class="card card-flush h-md-100" style="background-color: #F1FAFF; border: 1px solid #009EF7;">
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center mb-2">
+                             <i class="bi bi-mortarboard fs-2hx text-info me-3"></i>
+                             <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ number_format($stats['jenjang']['smp']) }}</span>
+                        </div>
+                        <span class="text-info pt-1 fw-bold fs-7 text-uppercase">Total Jenjang SMP</span>
+                    </div>
+                </div>
+                <div class="card-body d-flex align-items-end pt-0 pb-6">
+                    <span class="text-muted fs-8">Calon Peserta Didik Baru SMP</span>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
     </div>
     <!--end::Row-->
+
+    <!--begin::Row - Verification Stats-->
+    <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+        <!--begin::Col-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100" style="background-color: #fff8dd; border: 1px dashed #ffc700;">
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['verification']['submit'] }}</span>
+                        <span class="text-gray-600 pt-1 fw-bold fs-7 text-uppercase">Perlu Verifikasi</span>
+                    </div>
+                </div>
+                <div class="card-body pt-0 pb-6 d-flex align-items-center">
+                    <span class="badge badge-warning fs-8 fw-bold">Status: Submit</span>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
+        <!--begin::Col-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100" style="background-color: #f3f1ff; border: 1px dashed #7239ea;">
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['verification']['verifikasi'] }}</span>
+                        <span class="text-gray-600 pt-1 fw-bold fs-7 text-uppercase">Terverifikasi</span>
+                    </div>
+                </div>
+                <div class="card-body pt-0 pb-6 d-flex align-items-center">
+                    <span class="badge badge-primary fs-8 fw-bold" style="background-color: #7239ea;">Status: Verified</span>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
+        <!--begin::Col-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100" style="background-color: #fff4e1; border: 1px dashed #ff8c00;">
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['verification']['perbaikan'] }}</span>
+                        <span class="text-gray-600 pt-1 fw-bold fs-7 text-uppercase">Minta Perbaikan</span>
+                    </div>
+                </div>
+                <div class="card-body pt-0 pb-6 d-flex align-items-center">
+                    <span class="badge badge-warning fs-8 fw-bold" style="background-color: #ff8c00;">Status: Pending</span>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
+        <!--begin::Col-->
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-flush h-md-100" style="background-color: #e8fff3; border: 1px dashed #50cd89;">
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{ $stats['verification']['hasil'] }}</span>
+                        <span class="text-gray-600 pt-1 fw-bold fs-7 text-uppercase">Selesai Seleksi</span>
+                    </div>
+                </div>
+                <div class="card-body pt-0 pb-6 d-flex align-items-center">
+                    <span class="badge badge-success fs-8 fw-bold">Status: Final</span>
+                </div>
+            </div>
+        </div>
+        <!--end::Col-->
+    </div>
 
     <!--begin::Row - Path Breakdown-->
     <div class="row g-5 g-xl-10 mb-5 mb-xl-10">

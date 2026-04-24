@@ -67,17 +67,19 @@
                                     <div class="border border-gray-300 border-dashed rounded py-3 px-3 mb-3">
                                         <div class="fs-4 fw-bolder text-gray-700 text-center">
                                             @if($peserta->pendaftaran->status == 'submit')
-                                                <span class="badge badge-light-warning fw-bolder px-4 py-3">Proses Verifikasi</span>
+                                                <span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">PROSES VERIFIKASI</span>
                                             @elseif($peserta->pendaftaran->status == 'verifikasi')
-                                                <span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">Terverifikasi</span>
+                                                <span class="badge badge-light-info fw-bolder px-4 py-3" style="background-color: #f3f1ff; color: #7239ea;">TERVERIFIKASI</span>
                                             @elseif($peserta->pendaftaran->status == 'perbaikan')
-                                                <span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">Perbaikan</span>
+                                                <span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff4e1; color: #ff8c00;">PERBAIKAN BERKAS</span>
                                             @elseif($peserta->pendaftaran->status == 'lulus' || $peserta->pendaftaran->status == 'diterima')
-                                                <span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">{{ $peserta->pendaftaran->status == 'lulus' ? 'Lulus' : 'Diterima' }}</span>
-                                            @elseif($peserta->pendaftaran->status == 'ditolak')
-                                                <span class="badge badge-light-danger fw-bolder px-4 py-3">Ditolak</span>
+                                                <span class="badge badge-light-success fw-bolder px-4 py-3" style="background-color: #e8fff3; color: #50cd89;">LULUS / DITERIMA</span>
+                                            @elseif($peserta->pendaftaran->status == 'cadangan')
+                                                <span class="badge badge-light-warning fw-bolder px-4 py-3" style="background-color: #fff8dd; color: #ffc700;">CADANGAN</span>
+                                            @elseif($peserta->pendaftaran->status == 'tidak_lulus' || $peserta->pendaftaran->status == 'ditolak')
+                                                <span class="badge badge-light-danger fw-bolder px-4 py-3" style="background-color: #fff5f8; color: #f1416c;">TIDAK LULUS</span>
                                             @elseif($peserta->pendaftaran->status == 'draft')
-                                                <span class="badge badge-light-primary fw-bolder px-4 py-3">Draft</span>
+                                                <span class="badge badge-light-primary fw-bolder px-4 py-3">DRAFT</span>
                                             @endif
                                         </div>
                                         <div class="fw-bold text-muted text-center fs-7">Status</div>

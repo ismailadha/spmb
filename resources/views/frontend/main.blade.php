@@ -111,17 +111,18 @@
     <!-- header area -->
     <section class="header header--2">
         <!-- Topbar: Sleek and Slim -->
-        <div class="top_bar" style="background-color: #1e2a4a; color: #f8f9fa; padding: 20px 0;">
+        <div class="top_bar" style="background-color: #1e2a4a; color: #f8f9fa; padding: 12px 0;">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-7 d-none d-md-block">
-                        <div class="d-flex align-items-center" style="font-size: 0.85rem; opacity: 0.9; margin: 0; padding: 0; line-height: 1;">
-                            <div class="d-flex align-items-center mr-4"><i class="la la-envelope mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ $appConfig['email_resmi'] ?? 'support@spmb.com' }}</div>
-                            <div class="d-flex align-items-center mr-4"><i class="la la-phone mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ $appConfig['telepon'] ?? '0800 123 456' }}</div>
+                    <div class="col-md-8 d-none d-md-block">
+                        <div class="d-flex align-items-center flex-nowrap" style="font-size: 0.82rem; opacity: 0.9; margin: 0; padding: 0;">
+                            <div class="d-flex align-items-center mr-3"><i class="la la-calendar mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</div>
+                            <div class="d-flex align-items-center mr-3"><i class="la la-envelope mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ $appConfig['email_resmi'] ?? 'support@spmb.com' }}</div>
+                            <div class="d-flex align-items-center mr-3"><i class="la la-phone mr-1" style="color: #3498db; font-size: 1.1rem;"></i> {{ $appConfig['telepon'] ?? '0800 123 456' }}</div>
                             <div class="d-flex align-items-center"><i class="la la-clock-o mr-1" style="color: #3498db; font-size: 1.1rem;"></i> Senin - Sabtu 08.00 - 15.00</div>
                         </div>
                     </div>
-                    <div class="col-md-5 text-md-right text-center d-flex align-items-center justify-content-md-end justify-content-center">
+                    <div class="col-md-4 text-md-right text-center d-flex align-items-center justify-content-md-end justify-content-center">
                         @auth
                             <div class="d-flex align-items-center" style="font-size: 0.85rem; font-weight: 500; line-height: 1;">
                                 <i class="la la-user-circle mr-1" style="font-size: 1.1rem;"></i> Selamat datang, <strong style="color: #1abc9c; margin-left: 4px;">{{ Auth::user()->name }}</strong>
