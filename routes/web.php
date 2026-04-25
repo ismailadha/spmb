@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HasilSeleksiController;
 use App\Http\Controllers\KelulusanController;
@@ -88,6 +89,8 @@ Route::middleware('auth')->group(function () {
 
         return view('backend.home', compact('stats'));
     })->name('dashboard');
+
+    Route::get('/password/edit', [PasswordController::class, 'edit'])->name('password.edit');
 
     Route::middleware('role:admin_dinas,admin_sekolah')->group(function () {
         Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik.index');

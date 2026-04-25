@@ -578,7 +578,12 @@
 											<div class="separator my-2"></div>
 											<!--end::Menu separator-->
 											<!--begin::Menu item-->
+											<div class="menu-item px-5">
+												<a href="{{ route('password.edit') }}" class="menu-link px-5">Ubah Kata Sandi</a>
+											</div>
+											<!--end::Menu item-->
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST">
+
 												@csrf
                                                 <div class="menu-item px-5">
                                                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="menu-link px-5">Sign Out</a>
