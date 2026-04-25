@@ -28,9 +28,6 @@
                     <button type="button" id="btn_export_excel" class="btn btn-sm btn-success d-flex align-items-center">
                         <i class="fas fa-file-excel fs-4 me-2"></i> Excel
                     </button>
-                    <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
-                        <i class="fas fa-file-pdf fs-4 me-2"></i> PDF
-                    </button>
                 </div>
                 <!--end::Export Buttons-->
             </div>
@@ -235,16 +232,7 @@ $(document).ready(function() {
         window.location.href = url;
     });
 
-    $('#btn_export_pdf').click(function() {
-        let params = {
-            periode_id: $('#filter_periode').val(),
-            jalur_id: $('#filter_jalur').val(),
-            sekolah_id: $('#filter_sekolah').val(),
-            status: $('#filter_status').val(),
-        };
-        let url = "{{ route('peserta.smp.export.pdf') }}?" + $.param(params);
-        window.location.href = url;
-    });
+
 });
 </script>
 @endsection

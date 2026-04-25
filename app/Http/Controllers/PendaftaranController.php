@@ -73,6 +73,7 @@ class PendaftaranController extends Controller
                     ->join('sekolah as sekolah1', 'pendaftaran.sekolah_pilihan_1', '=', 'sekolah1.id')
                     ->leftJoin('sekolah as sekolah2', 'pendaftaran.sekolah_pilihan_2', '=', 'sekolah2.id')
                     ->leftJoin('sekolah as sekolah_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sekolah_diterima.id')
+                    ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
                     ->leftJoin('orang_tua_wali', 'peserta.id', '=', 'orang_tua_wali.peserta_id')
                     ->where('peserta.user_id', Auth::id())
                     ->where('pendaftaran.id', $pendaftaran->id)
@@ -135,6 +136,13 @@ class PendaftaranController extends Controller
                         'orang_tua_wali.pekerjaan_wali',
                         'orang_tua_wali.no_hp',
                         'orang_tua_wali.alamat_wali',
+                        'nilai_seleksi.skor_jarak',
+                        'nilai_seleksi.skor_jarak_2',
+                        'nilai_seleksi.skor_usia',
+                        'nilai_seleksi.rata_rapor',
+                        'nilai_seleksi.nilai_tes_akademik',
+                        'nilai_seleksi.nilai_prestasi',
+                        'nilai_seleksi.nilai_akhir',
                     )
                     ->orderBy('pendaftaran.id', 'desc')
                     ->first();

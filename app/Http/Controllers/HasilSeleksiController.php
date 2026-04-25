@@ -20,6 +20,7 @@ class HasilSeleksiController extends Controller
     {
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -27,7 +28,7 @@ class HasilSeleksiController extends Controller
 
         $filename = 'hasil_seleksi_sd_'.date('YmdHis').'.xlsx';
 
-        return (new HasilSeleksiExport($jalurId, $sekolahId, 'SD'))->download($filename);
+        return (new HasilSeleksiExport($jalurId, $sekolahId, 'SD', $status))->download($filename);
     }
 
     /**
@@ -37,6 +38,7 @@ class HasilSeleksiController extends Controller
     {
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -52,7 +54,11 @@ class HasilSeleksiController extends Controller
             ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
             ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->where('pendaftaran.jenjang', $jenjang)
-            ->where('pendaftaran.status', 'Lulus')
+            ->when($status, function ($query, $status) {
+                return $query->where('pendaftaran.status', $status);
+            }, function ($query) {
+                return $query->whereIn('pendaftaran.status', ['Lulus', 'Tidak Lulus', 'Cadangan', 'lulus', 'tidak_lulus', 'cadangan']);
+            })
             ->when($jalurId, function ($query, $jalurId) {
                 return $query->where('pendaftaran.jalur_id', $jalurId);
             })
@@ -88,8 +94,13 @@ class HasilSeleksiController extends Controller
     {
         if ($request->ajax()) {
             $data = Pendaftaran::with(['peserta', 'jalur', 'sekolahDiterima', 'nilaiSeleksi'])
-                ->where('jenjang', 'SD')
-                ->where('status', 'Lulus');
+                ->where('jenjang', 'SD');
+
+            if ($request->status) {
+                $data->where('status', $request->status);
+            } else {
+                $data->whereIn('status', ['Lulus', 'Tidak Lulus', 'Cadangan', 'lulus', 'tidak_lulus', 'cadangan']);
+            }
 
             if (auth()->user()->role == 'admin_sekolah') {
                 $data->where('sekolah_diterima_id', auth()->user()->sekolah_id);
@@ -105,11 +116,11 @@ class HasilSeleksiController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+                ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
                     $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
                 })
-                ->filterColumn('peserta_info', function($query, $keyword) {
-                    $query->whereHas('peserta', function($q) use ($keyword) {
+                ->filterColumn('peserta_info', function ($query, $keyword) {
+                    $query->whereHas('peserta', function ($q) use ($keyword) {
                         $q->where('nama_lengkap', 'like', "%{$keyword}%");
                     });
                 })
@@ -130,22 +141,40 @@ class HasilSeleksiController extends Controller
                 ->addColumn('sekolah_info', function ($row) {
                     return $row->sekolahDiterima->nama_sekolah ?? '-';
                 })
+                ->addColumn('status_info', function ($row) {
+                    $status = strtolower($row->status);
+                    if ($status == 'lulus') {
+                        return '<span class="badge badge-light-success fw-bolder">Lulus</span>';
+                    } elseif ($status == 'cadangan') {
+                        return '<span class="badge badge-light-warning fw-bolder">Cadangan</span>';
+                    } elseif ($status == 'tidak_lulus') {
+                        return '<span class="badge badge-light-danger fw-bolder">Tidak Lulus</span>';
+                    }
+
+                    return '<span class="badge badge-light-secondary fw-bolder">'.$row->status.'</span>';
+                })
                 ->addColumn('action', function ($row) {
-                    return '
-                        <div class="d-flex justify-content-end">
-                            <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail" target="_blank">
-                                <i class="bi bi-eye fs-3"></i>
-                            </a>
+                    $html = '<div class="d-flex justify-content-end">';
+                    $html .= '
+                        <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail" target="_blank">
+                            <i class="bi bi-eye fs-3"></i>
+                        </a>
+                    ';
+                    if (strtolower($row->status) == 'lulus') {
+                        $html .= '
                             <a href="'.route('hasil-seleksi.download', $row->id).'" target="_blank" class="btn btn-icon btn-light-danger btn-sm me-1" title="Download Kartu Lulus">
                                 <i class="bi bi-file-earmark-pdf fs-3"></i>
                             </a>
                             <a href="'.route('hasil-seleksi.cetak', $row->id).'" target="_blank" class="btn btn-icon btn-light-dark btn-sm me-1" title="Cetak Kartu Lulus">
                                 <i class="bi bi-printer fs-3"></i>
                             </a>
-                        </div>
-                    ';
+                        ';
+                    }
+                    $html .= '</div>';
+
+                    return $html;
                 })
-                ->rawColumns(['peserta_info', 'action', 'nomor_pendaftaran'])
+                ->rawColumns(['peserta_info', 'action', 'nomor_pendaftaran', 'status_info'])
                 ->make(true);
         }
 
@@ -166,6 +195,7 @@ class HasilSeleksiController extends Controller
     {
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -173,7 +203,7 @@ class HasilSeleksiController extends Controller
 
         $filename = 'hasil_seleksi_smp_'.date('YmdHis').'.xlsx';
 
-        return (new HasilSeleksiExport($jalurId, $sekolahId, 'SMP'))->download($filename);
+        return (new HasilSeleksiExport($jalurId, $sekolahId, 'SMP', $status))->download($filename);
     }
 
     /**
@@ -183,6 +213,7 @@ class HasilSeleksiController extends Controller
     {
         $jalurId = $request->get('jalur_id');
         $sekolahId = $request->get('sekolah_id');
+        $status = $request->get('status');
 
         if (auth()->user()->role == 'admin_sekolah') {
             $sekolahId = auth()->user()->sekolah_id;
@@ -198,7 +229,11 @@ class HasilSeleksiController extends Controller
             ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
             ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->where('pendaftaran.jenjang', $jenjang)
-            ->where('pendaftaran.status', 'Lulus')
+            ->when($status, function ($query, $status) {
+                return $query->where('pendaftaran.status', $status);
+            }, function ($query) {
+                return $query->whereIn('pendaftaran.status', ['Lulus', 'Tidak Lulus', 'Cadangan', 'lulus', 'tidak_lulus', 'cadangan']);
+            })
             ->when($jalurId, function ($query, $jalurId) {
                 return $query->where('pendaftaran.jalur_id', $jalurId);
             })
@@ -234,8 +269,13 @@ class HasilSeleksiController extends Controller
     {
         if ($request->ajax()) {
             $data = Pendaftaran::with(['peserta', 'jalur', 'sekolahDiterima', 'nilaiSeleksi'])
-                ->where('jenjang', 'SMP')
-                ->where('status', 'Lulus');
+                ->where('jenjang', 'SMP');
+
+            if ($request->status) {
+                $data->where('status', $request->status);
+            } else {
+                $data->whereIn('status', ['Lulus', 'Tidak Lulus', 'Cadangan', 'lulus', 'tidak_lulus', 'cadangan']);
+            }
 
             if (auth()->user()->role == 'admin_sekolah') {
                 $data->where('sekolah_diterima_id', auth()->user()->sekolah_id);
@@ -251,11 +291,11 @@ class HasilSeleksiController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->filterColumn('nomor_pendaftaran', function($query, $keyword) {
+                ->filterColumn('nomor_pendaftaran', function ($query, $keyword) {
                     $query->where('pendaftaran.nomor_pendaftaran', 'like', "%{$keyword}%");
                 })
-                ->filterColumn('peserta_info', function($query, $keyword) {
-                    $query->whereHas('peserta', function($q) use ($keyword) {
+                ->filterColumn('peserta_info', function ($query, $keyword) {
+                    $query->whereHas('peserta', function ($q) use ($keyword) {
                         $q->where('nama_lengkap', 'like', "%{$keyword}%");
                     });
                 })
@@ -276,22 +316,40 @@ class HasilSeleksiController extends Controller
                 ->addColumn('sekolah_info', function ($row) {
                     return $row->sekolahDiterima->nama_sekolah ?? '-';
                 })
+                ->addColumn('status_info', function ($row) {
+                    $status = strtolower($row->status);
+                    if ($status == 'lulus') {
+                        return '<span class="badge badge-light-success fw-bolder">Lulus</span>';
+                    } elseif ($status == 'cadangan') {
+                        return '<span class="badge badge-light-warning fw-bolder">Cadangan</span>';
+                    } elseif ($status == 'tidak_lulus') {
+                        return '<span class="badge badge-light-danger fw-bolder">Tidak Lulus</span>';
+                    }
+
+                    return '<span class="badge badge-light-secondary fw-bolder">'.$row->status.'</span>';
+                })
                 ->addColumn('action', function ($row) {
-                    return '
-                        <div class="d-flex justify-content-end">
-                            <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail">
-                                <i class="bi bi-eye fs-3"></i>
-                            </a>
+                    $html = '<div class="d-flex justify-content-end">';
+                    $html .= '
+                        <a href="'.route('peserta.detail', $row->id).'" class="btn btn-icon btn-light-primary btn-sm me-1" title="Detail" target="_blank">
+                            <i class="bi bi-eye fs-3"></i>
+                        </a>
+                    ';
+                    if (strtolower($row->status) == 'lulus') {
+                        $html .= '
                             <a href="'.route('hasil-seleksi.download', $row->id).'" target="_blank" class="btn btn-icon btn-light-danger btn-sm me-1" title="Download Kartu Lulus">
                                 <i class="bi bi-file-earmark-pdf fs-3"></i>
                             </a>
                             <a href="'.route('hasil-seleksi.cetak', $row->id).'" target="_blank" class="btn btn-icon btn-light-dark btn-sm me-1" title="Cetak Kartu Lulus">
                                 <i class="bi bi-printer fs-3"></i>
                             </a>
-                        </div>
-                    ';
+                        ';
+                    }
+                    $html .= '</div>';
+
+                    return $html;
                 })
-                ->rawColumns(['peserta_info', 'action', 'nomor_pendaftaran'])
+                ->rawColumns(['peserta_info', 'action', 'nomor_pendaftaran', 'status_info'])
                 ->make(true);
         }
 

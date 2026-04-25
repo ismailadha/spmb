@@ -29,7 +29,8 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
     public function __construct(
         private $jalurId,
         private $sekolahId,
-        private $jenjang = 'SD'
+        private $jenjang = 'SD',
+        private $status = null
     ) {}
 
     public function startCell(): string
@@ -47,7 +48,11 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
             ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
             ->leftJoin('nilai_seleksi', 'pendaftaran.id', '=', 'nilai_seleksi.pendaftaran_id')
             ->where('pendaftaran.jenjang', $this->jenjang)
-            ->where('pendaftaran.status', 'Lulus')
+            ->when($this->status, function ($query, $status) {
+                return $query->where('pendaftaran.status', $status);
+            }, function ($query) {
+                return $query->whereIn('pendaftaran.status', ['Lulus', 'Tidak Lulus', 'Cadangan', 'lulus', 'tidak_lulus', 'cadangan']);
+            })
             ->when($this->jalurId, function ($query, $jalurId) {
                 return $query->where('pendaftaran.jalur_id', $jalurId);
             })
@@ -76,7 +81,8 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
                 'nilai_seleksi.rata_rapor',
                 'nilai_seleksi.nilai_tes_akademik',
                 'nilai_seleksi.nilai_prestasi',
-                'nilai_seleksi.nilai_akhir'
+                'nilai_seleksi.nilai_akhir',
+                'pendaftaran.status'
             )
             ->orderBy('pendaftaran.nomor_pendaftaran', 'asc');
     }
@@ -101,6 +107,7 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
             'Nilai Prestasi',
             'Skor Nilai Akhir',
             'Tanggal Daftar',
+            'Status',
         ];
     }
 
@@ -124,6 +131,7 @@ class HasilSeleksiExport extends DefaultValueBinder implements FromQuery, Should
             $row->nilai_prestasi ?? '-',
             $row->nilai_akhir ?? '-',
             Carbon::parse($row->tanggal_daftar)->format('d-m-Y'),
+            ucfirst(str_replace('_', ' ', $row->status)),
         ];
     }
 

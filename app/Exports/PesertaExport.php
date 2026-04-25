@@ -48,6 +48,7 @@ class PesertaExport extends DefaultValueBinder implements FromQuery, ShouldAutoS
             ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
             ->leftJoin('sekolah as sek1', 'pendaftaran.sekolah_pilihan_1', '=', 'sek1.id')
             ->leftJoin('sekolah as sek2', 'pendaftaran.sekolah_pilihan_2', '=', 'sek2.id')
+            ->leftJoin('sekolah as sek_diterima', 'pendaftaran.sekolah_diterima_id', '=', 'sek_diterima.id')
             ->where('pendaftaran.periode_id', $this->periodeId)
             ->where('pendaftaran.jenjang', $this->jenjang)
             ->when($this->jalurId, function ($query, $jalurId) {
@@ -70,6 +71,10 @@ class PesertaExport extends DefaultValueBinder implements FromQuery, ShouldAutoS
                 'jalur_pendaftaran.nama_jalur',
                 'sek1.nama_sekolah as pilihan_1',
                 'sek2.nama_sekolah as pilihan_2',
+                'sek_diterima.nama_sekolah as sekolah_diterima',
+                'pendaftaran.sekolah_pilihan_1',
+                'pendaftaran.sekolah_pilihan_2',
+                'pendaftaran.sekolah_diterima_id',
                 'pendaftaran.status',
                 'pendaftaran.tanggal_daftar'
             )
@@ -86,6 +91,7 @@ class PesertaExport extends DefaultValueBinder implements FromQuery, ShouldAutoS
             'Jalur',
             'Sekolah Pilihan 1',
             'Sekolah Pilihan 2',
+            'Sekolah Diterima',
             'Status',
             'Tanggal Daftar',
         ];
@@ -93,15 +99,50 @@ class PesertaExport extends DefaultValueBinder implements FromQuery, ShouldAutoS
 
     public function map($pendaftaran): array
     {
+        $p1 = $pendaftaran->pilihan_1 ?? '-';
+        $p2 = $pendaftaran->pilihan_2 ?? '-';
+        $diterima = $pendaftaran->sekolah_diterima ?? '-';
+
+        if (in_array($pendaftaran->status, ['lulus', 'diterima']) && $pendaftaran->sekolah_diterima_id) {
+            if ($pendaftaran->sekolah_diterima_id == $pendaftaran->sekolah_pilihan_1) {
+                $p1 .= ' (Lulus)';
+                if ($p2 != '-') {
+                    $p2 .= ' (Tidak Lulus)';
+                }
+            } elseif ($pendaftaran->sekolah_diterima_id == $pendaftaran->sekolah_pilihan_2) {
+                if ($p1 != '-') {
+                    $p1 .= ' (Tidak Lulus)';
+                }
+                $p2 .= ' (Lulus)';
+            } else {
+                // Penempatan Khusus
+                if ($p1 != '-') {
+                    $p1 .= ' (Tidak Lulus)';
+                }
+                if ($p2 != '-') {
+                    $p2 .= ' (Tidak Lulus)';
+                }
+                $diterima .= ' (Lulus Penempatan)';
+            }
+        } elseif ($pendaftaran->status == 'tidak_lulus') {
+            if ($p1 != '-') {
+                $p1 .= ' (Tidak Lulus)';
+            }
+            if ($p2 != '-') {
+                $p2 .= ' (Tidak Lulus)';
+            }
+        }
+
         return [
             $pendaftaran->nomor_pendaftaran,
             $pendaftaran->nama_lengkap,
             $pendaftaran->nik,
             $pendaftaran->nisn,
             $pendaftaran->nama_jalur,
-            $pendaftaran->pilihan_1,
-            $pendaftaran->pilihan_2,
-            $pendaftaran->status,
+            $p1,
+            $p2,
+            $diterima,
+            ucfirst(str_replace('_', ' ', $pendaftaran->status)),
             Carbon::parse($pendaftaran->tanggal_daftar)->format('d-m-Y H:i'),
         ];
     }

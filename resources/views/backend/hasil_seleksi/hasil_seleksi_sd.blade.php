@@ -15,7 +15,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <h3 class="card-label">Daftar Hasil Seleksi Lulus - SD</h3>
+                <h3 class="card-label">Daftar Hasil Seleksi - SD</h3>
             </div>
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
@@ -24,9 +24,7 @@
                     <button type="button" id="btn_export_excel" class="btn btn-sm btn-success d-flex align-items-center">
                         <i class="fas fa-file-excel fs-4 me-2"></i> Excel
                     </button>
-                    {{-- <button type="button" id="btn_export_pdf" class="btn btn-sm btn-danger d-flex align-items-center">
-                        <i class="fas fa-file-pdf fs-4 me-2"></i> PDF
-                    </button> --}}
+
                 </div>
                 <!--end::Export Buttons-->
             </div>
@@ -62,6 +60,18 @@
                     </select>
                 </div>
                 <!--end::Filter Sekolah-->
+
+                <!--begin::Filter Status-->
+                <div class="d-flex align-items-center">
+                    <label class="me-2 fw-bold text-muted">Status:</label>
+                    <select id="filter_status" class="form-select form-select-sm form-select-solid w-150px" data-control="select2" data-placeholder="Filter Status" data-allow-clear="true">
+                        <option value="">Semua Status</option>
+                        <option value="Lulus">Lulus</option>
+                        <option value="Cadangan">Cadangan</option>
+                        <option value="Tidak Lulus">Tidak Lulus</option>
+                    </select>
+                </div>
+                <!--end::Filter Status-->
             </div>
         </div>
 
@@ -77,6 +87,7 @@
                             <th class="min-w-200px">Peserta</th>
                             <th class="min-w-150px">Jalur Seleksi</th>
                             <th class="min-w-200px">Sekolah Diterima</th>
+                            <th class="min-w-100px">Status</th>
                             <th class="min-w-100px">Skor Usia</th>
                             <th class="min-w-100px">Skor Jarak</th>
                             <th class="min-w-125px">Skor Akhir</th>
@@ -101,9 +112,25 @@
                     <div class="d-flex flex-stack flex-grow-1">
                         <div class="fw-semibold">
                             <div class="fs-6 text-gray-700">
-                                <strong class="text-dark">Informasi Perhitungan:</strong> 
-                                Skor Akhir untuk jalur selain Prestasi dihitung berdasarkan <strong>Skor Usia + Skor Jarak</strong>. 
-                                Untuk Jalur Prestasi, skor akhir dihitung berdasarkan komponen penilaian prestasi masing-masing.
+                                <div class="mb-2">
+                                    <strong class="text-dark">Informasi Perhitungan:</strong> 
+                                    Skor Akhir untuk jalur selain Prestasi dihitung berdasarkan <strong>Skor Usia + Skor Jarak</strong>. 
+                                    Untuk Jalur Prestasi, skor akhir dihitung berdasarkan komponen penilaian prestasi masing-masing.
+                                </div>
+                                <div class="mt-3">
+                                    <strong class="text-dark">Kriteria Skor Jarak:</strong>
+                                    <ul class="mt-2">
+                                        <li>Jarak &le; 0.5 km: <strong>800</strong></li>
+                                        <li>Jarak 0.5 - 1.0 km: <strong>600</strong></li>
+                                        <li>Jarak 1.0 - 3.0 km: <strong>400</strong></li>
+                                        <li>Jarak 3.0 - 5.0 km: <strong>300</strong></li>
+                                        <li>Jarak 5.0 - 7.5 km: <strong>200</strong></li>
+                                        <li>Jarak &gt; 7.5 km: <strong>100</strong></li>
+                                    </ul>
+                                </div>
+                                <div class="mt-2">
+                                    <strong class="text-dark">Skor Usia:</strong> Dihitung berdasarkan selisih hari antara tanggal lahir dengan batas usia yang ditetapkan.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,6 +158,7 @@ $(document).ready(function() {
             data: function (d) {
                 d.jalur_id = $('#filter_jalur').val();
                 d.sekolah_id = $('#filter_sekolah').val();
+                d.status = $('#filter_status').val();
             }
         },
         columns: [
@@ -139,6 +167,7 @@ $(document).ready(function() {
             { data: 'peserta_info', name: 'peserta_info' },
             { data: 'jalur_info', name: 'jalur_info', searchable: false },
             { data: 'sekolah_info', name: 'sekolah_info', searchable: false },
+            { data: 'status_info', name: 'status_info', searchable: false },
             { 
                 data: 'skor_usia', 
                 name: 'nilaiSeleksi.skor_usia',
@@ -170,7 +199,7 @@ $(document).ready(function() {
         ]
     });
 
-    $('#filter_jalur, #filter_sekolah').on('change', function () {
+    $('#filter_jalur, #filter_sekolah, #filter_status').on('change', function () {
         table.draw();
     });
 
@@ -179,19 +208,13 @@ $(document).ready(function() {
         let params = {
             jalur_id: $('#filter_jalur').val(),
             sekolah_id: $('#filter_sekolah').val(),
+            status: $('#filter_status').val(),
         };
         let url = "{{ route('hasil-seleksi.sd.export.excel') }}?" + $.param(params);
         window.location.href = url;
     });
 
-    $('#btn_export_pdf').click(function() {
-        let params = {
-            jalur_id: $('#filter_jalur').val(),
-            sekolah_id: $('#filter_sekolah').val(),
-        };
-        let url = "{{ route('hasil-seleksi.sd.export.pdf') }}?" + $.param(params);
-        window.location.href = url;
-    });
+
 });
 </script>
 @endsection

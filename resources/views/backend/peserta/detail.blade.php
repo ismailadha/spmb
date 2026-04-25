@@ -389,8 +389,11 @@
                 </div>
                 <div class="row mb-7">
                     <label class="col-lg-4 fw-bold text-muted">Sekolah Penempatan</label>
-                    <div class="col-lg-8">
-                        <span class="fw-bolder fs-4 text-gray-800">{{ $pendaftaran->sekolah_diterima ?? '-' }}</span>
+                    <div class="col-lg-8 d-flex align-items-center">
+                        <span class="fw-bolder fs-4 text-gray-800 me-3">{{ $pendaftaran->sekolah_diterima ?? '-' }}</span>
+                        @if($pendaftaran->sekolah_diterima_id && !in_array($pendaftaran->sekolah_diterima_id, [$pendaftaran->sekolah_pilihan_1, $pendaftaran->sekolah_pilihan_2]))
+                            <span class="badge badge-light-primary fw-bolder px-3 py-1">PENEMPATAN KHUSUS / DINAS</span>
+                        @endif
                     </div>
                 </div>
                 <div class="row mb-7">
@@ -405,14 +408,20 @@
                         <div class="d-flex flex-wrap gap-3 mb-5">
                             @if($pendaftaran->skor_jarak)
                                 <div class="border border-gray-300 border-dashed rounded py-3 px-4">
-                                    <div class="fw-bold text-muted fs-7">Jarak (Zonasi)</div>
-                                    <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->skor_jarak, 0, ',', '.') }} Meter</div>
+                                    <div class="fw-bold text-muted fs-7">Skor Jarak</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->skor_jarak, 0, ',', '.') }} Poin</div>
+                                </div>
+                            @endif
+                            @if($pendaftaran->skor_usia)
+                                <div class="border border-gray-300 border-dashed rounded py-3 px-4">
+                                    <div class="fw-bold text-muted fs-7">Skor Usia</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->skor_usia, 0, ',', '.') }} Hari</div>
                                 </div>
                             @endif
                             @if($pendaftaran->nilai_akhir)
                                 <div class="border border-gray-300 border-dashed rounded py-3 px-4">
                                     <div class="fw-bold text-muted fs-7">Nilai Akhir</div>
-                                    <div class="fw-bolder fs-5 text-primary">{{ $pendaftaran->nilai_akhir }}</div>
+                                    <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->nilai_akhir, 0, ',', '.') }}</div>
                                 </div>
                             @endif
                             @if($pendaftaran->nilai_prestasi)
@@ -434,6 +443,16 @@
                                 </div>
                             @endif
                         </div>
+                        
+                        @if($pendaftaran->sekolah_diterima_id && !in_array($pendaftaran->sekolah_diterima_id, [$pendaftaran->sekolah_pilihan_1, $pendaftaran->sekolah_pilihan_2]))
+                            <div class="alert alert-dismissible bg-light-info d-flex flex-column flex-sm-row p-5 mb-5">
+                                <i class="bi bi-info-circle fs-2hx text-info me-4 mb-5 mb-sm-0"></i>
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h4 class="fw-bold">Informasi Penempatan</h4>
+                                    <span>Peserta ini diterima melalui <strong>Penempatan Khusus / Dinas</strong> karena sisa kuota yang tersedia di sekolah penempatan. Skor yang ditampilkan tetap menggunakan referensi skor seleksi dari pilihan awal peserta.</span>
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="d-flex gap-3">
                             <a href="{{ route('pendaftaran.lulus.download', $pendaftaran->id) }}" class="btn btn-danger btn-sm" target="_blank">

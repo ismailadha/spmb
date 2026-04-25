@@ -35,13 +35,23 @@
                         'class' => 'success',
                         'icon' => 'bi-trophy',
                         'title' => 'Selamat, Anda Lulus!',
-                        'message' => 'Selamat! Anda dinyatakan Lulus di <strong>' . ($pendaftaran->sekolah_diterima_nama ?? 'Sekolah Tujuan') . '</strong>. Silakan lakukan proses pendaftaran ulang sesuai jadwal yang ditentukan.',
+                        'message' => 'Selamat! Anda dinyatakan Lulus di <strong>' . ($pendaftaran->sekolah_diterima_nama ?? 'Sekolah Tujuan') . '</strong>.' . 
+                                     ($pendaftaran->sekolah_diterima_id && !in_array($pendaftaran->sekolah_diterima_id, [$pendaftaran->sekolah_pilihan_1, $pendaftaran->sekolah_pilihan_2]) 
+                                      ? '<br><span class="badge badge-light-primary fw-bolder mt-2 py-2 px-3">Diterima melalui Penempatan Khusus / Dinas</span>' 
+                                      : '') . 
+                                     '<br><br>Silakan lakukan proses pendaftaran ulang sesuai jadwal yang ditentukan.',
+                    ],
+                    'cadangan' => [
+                        'class' => 'warning',
+                        'icon' => 'bi-clock-history',
+                        'title' => 'Status Cadangan',
+                        'message' => 'Anda saat ini masuk dalam daftar <strong>Cadangan</strong>. <br>Silakan pantau terus akun Anda untuk informasi penempatan selanjutnya jika terdapat kuota yang tersedia.',
                     ],
                     'tidak_lulus' => [
                         'class' => 'danger',
                         'icon' => 'bi-x-circle',
                         'title' => 'Mohon Maaf',
-                        'message' => 'Mohon maaf, Anda dinyatakan Tidak Lulus seleksi pada periode ini. Tetap semangat dan jangan menyerah!',
+                        'message' => 'Mohon maaf, Anda dinyatakan belum lulus seleksi pada periode ini. Tetap semangat!',
                     ],
                 ];
                 $current_status = $status_config[$pendaftaran->status] ?? null;
@@ -59,6 +69,8 @@
                 </div>
             @endif
         @endif
+
+
     </div>
 
     @if ($pendaftaran && $pendaftaran->status != 'draft')
@@ -206,6 +218,66 @@
             </div>
         </div>
         <!--end::Navbar-->
+
+        @if ($pendaftaran && in_array($pendaftaran->status, ['verifikasi', 'lulus', 'cadangan']))
+            <div class="card mb-5 mb-xl-10">
+                <div class="card-header border-0">
+                    <div class="card-title m-0">
+                        <h3 class="fw-bolder m-0"><i class="bi bi-clipboard-data text-primary fs-2 me-3"></i>Rincian Skor Seleksi</h3>
+                    </div>
+                </div>
+                <div class="card-body border-top p-9">
+                    <div class="d-flex flex-wrap gap-3 mb-5">
+                        @php
+                            $isSpecialPlacement = $pendaftaran->sekolah_diterima_id && !in_array($pendaftaran->sekolah_diterima_id, [$pendaftaran->sekolah_pilihan_1, $pendaftaran->sekolah_pilihan_2]);
+                        @endphp
+
+                        @if($pendaftaran->skor_jarak)
+                            <div class="border border-gray-300 border-dashed rounded py-3 px-4 min-w-125px">
+                                <div class="fw-bold text-muted fs-7">Skor Jarak</div>
+                                <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->skor_jarak, 0, ',', '.') }} Poin</div>
+                            </div>
+                        @endif
+                        @if($pendaftaran->skor_usia)
+                            <div class="border border-gray-300 border-dashed rounded py-3 px-4 min-w-125px">
+                                <div class="fw-bold text-muted fs-7">Skor Usia</div>
+                                <div class="fw-bolder fs-5 text-primary">{{ number_format($pendaftaran->skor_usia, 0, ',', '.') }} Hari</div>
+                            </div>
+                        @endif
+                        @if($pendaftaran->nilai_akhir)
+                            <div class="border border-gray-300 border-dashed rounded py-3 px-4 min-w-125px">
+                                <div class="fw-bold text-muted fs-7">Nilai Akhir</div>
+                                <div class="fw-bolder fs-5 text-success">{{ number_format($pendaftaran->nilai_akhir, 0, ',', '.') }}</div>
+                            </div>
+                        @endif
+                        @if($pendaftaran->nilai_prestasi)
+                            <div class="border border-gray-300 border-dashed rounded py-3 px-4 min-w-125px">
+                                <div class="fw-bold text-muted fs-7">Nilai Prestasi</div>
+                                <div class="fw-bolder fs-5 text-info">{{ $pendaftaran->nilai_prestasi }}</div>
+                            </div>
+                        @endif
+                        @if($pendaftaran->rata_rapor)
+                            <div class="border border-gray-300 border-dashed rounded py-3 px-4 min-w-125px">
+                                <div class="fw-bold text-muted fs-7">Rata-rata Rapor</div>
+                                <div class="fw-bolder fs-5 text-warning">{{ $pendaftaran->rata_rapor }}</div>
+                            </div>
+                        @endif
+                    </div>
+
+                    @if($isSpecialPlacement)
+                        <div class="notice d-flex bg-light-info rounded border-info border border-dashed p-6">
+                            <i class="bi bi-info-circle fs-2tx text-info me-4"></i>
+                            <div class="d-flex flex-stack flex-grow-1">
+                                <div class="fw-bold">
+                                    <h4 class="text-gray-900 fw-bolder">Informasi Penempatan Khusus</h4>
+                                    <div class="fs-6 text-gray-700">Anda diterima di sekolah yang tidak ada dalam pilihan Anda melalui kebijakan Penempatan Khusus oleh Dinas Pendidikan. Skor yang ditampilkan adalah nilai seleksi Anda berdasarkan pilihan awal.</div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <!--begin::details View-->
         <div class="row g-5 g-xl-10">
