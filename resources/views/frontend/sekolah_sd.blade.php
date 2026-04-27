@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="small text-muted mb-1 font-weight-bold text-uppercase" style="font-size: 0.65rem;">Sisa</div>
-                                    <div class="h6 font-weight-bold text-success mb-0 font-italic">{{ max(0, $s->total_daya_tampung - $s->pendaftar_count) }}</div>
+                                    <div class="h6 font-weight-bold text-success mb-0 font-italic">{{ max(0, $s->total_daya_tampung - $s->lulus_count) }}</div>
                                 </div>
                             </div>
                         </div>

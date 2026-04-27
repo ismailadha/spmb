@@ -32,6 +32,7 @@ Route::get('sekolah-sd/{id}', [FrontendController::class, 'detail_sekolah_sd'])-
 Route::get('sekolah-smp', [FrontendController::class, 'sekolah_smp'])->name('sekolah-smp');
 Route::get('sekolah-smp/{id}', [FrontendController::class, 'detail_sekolah_smp'])->name('sekolah-smp.detail');
 
+Route::get('berita', [FrontendController::class, 'posts'])->name('post.index');
 Route::get('berita/{slug}', [FrontendController::class, 'showPost'])->name('post.detail');
 
 Route::get('hasil-seleksi', function () {

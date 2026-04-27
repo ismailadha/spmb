@@ -25,7 +25,7 @@ class FrontendController extends Controller
     {
         $sliders = Slider::all();
         $sambutans = Sambutan::where('is_active', 1)->orderBy('sort_order', 'asc')->take(2)->get();
-        $posts = Post::whereIn('status', ['Publish', 'Published'])->orderBy('tanggal', 'desc')->take(3)->get();
+        $posts = Post::whereIn('status', ['Publish', 'Published'])->orderBy('tanggal', 'desc')->take(6)->get();
         $activePeriode = PeriodeDaftar::where('status_aktif', 1)->first();
 
         // Get Statistics
@@ -77,17 +77,30 @@ class FrontendController extends Controller
                 if ($activePeriode) {
                     $q->where('periode_id', $activePeriode->id);
                 }
+            }])
+            ->withCount(['pendaftarDiterima as lulus_count' => function ($q) use ($activePeriode) {
+                $q->where('status', 'lulus');
+                if ($activePeriode) {
+                    $q->where('periode_id', $activePeriode->id);
+                }
             }]);
 
+        $query->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->select('sekolah.*');
+
         if ($request->filled('search')) {
-            $query->where('nama_sekolah', 'like', '%'.$request->search.'%');
+            $query->where('sekolah.nama_sekolah', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('kecamatan')) {
-            $query->where('id_kecamatan', $request->kecamatan);
+            $query->where('sekolah.id_kecamatan', $request->kecamatan);
         }
 
-        $sekolah = $query->orderBy('nama_sekolah', 'asc')->paginate(9)->withQueryString();
+        $sekolah = $query->orderBy('kecamatan.nama_kecamatan', 'asc')
+            ->orderBy('sekolah.status_pilihan_1', 'desc')
+            ->orderBy('sekolah.nama_sekolah', 'asc')
+            ->paginate(9)
+            ->withQueryString();
         $kecamatan = Kecamatan::orderBy('nama_kecamatan', 'asc')->get();
 
         return view('frontend.sekolah_sd', compact('sekolah', 'kecamatan'));
@@ -101,17 +114,30 @@ class FrontendController extends Controller
                 if ($activePeriode) {
                     $q->where('periode_id', $activePeriode->id);
                 }
+            }])
+            ->withCount(['pendaftarDiterima as lulus_count' => function ($q) use ($activePeriode) {
+                $q->where('status', 'lulus');
+                if ($activePeriode) {
+                    $q->where('periode_id', $activePeriode->id);
+                }
             }]);
 
+        $query->join('kecamatan', 'sekolah.id_kecamatan', '=', 'kecamatan.id')
+            ->select('sekolah.*');
+
         if ($request->filled('search')) {
-            $query->where('nama_sekolah', 'like', '%'.$request->search.'%');
+            $query->where('sekolah.nama_sekolah', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('kecamatan')) {
-            $query->where('id_kecamatan', $request->kecamatan);
+            $query->where('sekolah.id_kecamatan', $request->kecamatan);
         }
 
-        $sekolah = $query->orderBy('nama_sekolah', 'asc')->paginate(9)->withQueryString();
+        $sekolah = $query->orderBy('kecamatan.nama_kecamatan', 'asc')
+            ->orderBy('sekolah.status_pilihan_1', 'desc')
+            ->orderBy('sekolah.nama_sekolah', 'asc')
+            ->paginate(9)
+            ->withQueryString();
         $kecamatan = Kecamatan::orderBy('nama_kecamatan', 'asc')->get();
 
         return view('frontend.sekolah_smp', compact('sekolah', 'kecamatan'));
@@ -150,20 +176,28 @@ class FrontendController extends Controller
     private function getStatsJalur($sekolahId, $jalurId, $kuota, $activePeriode): array
     {
         $count = 0;
+        $lulus = 0;
         if ($activePeriode) {
             $count = Pendaftaran::where('sekolah_pilihan_1', $sekolahId)
                 ->where('jalur_id', $jalurId)
                 ->where('periode_id', $activePeriode->id)
                 ->count();
+
+            $lulus = Pendaftaran::where('sekolah_diterima_id', $sekolahId)
+                ->where('jalur_id', $jalurId)
+                ->where('status', 'lulus')
+                ->where('periode_id', $activePeriode->id)
+                ->count();
         }
 
         $kuota = $kuota ?? 0;
-        $sisa = max(0, $kuota - $count);
-        $persen = $kuota > 0 ? min(100, round(($count / $kuota) * 100)) : 0;
+        $sisa = max(0, $kuota - $lulus);
+        $persen = $kuota > 0 ? min(100, round(($lulus / $kuota) * 100)) : 0;
 
         return [
             'kuota' => $kuota,
             'pendaftar' => $count,
+            'lulus' => $lulus,
             'sisa' => $sisa,
             'persen' => $persen,
         ];
@@ -179,6 +213,15 @@ class FrontendController extends Controller
             ->get();
 
         return view('frontend.detail_post', compact('post', 'recent_posts'));
+    }
+
+    public function posts()
+    {
+        $posts = Post::whereIn('status', ['Publish', 'Published'])
+            ->orderBy('tanggal', 'desc')
+            ->paginate(12);
+
+        return view('frontend.berita', compact('posts'));
     }
 
     public function zonasi_sd()

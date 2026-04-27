@@ -64,6 +64,11 @@ class Sekolah extends Model
         return $this->hasMany(Pendaftaran::class, 'sekolah_pilihan_2');
     }
 
+    public function pendaftarDiterima()
+    {
+        return $this->hasMany(Pendaftaran::class, 'sekolah_diterima_id');
+    }
+
     /**
      * Get the total daya tampung calculated from all paths.
      */

@@ -159,6 +159,16 @@
             </div>
             @endforeach
         </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{{ route('post.index') }}" 
+                   style="display:inline-block;padding:12px 35px;background:#fff;color:#8e44ad;border:2px solid #8e44ad;border-radius:50px;font-weight:700;text-decoration:none;transition:all 0.3s;"
+                   onmouseover="this.style.background='#8e44ad';this.style.color='#fff';" 
+                   onmouseout="this.style.background='#fff';this.style.color='#8e44ad';">
+                    Semua Berita <i class="la la-angle-right"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 
