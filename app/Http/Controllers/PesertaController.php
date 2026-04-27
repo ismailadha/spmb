@@ -558,7 +558,7 @@ class PesertaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'nik' => ['required', 'min:16', 'unique:users,username', 'numeric'],
+            'nik' => ['required', 'min:16', 'max:16', 'unique:users,username', 'numeric'],
             'password' => ['required', 'min:6', 'confirmed'],
             'terms' => ['accepted'],
         ]);

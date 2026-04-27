@@ -663,16 +663,26 @@ $(document).ready(function() {
             return;
         }
 
-        var confirmText = 'Semua peserta yang masih berstatus "Terverifikasi" (sebanyak ' + totalData + ' orang) pada filter ini akan dinyatakan TIDAK LULUS. Tindakan ini tidak dapat dibatalkan secara massal.';
+        var confirmText = 'Semua peserta yang masih berstatus <strong>"Terverifikasi"</strong> (sebanyak ' + totalData + ' orang) pada filter ini akan dinyatakan <strong>TIDAK LULUS</strong>.<br><br>' +
+                          '<div class="text-start bg-light-info p-3 rounded border border-info border-dashed">' +
+                          '• Status <strong>Lulus</strong> dan <strong>Cadangan</strong> tidak akan berubah.<br>' +
+                          '• Peserta yang tidak lulus akan masuk ke Data Hasil Seleksi.<br>' +
+                          '• Tindakan ini bersifat final.</div>';
         
         if (window.remainingQuota > 0) {
-            confirmText = '<strong>PERHATIAN: Sisa kuota masih tersedia (' + window.remainingQuota + ' kursi).</strong><br><br>' + confirmText;
+            confirmText = '<div class="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-4 mb-5">' +
+                          '<i class="ki-duotone ki-notification-on fs-2hx text-danger me-4 mb-5 mb-sm-0"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>' +
+                          '<div class="d-flex flex-column pe-0 pe-sm-10">' +
+                          '<h4 class="fw-bold">Perhatian: Sisa Kuota Tersedia!</h4>' +
+                          '<span>Masih ada sisa kuota sebanyak <strong>' + window.remainingQuota + ' kursi</strong>. Pastikan tidak ada lagi peserta yang akan diluluskan.</span>' +
+                          '</div></div>' + confirmText;
         }
 
         Swal.fire({
             title: 'Finalisasi Hasil Seleksi?',
             html: confirmText,
             icon: 'warning',
+            width: '650px',
             showCancelButton: true,
             confirmButtonColor: '#f1416c',
             cancelButtonColor: '#d33',
