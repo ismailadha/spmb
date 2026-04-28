@@ -51,6 +51,8 @@ class PesertaController extends Controller
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+                ->leftJoin('sekolah as s1', 'pendaftaran.sekolah_pilihan_1', '=', 's1.id')
+                ->leftJoin('sekolah as s2', 'pendaftaran.sekolah_pilihan_2', '=', 's2.id')
                 ->where('pendaftaran.periode_id', $periodeId)
                 ->where('pendaftaran.jenjang', 'SD')
                 ->when($jalurId, function ($query, $jalurId) {
@@ -74,7 +76,9 @@ class PesertaController extends Controller
                     'jalur_pendaftaran.nama_jalur',
                     'pendaftaran.jenjang',
                     'pendaftaran.status',
-                    'pendaftaran.tanggal_daftar'
+                    'pendaftaran.tanggal_daftar',
+                    's1.nama_sekolah as pilihan_1',
+                    's2.nama_sekolah as pilihan_2'
                 )
                 ->orderByRaw("CASE WHEN pendaftaran.status = 'submit' THEN 0 WHEN pendaftaran.status = 'verifikasi' THEN 1 ELSE 2 END")
                 ->orderBy('pendaftaran.tanggal_daftar', 'asc');
@@ -247,6 +251,8 @@ class PesertaController extends Controller
             $data = DB::table('pendaftaran')
                 ->join('peserta', 'pendaftaran.peserta_id', '=', 'peserta.id')
                 ->join('jalur_pendaftaran', 'pendaftaran.jalur_id', '=', 'jalur_pendaftaran.id')
+                ->leftJoin('sekolah as s1', 'pendaftaran.sekolah_pilihan_1', '=', 's1.id')
+                ->leftJoin('sekolah as s2', 'pendaftaran.sekolah_pilihan_2', '=', 's2.id')
                 ->where('pendaftaran.periode_id', $periodeId)
                 ->where('pendaftaran.jenjang', 'SMP')
                 ->when($jalurId, function ($query, $jalurId) {
@@ -270,7 +276,9 @@ class PesertaController extends Controller
                     'jalur_pendaftaran.nama_jalur',
                     'pendaftaran.jenjang',
                     'pendaftaran.status',
-                    'pendaftaran.tanggal_daftar'
+                    'pendaftaran.tanggal_daftar',
+                    's1.nama_sekolah as pilihan_1',
+                    's2.nama_sekolah as pilihan_2'
                 )
                 ->orderByRaw("CASE WHEN pendaftaran.status = 'submit' THEN 0 WHEN pendaftaran.status = 'verifikasi' THEN 1 ELSE 2 END")
                 ->orderBy('pendaftaran.tanggal_daftar', 'asc');

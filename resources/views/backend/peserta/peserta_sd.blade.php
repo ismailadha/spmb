@@ -89,12 +89,14 @@
                 <thead>
                     <tr class="text-start text-dark-400 fw-bolder fs-7 text-uppercase gs-0">
                         <th class="w-10px pe-2">No</th>
+                        <th class="min-w-70px">Actions</th>
                         <th class="min-w-125px">No. Pendaftaran</th>
                         <th class="min-w-125px">Nama Lengkap</th>
                         <th class="min-w-125px">Jalur</th>
                         <th class="min-w-125px">Jenjang</th>
                         <th class="min-w-100px text-center">Status</th>
-                        <th class="text-end min-w-70px">Actions</th>
+                        <th class="min-w-150px">Pilihan 1</th>
+                        <th class="min-w-150px">Pilihan 2</th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
@@ -136,12 +138,14 @@ $(document).ready(function() {
         },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, width: '10px' },
+            { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-start' },
             { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
             { data: 'nama_jalur', name: 'nama_jalur', searchable: false },
             { data: 'jenjang', name: 'jenjang', searchable: false },
             { data: 'status', name: 'status', className: 'text-center', searchable: false },
-            { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
+            { data: 'pilihan_1', name: 'pilihan_1', searchable: false },
+            { data: 'pilihan_2', name: 'pilihan_2', searchable: false }
         ],
         language: {
             "emptyTable": "Tidak ada data yang tersedia",
