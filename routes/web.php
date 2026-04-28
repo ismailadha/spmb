@@ -135,6 +135,7 @@ Route::middleware('auth')->group(function () {
         Route::post('kelulusan/finalize', [KelulusanController::class, 'finalize'])->name('kelulusan.finalize');
         Route::get('kelulusan/sekolah-list', [KelulusanController::class, 'getSekolahList'])->name('kelulusan.sekolah_list');
         Route::post('kelulusan/{id}/tidak-lulus', [KelulusanController::class, 'setTidakLulus'])->name('kelulusan.tidak_lulus');
+        Route::post('kelulusan/{id}/reset-draft', [KelulusanController::class, 'resetKeDraft'])->name('kelulusan.reset_draft');
 
         // hasil seleksi
         Route::get('hasil-seleksi/sd', [HasilSeleksiController::class, 'hasil_seleksi_sd'])->name('hasil-seleksi.sd');

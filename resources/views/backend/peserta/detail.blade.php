@@ -41,6 +41,24 @@
             });
         }
 
+        function confirmResetDraft() {
+            Swal.fire({
+                title: 'Kembalikan ke Draft?',
+                text: "Status akan diubah ke draft dan SELURUH berkas yang telah diupload akan dihapus. Peserta dapat mendaftar kembali ke jalur lain. Lanjutkan?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f1416c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Reset ke Draft!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-reset-draft').submit();
+                }
+            });
+        }
+
+
         // Handler untuk Radio & Dropdown di section penempatan
         $(document).on('change', '#select_other_school', function() {
             if ($(this).val()) {
@@ -210,7 +228,17 @@
                                         <i class="bi bi-printer fs-4 me-1"></i>Cetak Kartu
                                     </a>
                                 @endif
+
+                                @if(auth()->user()->role == 'admin_dinas' && $pendaftaran->jalur_id == 3 && $pendaftaran->status == 'tidak_lulus')
+                                    <form action="{{ route('kelulusan.reset_draft', $pendaftaran->id) }}" method="POST" class="d-inline" id="form-reset-draft">
+                                        @csrf
+                                        <button type="button" class="btn btn-sm btn-danger ms-2" onclick="confirmResetDraft()">
+                                            <i class="bi bi-arrow-counterclockwise fs-4 me-1"></i>Kembalikan ke Draft
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
+
                             <!--end::Actions-->
                         </div>
                         <!--end::Title-->

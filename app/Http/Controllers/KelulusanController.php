@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
 
 class KelulusanController extends Controller
@@ -661,6 +662,57 @@ class KelulusanController extends Controller
                 'success' => false,
                 'message' => 'Gagal memproses cadangan: '.$e->getMessage(),
             ], 500);
+        }
+    }
+
+    /**
+     * Reset graduation status to 'draft' for Prestasi participants who failed.
+     */
+    public function resetKeDraft($id)
+    {
+        if (auth()->user()->role != 'admin_dinas') {
+            return redirect()->back()->with('error', 'Hanya Admin Dinas yang dapat melakukan aksi ini.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Ambil data pendaftaran
+            $pendaftaran = DB::table('pendaftaran')->where('id', $id)->first();
+
+            if (! $pendaftaran || $pendaftaran->jalur_id != 3 || $pendaftaran->status != 'tidak_lulus') {
+                return redirect()->back()->with('error', 'Peserta tidak memenuhi syarat untuk direset (Harus Jalur Prestasi dan Status Tidak Lulus).');
+            }
+
+            // 2. Hapus berkas fisik dan data berkas
+            $path = storage_path('app/berkas/'.$pendaftaran->id);
+            if (File::isDirectory($path)) {
+                File::deleteDirectory($path);
+            }
+            DB::table('berkas_pendaftaran')->where('pendaftaran_id', $pendaftaran->id)->delete();
+
+            // 3. Hapus nilai seleksi dan hasil seleksi
+            DB::table('nilai_seleksi')->where('pendaftaran_id', $pendaftaran->id)->delete();
+            DB::table('hasil_seleksi')->where('pendaftaran_id', $pendaftaran->id)->delete();
+
+            // 4. Update status pendaftaran menjadi draft
+            DB::table('pendaftaran')
+                ->where('id', $id)
+                ->update([
+                    'status' => 'draft',
+                    'nomor_pendaftaran' => null,
+                    'sekolah_diterima_id' => null,
+                    'catatan_perbaikan' => null,
+                    'updated_at' => now(),
+                ]);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Status pendaftaran berhasil dikembalikan ke Draft. Peserta sekarang dapat memilih jalur lain.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Gagal memproses reset: '.$e->getMessage());
         }
     }
 }

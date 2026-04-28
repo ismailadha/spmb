@@ -111,11 +111,6 @@
 										<span class="menu-title">Website</span>
 									</a>
 								</div>
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Pendaftaran</span>
-									</div>
-								</div> --}}
 								@if(auth()->user()->role == 'admin_dinas')
 								<div class="menu-item">
 									<a class="menu-link @yield('periode-menu-active')" href="{{ route('periode.index') }}">
@@ -152,11 +147,6 @@
 								</div>
 								@endif
 								@if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah' || auth()->user()->role == 'operator_sekolah')
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Verifikasi</span>
-									</div>
-								</div> --}}
 								<div data-kt-menu-trigger="click" class="menu-item here @yield('peserta-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -194,11 +184,6 @@
 									</div>
 								</div>
 								@endif
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Kelulusan</span>
-									</div>
-								</div> --}}
 								@if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah')
 								<div data-kt-menu-trigger="click" class="menu-item here @yield('kelulusan-menu-open') menu-accordion">
 									<span class="menu-link">
@@ -236,11 +221,6 @@
 										@endif
 									</div>
 								</div>
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Hasil Seleksi</span>
-									</div>
-								</div> --}}
 								<div data-kt-menu-trigger="click" class="menu-item here @yield('hasil-seleksi-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -297,11 +277,6 @@
 								</div>
 								@endif
 								@if(auth()->user()->role == 'admin_dinas' || auth()->user()->role == 'admin_sekolah')
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Informasi Sekolah</span>
-									</div>
-								</div> --}}
 								<div data-kt-menu-trigger="click" class="menu-item here @yield('sekolah-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -340,11 +315,6 @@
 								</div>
 								@endif
 								@if(auth()->user()->role == 'admin_dinas')
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Beranda Website</span>
-									</div>
-								</div> --}}
 								<div data-kt-menu-trigger="click" class="menu-item here @yield('utilitas-menu-open') menu-accordion">
 									<span class="menu-link">
 										<span class="menu-icon">
@@ -401,11 +371,6 @@
 										</div>
 									</div>
 								</div>
-								{{-- <div class="menu-item">
-									<div class="menu-content pt-8 pb-0">
-										<span class="menu-section text-muted text-uppercase fs-8 ls-1">Pengaturan</span>
-									</div>
-								</div> --}}
 								<div class="menu-item">
 									<a class="menu-link @yield('konfigurasi-menu-active')" href="{{ route('konfigurasi.index') }}">
 										<span class="menu-icon">
@@ -521,14 +486,14 @@
 									<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 										<!--begin::Menu wrapper-->
 										<div class="d-none d-md-flex flex-column align-items-end justify-content-center me-3">
-											<span class="text-muted fs-8 fw-bold lh-1 mb-1">Login sebagai</span>
+											<span class="text-muted fs-8 fw-bold lh-1 mb-1">Login sebagai {{ Auth::user()->name }}</span>
 											<span class="text-dark fs-7 fw-bolder lh-1">
 												@if(Auth::user()->role == 'admin_dinas')
 													Admin Dinas
 												@elseif(Auth::user()->role == 'admin_sekolah')
-													Admin Sekolah
+													Admin Sekolah {{ Auth::user()->sekolah?->nama_sekolah }}
 												@elseif(Auth::user()->role == 'operator_sekolah')
-													Operator Sekolah
+													Operator Sekolah {{ Auth::user()->sekolah?->nama_sekolah }}
 												@elseif(Auth::user()->role == 'peserta')
 													Peserta
 												@else
