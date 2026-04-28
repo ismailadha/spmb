@@ -78,7 +78,10 @@ class PesertaController extends Controller
                     'pendaftaran.status',
                     'pendaftaran.tanggal_daftar',
                     's1.nama_sekolah as pilihan_1',
-                    's2.nama_sekolah as pilihan_2'
+                    's2.nama_sekolah as pilihan_2',
+                    'pendaftaran.sekolah_pilihan_1',
+                    'pendaftaran.sekolah_pilihan_2',
+                    'pendaftaran.sekolah_diterima_id'
                 )
                 ->orderByRaw("CASE WHEN pendaftaran.status = 'submit' THEN 0 WHEN pendaftaran.status = 'verifikasi' THEN 1 ELSE 2 END")
                 ->orderBy('pendaftaran.tanggal_daftar', 'asc');
@@ -116,6 +119,28 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
                 })
+                ->editColumn('pilihan_1', function ($row) {
+                    if (! $row->pilihan_1) {
+                        return '-';
+                    }
+                    $color = 'text-danger';
+                    if ($row->status == 'lulus' && $row->sekolah_pilihan_1 == $row->sekolah_diterima_id) {
+                        $color = 'text-success';
+                    }
+
+                    return '<span class="'.$color.'">'.$row->pilihan_1.'</span>';
+                })
+                ->editColumn('pilihan_2', function ($row) {
+                    if (! $row->pilihan_2) {
+                        return '-';
+                    }
+                    $color = 'text-danger';
+                    if ($row->status == 'lulus' && $row->sekolah_pilihan_2 == $row->sekolah_diterima_id) {
+                        $color = 'text-success';
+                    }
+
+                    return '<span class="'.$color.'">'.$row->pilihan_2.'</span>';
+                })
                 ->addColumn('action', function ($row) {
                     return '
                         <div class="btn-group" role="group">
@@ -134,7 +159,7 @@ class PesertaController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['status', 'action', 'nomor_pendaftaran'])
+                ->rawColumns(['status', 'action', 'nomor_pendaftaran', 'pilihan_1', 'pilihan_2'])
                 ->make(true);
         }
 
@@ -278,7 +303,10 @@ class PesertaController extends Controller
                     'pendaftaran.status',
                     'pendaftaran.tanggal_daftar',
                     's1.nama_sekolah as pilihan_1',
-                    's2.nama_sekolah as pilihan_2'
+                    's2.nama_sekolah as pilihan_2',
+                    'pendaftaran.sekolah_pilihan_1',
+                    'pendaftaran.sekolah_pilihan_2',
+                    'pendaftaran.sekolah_diterima_id'
                 )
                 ->orderByRaw("CASE WHEN pendaftaran.status = 'submit' THEN 0 WHEN pendaftaran.status = 'verifikasi' THEN 1 ELSE 2 END")
                 ->orderBy('pendaftaran.tanggal_daftar', 'asc');
@@ -316,6 +344,28 @@ class PesertaController extends Controller
                         return '<span class="badge badge-light-secondary fw-bolder px-4 py-3">'.ucfirst($row->status).'</span>';
                     }
                 })
+                ->editColumn('pilihan_1', function ($row) {
+                    if (! $row->pilihan_1) {
+                        return '-';
+                    }
+                    $color = 'text-danger';
+                    if ($row->status == 'lulus' && $row->sekolah_pilihan_1 == $row->sekolah_diterima_id) {
+                        $color = 'text-success';
+                    }
+
+                    return '<span class="'.$color.'">'.$row->pilihan_1.'</span>';
+                })
+                ->editColumn('pilihan_2', function ($row) {
+                    if (! $row->pilihan_2) {
+                        return '-';
+                    }
+                    $color = 'text-danger';
+                    if ($row->status == 'lulus' && $row->sekolah_pilihan_2 == $row->sekolah_diterima_id) {
+                        $color = 'text-success';
+                    }
+
+                    return '<span class="'.$color.'">'.$row->pilihan_2.'</span>';
+                })
                 ->addColumn('action', function ($row) {
                     return '
                         <div class="btn-group" role="group">
@@ -334,7 +384,7 @@ class PesertaController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['status', 'action', 'nomor_pendaftaran'])
+                ->rawColumns(['status', 'action', 'nomor_pendaftaran', 'pilihan_1', 'pilihan_2'])
                 ->make(true);
         }
 

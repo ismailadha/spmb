@@ -147,7 +147,9 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nomor_kk" class="form-label">Nomor Kartu Keluarga (KK)</label>
-                                <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ old('nomor_kk', $peserta->nomor_kk ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
+                                <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" value="{{ old('nomor_kk', $peserta->nomor_kk ?? '') }}" required minlength="16" maxlength="16" pattern="\d{16}" title="Nomor KK harus 16 digit angka" inputmode="numeric" @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
+                                <div class="text-muted fs-7 mt-1">Nomor KK harus terdiri dari tepat 16 digit angka.</div>
+                                <div class="invalid-feedback">Nomor KK harus 16 digit angka.</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="tanggal_kk" class="form-label">Tanggal Penerbitan KK</label>
@@ -801,6 +803,26 @@
                 });
             }
 
+            // -- KK Number Input Restriction --
+            const kkInput = document.getElementById('nomor_kk');
+            if (kkInput) {
+                kkInput.addEventListener('input', function(e) {
+                    // Remove any non-digit characters
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    // Limit to 16 digits
+                    if (this.value.length > 16) {
+                        this.value = this.value.slice(0, 16);
+                    }
+                });
+                
+                // Also prevent non-digit on keypress for better UX
+                kkInput.addEventListener('keypress', function(e) {
+                    if (e.which < 48 || e.which > 57) {
+                        e.preventDefault();
+                    }
+                });
+            }
 
             // -- End Leaflet Map Initialization --
 
