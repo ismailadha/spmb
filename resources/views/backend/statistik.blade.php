@@ -75,6 +75,10 @@
                     <h3 class="card-title align-items-start flex-column">
                         <span class="card-label fw-bold text-gray-800">Statistik Pendaftaran Per Sekolah</span>
                         <span class="text-gray-400 mt-1 fw-semibold fs-6">Data jumlah pendaftar dari kuota yang tersedia ({{ $stats['periode']->tahun_ajaran }})</span>
+                        <div class="mt-2">
+                            <span class="badge badge-light-primary fs-8 fw-bold">Info:</span>
+                            <span class="text-gray-800 fs-7 ms-1">Pendaftar/Kuota</span>
+                        </div>
                     </h3>
                     @if(auth()->user()->role == 'admin_dinas')
                     <div class="card-toolbar">

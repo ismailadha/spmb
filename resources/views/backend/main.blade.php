@@ -486,14 +486,14 @@
 									<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 										<!--begin::Menu wrapper-->
 										<div class="d-none d-md-flex flex-column align-items-end justify-content-center me-3">
-											<span class="text-muted fs-8 fw-bold lh-1 mb-1">Login sebagai {{ Auth::user()->name }}</span>
+											<span class="text-muted fs-8 fw-bold lh-1 mb-1">Login sebagai</span>
 											<span class="text-dark fs-7 fw-bolder lh-1 text-end">
 												@if(Auth::user()->role == 'admin_dinas')
 													Admin Dinas
 												@elseif(Auth::user()->role == 'admin_sekolah')
 													{{ Auth::user()->sekolah?->nama_sekolah }} <br><span class="text-primary">Admin Sekolah</span>
 												@elseif(Auth::user()->role == 'operator_sekolah')
-													{{ Auth::user()->sekolah?->nama_sekolah }} <br><span class="text-primary">Admin Sekolah</span>
+													{{ Auth::user()->sekolah?->nama_sekolah }} <br><span class="text-primary">Operator Sekolah</span>
 												@elseif(Auth::user()->role == 'peserta')
 													{{ Auth::user()->name }} <br><span class="text-primary">Peserta</span>
 												@else

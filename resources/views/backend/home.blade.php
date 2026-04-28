@@ -253,7 +253,7 @@
                 <div class="card-body pt-2 pb-4">
                     <div class="d-flex flex-column w-100 position-relative z-index-1">
                         <div class="d-flex flex-stack fs-6 fw-semibold mb-2">
-                            <div class="text-gray-600">SMP Only</div>
+                            <div class="text-gray-600">Jenjang SMP</div>
                             <div class="fw-bolder text-gray-800">{{ $stats['prestasi']['smp'] }}</div>
                         </div>
                         <div class="h-6px w-100 bg-white bg-opacity-50 rounded">

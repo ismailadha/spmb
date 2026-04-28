@@ -93,7 +93,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="nisn" class="form-label">Nomor Induk Siswa Nasional (NISN)</label>
-                                <input type="text" class="form-control" id="nisn" name="nisn" value="{{ old('nisn', $peserta->nisn ?? '') }}" required @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
+                                <input type="text" class="form-control" id="nisn" name="nisn" value="{{ old('nisn', $peserta->nisn ?? '') }}" @if(isset($isPerbaikan) && $isPerbaikan) readonly @endif>
                             </div>
                         </div>
 
@@ -333,7 +333,7 @@
 
                         <div class="row mb-4">
                             <div class="col-md-4" id="kartu_pkh_container" style="display: none;">
-                                <label for="kartu_pkh" class="form-label">Kartu PKH (Jalur Afirmasi)</label>
+                                <label for="kartu_pkh" class="form-label">Kartu PKH (Jika ada)</label>
                                 <input type="file" class="form-control" id="kartu_pkh" name="kartu_pkh">
                                 @error('kartu_pkh') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'kartu_pkh')->first())
@@ -346,7 +346,7 @@
                                 @endif
                             </div>
                             <div class="col-md-4" id="surat_dokter_container" style="display: none;">
-                                <label for="surat_dokter" class="form-label">Surat Keterangan Dokter/Disabilitas (Afirmasi)</label>
+                                <label for="surat_dokter" class="form-label">Surat Keterangan Dokter/Disabilitas (Jika ada)</label>
                                 <input type="file" class="form-control" id="surat_dokter" name="surat_dokter">
                                 @error('surat_dokter') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'surat_dokter')->first())
@@ -359,7 +359,7 @@
                                 @endif
                             </div>
                             <div class="col-md-4" id="surat_pindah_container" style="display: none;">
-                                <label for="surat_pindah" class="form-label">Surat Keterangan Pindah (Jalur Mutasi)</label>
+                                <label for="surat_pindah" class="form-label">Surat Keterangan Pindah (Jika ada)</label>
                                 <input type="file" class="form-control" id="surat_pindah" name="surat_pindah">
                                 @error('surat_pindah') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 @if($berkas->where('jenis_berkas', 'surat_pindah')->first())
@@ -377,7 +377,7 @@
                             <div class="col-md-6" id="prestasi_akademik_container" style="display: none;">
                                 <h5 class="mb-3">Dokumen Prestasi Akademik (Jalur Prestasi)</h5>
                                 <div>
-                                    <label for="dokumen_tka" class="form-label">Dokumen Hasil Tes TKA</label>
+                                    <label for="dokumen_tka" class="form-label">Dokumen Hasil Tes TKA/Nilai Rapor/Sertifikat Penghargaan Akademik (dijadikan dalam 1 file PDF)</label>
                                     <input type="file" class="form-control" id="dokumen_tka" name="dokumen_tka">
                                     @error('dokumen_tka') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     @if($berkas->where('jenis_berkas', 'dokumen_tka')->first())
@@ -393,7 +393,7 @@
                             <div class="col-md-6" id="prestasi_nonakademik_container" style="display: none;">
                                 <h5 class="mb-3">Dokumen Prestasi Non-Akademik (Jalur Prestasi)</h5>
                                 <div>
-                                    <label for="sertifikat_penghargaan" class="form-label">Sertifikat Penghargaan</label>
+                                    <label for="sertifikat_penghargaan" class="form-label">Sertifikat Penghargaan (Jika ada)</label>
                                     <input type="file" class="form-control" id="sertifikat_penghargaan" name="sertifikat_penghargaan">
                                     @error('sertifikat_penghargaan') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     @if($berkas->where('jenis_berkas', 'sertifikat_penghargaan')->first())
@@ -859,15 +859,12 @@
                     kartuPkhContainer.style.display = 'none';
                     suratDokterContainer.style.display = 'none';
                     suratPindahContainer.style.display = 'block';
-                    if (!hasSuratPindah) document.getElementById('surat_pindah').required = true;
 
                     if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
                     if(prestasiNonakademikContainer) prestasiNonakademikContainer.style.display = 'none';
                 } else if (selectedText.includes('afirmasi')) {
                     kartuPkhContainer.style.display = 'block';
                     suratDokterContainer.style.display = 'block';
-                    if (!hasKartuPkh) document.getElementById('kartu_pkh').required = true;
-                    if (!hasSuratDokter) document.getElementById('surat_dokter').required = true;
 
                     suratPindahContainer.style.display = 'none';
                     if(prestasiAkademikContainer) prestasiAkademikContainer.style.display = 'none';
@@ -885,9 +882,6 @@
                     }
                     if(prestasiNonakademikContainer) {
                         prestasiNonakademikContainer.style.display = 'block';
-                        if (!hasPrestasiNon) {
-                            document.getElementById('sertifikat_penghargaan').required = true;
-                        }
                     }
                 } else {
                     kartuPkhContainer.style.display = 'none';
@@ -1507,7 +1501,7 @@
                     let isValid = true;
                     if (isDraft) {
                         // Minimal validation for Draft: Jalur, Jenjang, Nama, NIK, NISN, Wilayah
-                        let minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'nisn', 'provinsi', 'kabupaten', 'sekolah_pilihan_1'];
+                        let minimalFields = ['jalur', 'jenjang', 'nama_lengkap', 'nik', 'provinsi', 'kabupaten', 'sekolah_pilihan_1'];
                         
                         if (kabupatenSelect.value == "1173") {
                             minimalFields.push('kecamatan', 'desa');
