@@ -94,11 +94,11 @@
                          <th class="min-w-70px">Actions</th>
                          <th class="min-w-125px">No. Pendaftaran</th>
                          <th class="min-w-125px">Nama Lengkap</th>
-                         <th class="min-w-125px">Jalur</th>
-                         <th class="min-w-125px">Jenjang</th>
                          <th class="min-w-100px text-center">Status</th>
                          <th class="min-w-150px">Pilihan 1</th>
                          <th class="min-w-150px">Pilihan 2</th>
+                         <th class="min-w-125px">Jalur</th>
+                         <th class="min-w-125px">Jenjang</th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
@@ -143,11 +143,11 @@ $(document).ready(function() {
             { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-start' },
             { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
             { data: 'nama_lengkap', name: 'nama_lengkap' },
-            { data: 'nama_jalur', name: 'nama_jalur', searchable: false },
-            { data: 'jenjang', name: 'jenjang', searchable: false },
             { data: 'status', name: 'status', className: 'text-center', searchable: false },
             { data: 'pilihan_1', name: 'pilihan_1', searchable: false },
-            { data: 'pilihan_2', name: 'pilihan_2', searchable: false }
+            { data: 'pilihan_2', name: 'pilihan_2', searchable: false },
+            { data: 'nama_jalur', name: 'nama_jalur', searchable: false },
+            { data: 'jenjang', name: 'jenjang', searchable: false }
         ],
         language: {
             "emptyTable": "Tidak ada data yang tersedia",
