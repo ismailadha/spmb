@@ -54,7 +54,7 @@
 
             <div class="fv-row mb-7 d-none" id="nik_container">
                 <label class="required fs-6 fw-bold mb-2">NIK</label>
-                <input type="text" class="form-control form-control-solid @error('nik') is-invalid @enderror" placeholder="Masukkan 16 digit NIK" name="nik" value="{{ old('nik', $user->nik) }}" maxlength="16" id="nik_input" />
+                <input type="text" class="form-control form-control-solid @error('nik') is-invalid @enderror" placeholder="Masukkan 16 digit NIK" name="nik" value="{{ old('nik', $user->nik) }}" minlength="16" maxlength="16" pattern="\d{16}" id="nik_input" inputmode="numeric" />
                 @error('nik')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -148,6 +148,19 @@
 
         roleSelect.on('change', toggleFields);
         toggleFields();
+
+        // NIK input restriction
+        nikInput.on('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 16) {
+                this.value = this.value.slice(0, 16);
+            }
+        });
+        nikInput.on('keypress', function(e) {
+            if (e.which < 48 || e.which > 57) {
+                e.preventDefault();
+            }
+        });
     });
 </script>
 @endsection

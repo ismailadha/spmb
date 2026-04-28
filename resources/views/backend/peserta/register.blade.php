@@ -191,7 +191,7 @@
                                             </div>
                                             
                                             <div class="form-floating-custom">
-                                                <input type="text" class="form-control" id="nik" name="nik" placeholder=" " required>
+                                                <input type="text" class="form-control" id="nik" name="nik" placeholder=" " required minlength="16" maxlength="16" pattern="\d{16}" title="NIK harus 16 digit angka" inputmode="numeric">
                                                 <label for="nik">NIK (Nomor Induk Kependudukan)</label>
                                                 @error('nik')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -242,5 +242,23 @@
             </div>
         </section>
         @include('frontend.js')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const nikInput = document.getElementById('nik');
+                if (nikInput) {
+                    nikInput.addEventListener('input', function(e) {
+                        this.value = this.value.replace(/[^0-9]/g, '');
+                        if (this.value.length > 16) {
+                            this.value = this.value.slice(0, 16);
+                        }
+                    });
+                    nikInput.addEventListener('keypress', function(e) {
+                        if (e.which < 48 || e.which > 57) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+            });
+        </script>
     </body>
 </html>
