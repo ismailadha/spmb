@@ -1,13 +1,12 @@
 @extends('frontend.main')
 
 @section('content')
-{{-- ===================== HEADER ===================== --}}
-<section style="padding:60px 0;background:linear-gradient(135deg,#8e44ad 0%,#673ab7 100%);">
-    <div class="container text-center">
-        <h2 style="color:#fff;font-weight:700;font-size:2.5rem;margin-bottom:10px;">Berita & Informasi</h2>
-        <p style="color:rgba(255,255,255,0.8);font-size:1.1rem;max-width:600px;margin:0 auto;">
-            Dapatkan informasi terbaru seputar Penerimaan Peserta Didik Baru (PPDB).
-        </p>
+<!-- Hero Area / Breadcrumb -->
+<section class="breadcrumb_area breadcrumb2 bgimage" style="background-image: url('https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&w=1920&q=80'); background-size: cover; padding: 120px 0; background-position: center; position: relative; overflow: hidden;">
+    <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(30, 42, 74, 0.8), rgba(142, 68, 173, 0.4));"></div>
+    <div class="container text-center position-relative" style="z-index: 2;">
+        <h1 class="text-white font-weight-bold display-4 mb-2 animate__animated animate__fadeInDown">Berita & Informasi</h1>
+        <p class="text-white-50 lead animate__animated animate__fadeInUp">Dapatkan informasi terbaru seputar Penerimaan Peserta Didik Baru (PPDB)</p>
     </div>
 </section>
 
