@@ -48,7 +48,7 @@
 </style>
 
 <!-- Hero Area / Breadcrumb -->
-<section class="breadcrumb_area breadcrumb2 bgimage" style="background-image: url('https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&w=1920&q=80'); background-size: cover; padding: 120px 0; background-position: center; position: relative; overflow: hidden;">
+<section class="breadcrumb_area breadcrumb2 bgimage" style="background-image: url('{{ asset('images/hasil.jpg') }}'); background-size: cover; padding: 120px 0; background-position: center; position: relative; overflow: hidden;">
     <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(30, 42, 74, 0.8), rgba(52, 152, 219, 0.4));"></div>
     <div class="container text-center position-relative" style="z-index: 2;">
         <h1 class="text-white font-weight-bold display-4 mb-2 animate__animated animate__fadeInDown">Pengumuman Hasil Seleksi</h1>
@@ -84,7 +84,7 @@
     <div id="result-section" class="row justify-content-center d-none">
         <div class="col-lg-10">
             <h3 class="font-weight-bold text-dark mb-4 text-center">Hasil Pencarian</h3>
-            
+
             <div class="card border-0 shadow rounded-xl result-card overflow-hidden">
                 <div class="card-header bg-white border-bottom-0 pt-4 pb-0 text-center">
                     <span id="res_status_badge" class="badge badge-success status-badge justify-content-center align-items-center d-inline-flex mb-3">
@@ -122,7 +122,7 @@
                             <div class="pl-md-3">
                                 <p id="res_label_penerimaan" class="text-muted mb-1 font-weight-bold">Diterima di Sekolah:</p>
                                 <h4 id="res_sekolah" class="font-weight-bold text-primary mb-3">-</h4>
-                                
+
                                 <p class="text-muted mb-1 font-weight-bold">Keterangan:</p>
                                 <h5 id="res_keterangan" class="font-weight-bold text-dark mb-4">-</h5>
 
@@ -168,10 +168,10 @@
 
         $('#form-cek-seleksi').on('submit', function(e) {
             e.preventDefault();
-            
+
             var btn = $(this).find('button[type="submit"]');
             var originalText = btn.html();
-            
+
             // Loading status
             btn.html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Mencari data...');
             btn.prop('disabled', true);
@@ -190,7 +190,7 @@
 
                     if (response.success) {
                         var data = response.data;
-                        
+
                         // Map Data
                         $('#res_no_reg').text(': ' + data.nomor_pendaftaran);
                         $('#res_nama').text(': ' + data.nama_lengkap);
@@ -207,7 +207,7 @@
 
                         badge.removeClass('badge-success badge-danger badge-info badge-warning');
                         card.removeClass('rejected');
-                        
+
                         var btnCetak = $('#btn_cetak_lulus');
                         if (status === 'lulus' || status === 'tidak lulus' || status === 'tidak_lulus') {
                             btnCetak.removeClass('d-none');

@@ -229,7 +229,7 @@
                                     </a>
                                 @endif
 
-                                @if(auth()->user()->role == 'admin_dinas' && $pendaftaran->jalur_id == 3 && $pendaftaran->status == 'tidak_lulus')
+                                @if(in_array(auth()->user()->role, ['admin_dinas', 'admin_sekolah', 'operator_sekolah']) && $pendaftaran->jalur_id == 3 && $pendaftaran->status == 'tidak_lulus')
                                     <form action="{{ route('kelulusan.reset_draft', $pendaftaran->id) }}" method="POST" class="d-inline" id="form-reset-draft">
                                         @csrf
                                         <button type="button" class="btn btn-sm btn-danger ms-2" onclick="confirmResetDraft()">

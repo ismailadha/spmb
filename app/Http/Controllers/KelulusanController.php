@@ -670,8 +670,8 @@ class KelulusanController extends Controller
      */
     public function resetKeDraft($id)
     {
-        if (auth()->user()->role != 'admin_dinas') {
-            return redirect()->back()->with('error', 'Hanya Admin Dinas yang dapat melakukan aksi ini.');
+        if (!in_array(auth()->user()->role, ['admin_dinas', 'admin_sekolah', 'operator_sekolah'])) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki hak akses untuk melakukan aksi ini.');
         }
 
         try {

@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Hero Area / Breadcrumb -->
-<section class="breadcrumb_area breadcrumb2 bgimage" style="background-image: url('https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&w=1920&q=80'); background-size: cover; padding: 120px 0; background-position: center; position: relative; overflow: hidden;">
+<section class="breadcrumb_area breadcrumb2 bgimage" style="background-image: url('{{ asset('images/sekolah.jpg') }}'); background-size: cover; padding: 120px 0; background-position: center; position: relative; overflow: hidden;">
     <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(30, 42, 74, 0.8), rgba(26, 188, 156, 0.4));"></div>
     <div class="container text-center position-relative" style="z-index: 2;">
         <h1 class="text-white font-weight-bold display-4 mb-2 animate__animated animate__fadeInDown">Informasi Sekolah Menengah Pertama</h1>
@@ -33,7 +33,7 @@
                                 </span>
                             </div>
                         </div>
-                        
+
                         <form action="{{ route('sekolah-smp') }}" method="GET" class="filter-form">
                             <div class="row">
                                 <div class="col-lg-5 col-md-4 mb-3 mb-lg-0">
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-body p-4">
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <span class="jenjang-badge">
@@ -97,15 +97,15 @@
                                 <i class="la la-map-pin text-primary mt-1"></i> {{ $s->kecamatan->nama_kecamatan ?? '-' }}
                             </span>
                         </div>
-                        
+
                         <h5 class="card-title font-weight-bold text-dark mb-3 card-title-hover" style="font-size: 1.25rem; line-height: 1.4; min-height: 3.5rem;">
                             {{ $s->nama_sekolah }}
                         </h5>
-                        
+
                         <p class="text-muted mb-4 school-address" style="font-size: 0.95rem; min-height: 2.8rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                             <i class="la la-map-marker-alt text-danger mr-1"></i> {{ $s->alamat }}
                         </p>
-                        
+
                         <div class="quota-info p-3 bg-light rounded-lg">
                             <div class="row no-gutters text-center">
                                 <div class="col-4 border-right">
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-footer bg-white border-top-0 px-4 pb-4">
                         <a href="{{ route('sekolah-smp.detail', $s->id) }}" class="btn btn-outline-premium-primary btn-block rounded-pill font-weight-bold text-uppercase py-2 small tracking-wider">
                             Lihat Detail
@@ -282,7 +282,7 @@
     .pagination-wrapper nav svg {
         width: 20px;
     }
-    
+
     .pagination-wrapper nav .flex.items-center.justify-between {
         display: none;
     }
